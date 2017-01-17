@@ -38,7 +38,10 @@
                                     <thead>
                                         <tr>
                                             <th>Name</th>
-                                            <th>Progress</th>
+                                            @if (Model.IsActive)
+                                            {
+                                                <th>Progress</th>
+                                            }
                                             <th>Points you'll earn</th>
                                             <th>Badge</th>
                                         </tr>
@@ -48,13 +51,16 @@
                                         {
                                             <tr>
                                                 <td style="vertical-align:middle;"><a asp-action="Detail" asp-route-id="@challenge.Id">@challenge.Name</a></td>
-                                                <td style="text-align:center; vertical-align:middle;">
-                                                    @challenge.Status
-                                                    <div class="progress" style="margin:0px;">
-                                                        <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="@challenge.PercentComplete" aria-valuemin="0" aria-valuemax="100" style="width: @challenge.PercentComplete%;">
+                                                @if (Model.IsActive)
+                                                {
+                                                    <td style="text-align:center; vertical-align:middle;">
+                                                        @challenge.Status
+                                                        <div class="progress" style="margin:0px;">
+                                                            <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="@challenge.PercentComplete" aria-valuemin="0" aria-valuemax="100" style="width: @challenge.PercentComplete%;">
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </td>
+                                                    </td>
+                                                }
                                                 <td style="font-size:large; text-align:center; vertical-align:middle;">@challenge.PointsAwarded</td>
                                                 <td>
                                                     @if (!string.IsNullOrEmpty(challenge.BadgeFilename))
