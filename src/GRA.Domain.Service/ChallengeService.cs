@@ -47,7 +47,7 @@ namespace GRA.Domain.Service
                     if(completed > 0)
                     {
                         challengeStatus.Status = $"Completed {completed} of {challengeStatus.TasksToComplete} tasks.";
-                        challengeStatus.PercentComplete = (int)(completed * 100 / challengeStatus.TasksToComplete);
+                        challengeStatus.PercentComplete = Math.Min((int)(completed * 100 / challengeStatus.TasksToComplete), 100);
                         challengeStatus.CompletedTasks = completed;
                     }
 

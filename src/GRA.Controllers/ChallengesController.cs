@@ -61,6 +61,10 @@ namespace GRA.Controllers
                 {
                     challenge.BadgeFilename = _pathResolver.ResolveContentPath(challenge.BadgeFilename);
                 }
+                if (challenge.IsCompleted == true)
+                {
+                    challenge.Status = "Completed!";
+                }
             }
 
             ChallengesListViewModel viewModel = new ChallengesListViewModel()
