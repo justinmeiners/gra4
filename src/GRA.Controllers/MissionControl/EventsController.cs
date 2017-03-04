@@ -203,7 +203,7 @@ namespace GRA.Controllers.MissionControl
                 }
                 catch (GraException gex)
                 {
-                    ShowAlertWarning("Could not create event: ", gex.Message);
+                    ShowAlertWarning("Could not edit event: ", gex.Message);
                 }
             }
             PageTitle = "Edit Event";
