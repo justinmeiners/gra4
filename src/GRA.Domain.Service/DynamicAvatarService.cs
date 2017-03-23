@@ -40,17 +40,20 @@ namespace GRA.Domain.Service
             int take,
             string Search)
         {
+            VerifyManagementPermission();
             int siteId = GetClaimId(ClaimType.SiteId);
             return await _dynamicAvatarRepository.GetPaginatedAvatarListAsync(siteId, skip, take, Search);
         }
 
         public async Task<DynamicAvatar> GetAvatarDetailsAsync(int avatarId)
         {
+            VerifyManagementPermission();
             return await _dynamicAvatarRepository.GetByIdAsync(avatarId);
         }
 
         public async Task<DynamicAvatar> EditAvatarAsync(DynamicAvatar graAvatar)
         {
+            VerifyManagementPermission();
             return await _dynamicAvatarRepository.UpdateSaveAsync(GetClaimId(ClaimType.UserId), graAvatar);
         }
 
@@ -163,6 +166,7 @@ namespace GRA.Domain.Service
 
         public void DeleteElementFile(DynamicAvatarElement element)
         {
+            VerifyManagementPermission();
             var destinationRoot = Path.Combine($"site{GetCurrentSiteId()}", "dynamicavatars", $"layer{element.DynamicAvatarLayerId}");
             var destinationPath = _pathResolver.ResolveContentFilePath(destinationRoot);
 
@@ -178,6 +182,7 @@ namespace GRA.Domain.Service
         }
         public void WriteElementFile(DynamicAvatarElement element, byte[] imageFile)
         {
+            VerifyManagementPermission();
             var destinationRoot = Path.Combine($"site{GetCurrentSiteId()}", "dynamicavatars", $"layer{element.DynamicAvatarLayerId}");
             var destinationPath = _pathResolver.ResolveContentFilePath(destinationRoot);
 
