@@ -6,6 +6,5 @@ namespace GRA.Controllers
     {
         public Dictionary<int, string> DynamicAvatarPaths { get; set; }
         public string DynamicAvatarString { get; set; }
-        
     }
 }

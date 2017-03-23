@@ -60,7 +60,8 @@ namespace GRA.Domain.Service
 
             var avatarParts = new Dictionary<int, int>();
 
-            foreach (var layerId in layerIds) {
+            foreach (var layerId in layerIds)
+            {
                 var elementId = await _dynamicAvatarElementRepository.GetFirstElement(layerId);
                 avatarParts.Add(layerId, elementId);
             }
@@ -110,7 +111,7 @@ namespace GRA.Domain.Service
         {
             var layerIds = await _dynamicAvatarLayerRepository.GetLayerIdsAsync();
             int layerId = layerIds.ElementAt(layerNumber - 1);
-            var prevId  = await _dynamicAvatarElementRepository.GetPreviousElement(layerId, elementId);
+            var prevId = await _dynamicAvatarElementRepository.GetPreviousElement(layerId, elementId);
 
             if (prevId == null)
             {
@@ -168,10 +169,14 @@ namespace GRA.Domain.Service
 
             var fullFilePath = Path.Combine(destinationPath, $"{element.Id}.png");
 
-            if (File.Exists(fullFilePath)) {
-                try {
+            if (File.Exists(fullFilePath))
+            {
+                try
+                {
                     File.Delete(fullFilePath);
-                } catch (IOException) {
+                }
+                catch (IOException)
+                {
                     _logger.LogWarning($"Failed to delete element: {element.Id}");
                 }
             }

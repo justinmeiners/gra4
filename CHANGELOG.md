@@ -6,9 +6,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ## [Unreleased]
 ### Added
 - Slack logging capability (see appsettings.json for configuration)
+- Mission Control interface for managing dynamic avatars
 
 ### Changed
 - Override Microsoft logging to limit severity to Error and higher
+- Configure dynamic avatar parts in groups to make management easier
 
 ### Fixed
 - Fix pagination for MC household add existing participant list

@@ -6,9 +6,8 @@ namespace GRA.Domain.Model
     {
         [Required]
         public int DynamicAvatarId { get; set; }
-        
+
         [Required]
         public int DynamicAvatarLayerId { get; set; }
-
     }
 }

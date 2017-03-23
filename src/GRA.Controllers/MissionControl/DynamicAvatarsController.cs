@@ -24,13 +24,13 @@ namespace GRA.Controllers.MissionControl
         public DynamicAvatarsController(ILogger<DynamicAvatarsController> logger,
             ServiceFacade.Controller context,
             DynamicAvatarService avatarService,
-            SiteService siteService) 
+            SiteService siteService)
             : base(context)
         {
             _logger = Require.IsNotNull(logger, nameof(logger));
             _avatarService = Require.IsNotNull(avatarService, nameof(avatarService));
             _siteService = Require.IsNotNull(siteService, nameof(SiteService));
-            
+
             PageTitle = "Avatars";
         }
 
@@ -99,7 +99,7 @@ namespace GRA.Controllers.MissionControl
 
         [HttpPost]
         public async Task<IActionResult> Create(AvatarsDetailViewModel viewModel)
-        {            
+        {
             if (ModelState.IsValid)
             {
                 try
@@ -123,7 +123,7 @@ namespace GRA.Controllers.MissionControl
         public async Task<IActionResult> Edit(int id)
         {
             PageTitle = "Edit Avatar";
-            
+
             var avatarRoot = Path.Combine($"site{GetCurrentSiteId()}", "dynamicavatars");
 
             var avatar = await _avatarService.GetAvatarDetailsAsync(id);
@@ -131,7 +131,8 @@ namespace GRA.Controllers.MissionControl
 
             var elementViewModels = new List<AvatarsElementDetailViewModel>();
 
-            foreach (var layer in layerList) {
+            foreach (var layer in layerList)
+            {
                 var element = avatar.Elements.Where(_ => _.DynamicAvatarLayerId == layer.Id).FirstOrDefault();
 
                 var newElement = new AvatarsElementDetailViewModel()
@@ -162,7 +163,7 @@ namespace GRA.Controllers.MissionControl
                 try
                 {
                     var graAvatar = viewModel.Avatar;
-                
+
                     await _avatarService.EditAvatarAsync(graAvatar);
                     ShowAlertSuccess($"Avatar '{graAvatar.Name}' edited.");
                     return RedirectToAction("Index");
@@ -184,7 +185,8 @@ namespace GRA.Controllers.MissionControl
                 // delete all avatar files
                 var avatar = await _avatarService.GetAvatarDetailsAsync(id);
 
-                foreach (var element in avatar.Elements) {
+                foreach (var element in avatar.Elements)
+                {
                     _avatarService.DeleteElementFile(element);
                 }
 
@@ -218,7 +220,7 @@ namespace GRA.Controllers.MissionControl
             }
 
             if (viewModel.UploadImage != null)
-            {   
+            {
                 byte[] avatarBytes;
 
                 using (var fileStream = viewModel.UploadImage.OpenReadStream())
@@ -230,7 +232,7 @@ namespace GRA.Controllers.MissionControl
                     }
                 }
 
-                _avatarService.WriteElementFile(element, avatarBytes); 
+                _avatarService.WriteElementFile(element, avatarBytes);
             }
 
             return RedirectToAction("Edit", new { id = viewModel.AvatarId });

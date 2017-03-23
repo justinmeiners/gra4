@@ -42,21 +42,21 @@ namespace GRA.Data.Repository
 
         new public async Task<DynamicAvatar> GetByIdAsync(int id)
         {
-             var avatar = await DbSet
-                .AsNoTracking()
-                .Include(_ => _.Elements)
-                .Where(_ => _.Id == id)
-                .ProjectTo<DynamicAvatar>()
-                .SingleOrDefaultAsync();
+            var avatar = await DbSet
+               .AsNoTracking()
+               .Include(_ => _.Elements)
+               .Where(_ => _.Id == id)
+               .ProjectTo<DynamicAvatar>()
+               .SingleOrDefaultAsync();
 
             return avatar;
         }
         public override async Task RemoveSaveAsync(int userId, int id)
         {
-             _context.DynamicAvatarElements
-                                .AsNoTracking() 
-                                .Where(_ => _.DynamicAvatarId == id)
-                                .ToList().ForEach(x => _context.DynamicAvatarElements.Remove(x));
+            _context.DynamicAvatarElements
+                               .AsNoTracking()
+                               .Where(_ => _.DynamicAvatarId == id)
+                               .ToList().ForEach(x => _context.DynamicAvatarElements.Remove(x));
 
             _context.DynamicAvatarElements.RemoveRange();
             await base.RemoveSaveAsync(userId, id);

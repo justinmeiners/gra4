@@ -81,7 +81,7 @@ namespace GRA.Data.Repository
             {
                 throw new Exception($"Couldn't find  element {elementId}");
             }
-            
+
             var avatar = await _context.DynamicAvatars.AsNoTracking()
                                     .Where(_ => _.Id == element.DynamicAvatarId)
                                     .SingleOrDefaultAsync();
@@ -112,7 +112,7 @@ namespace GRA.Data.Repository
             {
                 throw new Exception($"Couldn't find  element {elementId}");
             }
-            
+
             var avatar = await _context.DynamicAvatars.AsNoTracking()
                                                       .Where(_ => _.Id == element.DynamicAvatarId)
                                                       .SingleOrDefaultAsync();
@@ -132,6 +132,5 @@ namespace GRA.Data.Repository
 
             return await GetLastElement(dynamicAvatarLayerId);
         }
-
     }
 }

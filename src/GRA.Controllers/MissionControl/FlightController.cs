@@ -121,7 +121,7 @@ namespace GRA.Controllers.MissionControl
                 return View("Index");
             }
 
-            string[] allowedExtensions = {".png", ".jpg", ".gif"};
+            string[] allowedExtensions = { ".png", ".jpg", ".gif" };
 
             var avatars = new Dictionary<int, DynamicAvatar>();
 
@@ -153,7 +153,7 @@ namespace GRA.Controllers.MissionControl
                 foreach (var avatarElementPath in Directory.EnumerateFiles(layerDirectory))
                 {
                     var extension = Path.GetExtension(avatarElementPath).ToLower();
-                    
+
                     // Mac often adds hidden files which we don't want to create avatars for
                     if (!allowedExtensions.Contains(extension))
                         continue;

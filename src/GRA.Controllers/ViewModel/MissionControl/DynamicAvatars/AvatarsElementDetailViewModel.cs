@@ -11,7 +11,7 @@ namespace GRA.Controllers.ViewModel.MissionControl.DynamicAvatars
         public DynamicAvatarLayer Layer { get; set; }
         public DynamicAvatarElement Element { get; set; }
         public bool Create { get; set; }
-        public IFormFile UploadImage {get; set; }
-        public string BaseAvatarUrl {get; set; }
+        public IFormFile UploadImage { get; set; }
+        public string BaseAvatarUrl { get; set; }
     }
 }
