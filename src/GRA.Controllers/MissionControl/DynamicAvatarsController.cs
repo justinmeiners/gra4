@@ -15,7 +15,7 @@ using System.IO;
 namespace GRA.Controllers.MissionControl
 {
     [Area("MissionControl")]
-    [Authorize(Policy = Policy.ViewAllChallenges)]
+    [Authorize(Policy = Policy.ManageAvatars)]
     public class DynamicAvatarsController : Base.MCController
     {
         private readonly ILogger<DynamicAvatarsController> _logger;
