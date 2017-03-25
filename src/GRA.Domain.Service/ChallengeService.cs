@@ -122,13 +122,13 @@ namespace GRA.Domain.Service
             throw new Exception("Permission denied.");
         }
 
-        public async Task<Challenge> GetChallengeDetailsAsync(int challengeId)
+        public async Task<Challenge> GetChallengeDetailsAsync(int challengeId, int? userId = null)
         {
-            int? userId = null;
-            if (GetAuthUser().Identity.IsAuthenticated)
+            if (userId == null && GetAuthUser().Identity.IsAuthenticated)
             {
                 userId = GetActiveUserId();
             }
+
             var challenge = await _challengeRepository.GetActiveByIdAsync(challengeId, userId);
             if (challenge == null)
             {
@@ -138,7 +138,7 @@ namespace GRA.Domain.Service
 
             return challenge;
         }
-
+        
         public async Task<Challenge> MCGetChallengeDetailsAsync(int challengeId)
         {
             int authUserId = GetClaimId(ClaimType.UserId);
@@ -350,16 +350,23 @@ namespace GRA.Domain.Service
             }
         }
 
-        public async Task<IEnumerable<ChallengeTask>> GetChallengeTasksAsync(int challengeId)
+        public async Task<IEnumerable<ChallengeTask>> GetChallengeTasksAsync(int challengeId, int? userId=null)
         {
-            int? userId = null;
-            if (GetAuthUser().Identity.IsAuthenticated)
+            if (userId == null && GetAuthUser().Identity.IsAuthenticated)
             {
                 userId = GetActiveUserId();
             }
             return await _challengeRepository.GetChallengeTasksAsync(challengeId, userId);
         }
 
+        public async Task<ChallengeTask> GetChallengeTaskAsync(int taskId, int userId)
+        {
+            return await _challengeRepository.GetChallengeTaskAsync(taskId, userId);
+        }
+        public async Task<ICollection<ChallengeTask>> GetApprovalListAsync()
+        {
+            return await _challengeRepository.GetApprovalListAsync();
+        }
         public async Task<ICollection<Trigger>> GetDependentsAsync(int challengeId)
         {
             return await _triggerRepository.GetChallengeDependentsAsync(challengeId);

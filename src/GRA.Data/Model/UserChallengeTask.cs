@@ -9,6 +9,8 @@ namespace GRA.Data.Model
         public int ChallengeTaskId { get; set; }
         public ChallengeTask ChallengeTask { get; set; }
         public bool IsCompleted { get; set; }
+        public bool SubmissionNeedsApproval { get; set; }
+        public string SubmissionText { get; set; }
         public DateTime CreatedAt { get; set; }
         public int? UserLogId { get; set; }
         public int? BookId { get; set; }

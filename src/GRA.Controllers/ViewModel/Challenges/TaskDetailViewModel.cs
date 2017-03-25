@@ -8,6 +8,8 @@ namespace GRA.Controllers.ViewModel.Challenges
         public string TaskType { get; set; }
         public string BookCover { get; set; }
         public string Description { get; set; }
+        public string SubmissionText { get; set; }
+        public bool? SubmissionNeedsApproval { get; set; }
         public string Url { get; set; }
     }
 }

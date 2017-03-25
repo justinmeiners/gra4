@@ -6,6 +6,7 @@ namespace GRA.Domain.Model
 {
     public class ChallengeTask : Abstract.BaseDomainEntity
     {
+        public Challenge Challenge { get; set; }
         [Required]
         public int ChallengeId { get; set; }
         [Required]
@@ -32,7 +33,12 @@ namespace GRA.Domain.Model
         public ChallengeTaskType ChallengeTaskType { get; set; }
         public bool? IsCompleted { get; set; }
         public DateTime? CompletedAt { get; set; }
+        public bool? SubmissionNeedsApproval { get; set; }
+        public string SubmissionText { get; set; }
         public int? ActivityCount { get; set; }
         public int? PointTranslationId { get; set; }
+
+        public int? UserId {get; set;}
+        public User User { get; set; }
     }
 }

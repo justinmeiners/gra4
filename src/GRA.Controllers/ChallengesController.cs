@@ -138,8 +138,11 @@ namespace GRA.Controllers
                     Id = task.Id,
                     IsCompleted = task.IsCompleted ?? false,
                     TaskType = task.ChallengeTaskType.ToString(),
-                    Url = task.Url
+                    Url = task.Url,
+                    SubmissionText = task.SubmissionText,
+                    SubmissionNeedsApproval = task.SubmissionNeedsApproval ?? false,
                 };
+
                 if (task.ChallengeTaskType.ToString() == "Book")
                 {
                     string description = $"Read <strong><em>{task.Title}</em></strong>";
@@ -163,13 +166,29 @@ namespace GRA.Controllers
         public async Task<IActionResult> CompleteTasks(ChallengeDetailViewModel model)
         {
             List<ChallengeTask> tasks = _mapper.Map<List<ChallengeTask>>(model.Tasks);
+
             try
             {
+                var challenge = await _challengeService.GetChallengeDetailsAsync(model.Challenge.Id);
+
+                foreach (var task in tasks)
+                {
+                    var challengeTask = challenge.Tasks.Where(_ => _.Id == task.Id).SingleOrDefault();
+                    if (challengeTask.ChallengeTaskType == ChallengeTaskType.Submission)
+                    {
+                        if (challengeTask.IsCompleted ?? false)
+                        {
+                            task.IsCompleted = true;
+                            task.SubmissionText = challengeTask.SubmissionText;
+                        }
+                    }
+                }
+
                 var completed = await _activityService.UpdateChallengeTasksAsync(model.Challenge.Id, tasks);
+
                 if (!completed)
                 {
-                    var challenge
-                        = await _challengeService.GetChallengeDetailsAsync(model.Challenge.Id);
+                    challenge  = await _challengeService.GetChallengeDetailsAsync(model.Challenge.Id);
                     if (challenge.TasksToComplete != null
                         && challenge.TasksToComplete > 0)
                     {

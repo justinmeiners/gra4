@@ -1,4 +1,5 @@
 ﻿@model GRA.Controllers.ViewModel.Challenges.ChallengeDetailViewModel
+@using GRA.Domain.Model;
 
 <form asp-controller="Challenges" asp-action="CompleteTasks" method="post" role="form">
     <div class="row">
@@ -25,7 +26,7 @@
                 </div>
                 <table class="table table-striped" style="margin-top: 1em;">
                     <tr>
-                        @if (Model.IsActive && !(Model.Challenge.IsCompleted == true))
+                        @if (Model.IsActive && Model.Challenge.IsCompleted == false)
                         {
                             <th class="text-center">Complete</th>
                         }
@@ -33,18 +34,56 @@
                     </tr>
                     @for (int i = 0; i < Model.Tasks.Count; i++)
                     {
+                        var task = Model.Tasks[i];
                         <tr>
                             @if (Model.IsActive && !(Model.Challenge.IsCompleted == true))
                             {
-                                <td class="text-center challenge-checkbox-container" style="vertical-align: middle;">
+                                <td class="text-center col-xs-1 challenge-checkbox-container" style="vertical-align: middle;">
                                     <input asp-for="Tasks[i].Id" type="hidden" />
-                                    <input asp-for="Tasks[i].IsCompleted" type="checkbox" />
+
+                                    @if (task.TaskType == ChallengeTaskType.Submission.ToString())
+                                    {
+                                        <input asp-for="Tasks[i].IsCompleted" type="checkbox" disabled/>
+                                    }
+                                    else
+                                    {
+                                        <input asp-for="Tasks[i].IsCompleted" type="checkbox"/>
+                                    }
                                 </td>
                             }
                             <td>
                                 <div>
                                     @Html.Raw(Model.Tasks[i].Description)
                                 </div>
+
+                                @if (task.TaskType == ChallengeTaskType.Submission.ToString())
+                                {
+                                    @if (Model.Challenge.IsCompleted ?? false || task.IsCompleted)
+                                    {
+                                        <p style="color: gray">&quot;@Model.Tasks[i].SubmissionText&quot;</p>
+                                    }
+                                    else
+                                    {
+                                        <br/>
+                                        <input asp-for="Tasks[i].SubmissionText" class="form-control"/>
+
+                                        @if (!String.IsNullOrEmpty(task.SubmissionText))
+                                        {
+                                            @if (task.SubmissionNeedsApproval ?? false)
+                                            {
+                                                <p style="padding: 4px" class="bg-success">
+                                                    Awaiting approval...
+                                                </p>
+                                            }
+                                            else
+                                            {
+                                                <p style="padding: 4px" class="bg-danger">
+                                                    Rejected. Try writing a different response.
+                                                </p>
+                                            }
+                                        }
+                                    }
+                                }
                             </td>
                         </tr>
                     }

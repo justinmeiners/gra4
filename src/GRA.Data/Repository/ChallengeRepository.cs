@@ -146,6 +146,7 @@ namespace GRA.Data.Repository
                         .AsNoTracking()
                         .Where(_ => _.UserId == userId && _.ChallengeId == id)
                         .SingleOrDefaultAsync();
+
                     if (challengeStatus != null)
                     {
                         challenge.IsCompleted = true;
@@ -162,10 +163,17 @@ namespace GRA.Data.Repository
                         var task = challenge.Tasks
                             .Where(_ => _.Id == userChallengeTask.ChallengeTaskId)
                             .SingleOrDefault();
-                        if (task != null && userChallengeTask.IsCompleted)
+
+                        if (task != null)
                         {
-                            task.IsCompleted = true;
-                            task.CompletedAt = userChallengeTask.CreatedAt;
+                            if (userChallengeTask.IsCompleted)
+                            {
+                                task.IsCompleted = true;
+                                task.CompletedAt = userChallengeTask.CreatedAt;
+                            }
+
+                            task.SubmissionText = userChallengeTask.SubmissionText;
+                            task.SubmissionNeedsApproval = userChallengeTask.SubmissionNeedsApproval;
                         }
                     }
                 }
@@ -216,6 +224,7 @@ namespace GRA.Data.Repository
         public async Task<IEnumerable<ChallengeTaskUpdateStatus>>
             UpdateUserChallengeTasksAsync(int userId, IEnumerable<ChallengeTask> challengeTasks)
         {
+            
             var result = new List<ChallengeTaskUpdateStatus>();
             foreach (var updatedChallengeTask in challengeTasks)
             {
@@ -223,16 +232,21 @@ namespace GRA.Data.Repository
                     .AsNoTracking()
                     .Where(_ => _.Id == updatedChallengeTask.Id)
                     .SingleAsync();
-
+                    
                 var status = new ChallengeTaskUpdateStatus
                 {
+                    IsComplete = updatedChallengeTask.IsCompleted ?? false,
                     ChallengeTask = _mapper.Map<ChallengeTask>(dataSourceChallengeTask),
-                    IsComplete = updatedChallengeTask.IsCompleted ?? false
                 };
-                var savedChallengeTask = await _context
-                    .UserChallengeTasks.Where(_ => _.UserId == userId
-                     && _.ChallengeTaskId == updatedChallengeTask.Id)
-                     .SingleOrDefaultAsync();
+    
+                var savedChallengeTask = await _context.UserChallengeTasks
+                                                .Where(_ => _.UserId == userId
+                                                && _.ChallengeTaskId == updatedChallengeTask.Id)
+                                                .SingleOrDefaultAsync();
+
+                var hasSubmission = !String.IsNullOrEmpty(updatedChallengeTask.SubmissionText);
+                var changedSubmission = hasSubmission && savedChallengeTask != null && 
+                                        updatedChallengeTask.SubmissionText != savedChallengeTask.SubmissionText;
 
                 if (savedChallengeTask == null)
                 {
@@ -241,13 +255,32 @@ namespace GRA.Data.Repository
                     {
                         ChallengeTaskId = updatedChallengeTask.Id,
                         UserId = userId,
-                        IsCompleted = updatedChallengeTask.IsCompleted ?? false
+                        IsCompleted = status.IsComplete,
+                        SubmissionNeedsApproval = !status.IsComplete && hasSubmission,
+                        SubmissionText = updatedChallengeTask.SubmissionText,
                     });
                 }
                 else
                 {
+                    var needsApproval = savedChallengeTask.SubmissionNeedsApproval || changedSubmission;
+
+                    if (!status.IsComplete && hasSubmission)
+                    {
+                        if (updatedChallengeTask.SubmissionNeedsApproval != null)
+                        {
+                            needsApproval = updatedChallengeTask.SubmissionNeedsApproval.Value;
+                        }
+                    }
+                    else
+                    {
+                        needsApproval = false;
+                    }
+
+                    // submissions cannot be unapproved by the user
                     status.WasComplete = savedChallengeTask.IsCompleted;
-                    savedChallengeTask.IsCompleted = updatedChallengeTask.IsCompleted ?? false;
+                    savedChallengeTask.IsCompleted = status.IsComplete;
+                    savedChallengeTask.SubmissionText = updatedChallengeTask.SubmissionText;
+                    savedChallengeTask.SubmissionNeedsApproval = needsApproval;
                     _context.UserChallengeTasks.Update(savedChallengeTask);
                 }
                 result.Add(status);
@@ -375,6 +408,83 @@ namespace GRA.Data.Repository
                 .AsNoTracking()
                 .Where(_ => _.ChallengeId == challengeId)
                 .AnyAsync();
+        }
+
+        public async Task<ChallengeTask> GetChallengeTaskAsync(int taskId, int userId)        
+        {
+            var userChallengeTask = await _context.UserChallengeTasks
+                .AsNoTracking()
+                .Where(_ => _.ChallengeTaskId == taskId && _.UserId == userId)
+                .SingleOrDefaultAsync();
+
+            var task = _context.ChallengeTasks
+                .AsNoTracking()
+                .Where(_ => _.Id == userChallengeTask.ChallengeTaskId)
+                .ProjectTo<ChallengeTask>()
+                .SingleOrDefault();
+
+            if (task != null)
+            {
+                if (userChallengeTask.IsCompleted)
+                {
+                    task.IsCompleted = true;
+                    task.CompletedAt = userChallengeTask.CreatedAt;
+                }
+
+                task.SubmissionText = userChallengeTask.SubmissionText;
+                task.SubmissionNeedsApproval = userChallengeTask.SubmissionNeedsApproval;
+            }
+
+            return task;
+        }
+        public async Task<ICollection<ChallengeTask>> GetApprovalListAsync()
+        {
+            var userChallengeTasks = await _context.UserChallengeTasks
+                    .AsNoTracking()
+                    .Where(_ => _.IsCompleted == false && _.SubmissionNeedsApproval && _.SubmissionText != null && _.SubmissionText.Length > 0)
+                    .ToListAsync();
+
+            var taskList = new List<ChallengeTask>();
+
+            foreach (var userChallengeTask in userChallengeTasks)
+            {
+                var task = _context.ChallengeTasks
+                        .AsNoTracking()
+                        .Where(_ => _.Id == userChallengeTask.ChallengeTaskId)
+                        .ProjectTo<ChallengeTask>()
+                        .SingleOrDefault();
+
+                var user = _context.Users
+                    .AsNoTracking()
+                    .Where(_ => _.Id == userChallengeTask.UserId)
+                    .ProjectTo<User>()
+                    .SingleOrDefault();
+
+                var challenge = _context.Challenges
+                    .AsNoTracking()
+                    .Where(_ => _.Id == task.ChallengeId)
+                    .ProjectTo<Challenge>()
+                    .SingleOrDefault();
+
+                if (task != null)
+                {
+                    if (userChallengeTask.IsCompleted)
+                    {
+                        task.IsCompleted = true;
+                        task.CompletedAt = userChallengeTask.CreatedAt;
+                    }
+
+                    task.SubmissionText = userChallengeTask.SubmissionText;
+                    task.SubmissionNeedsApproval = userChallengeTask.SubmissionNeedsApproval;
+                    task.UserId = userChallengeTask.UserId;
+                    task.User = user;
+                    task.Challenge = challenge;
+                }
+
+                taskList.Add(task);
+            }
+            
+            return taskList;
         }
     }
 }
