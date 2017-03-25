@@ -26,17 +26,20 @@ namespace GRA.Controllers.MissionControl
         private readonly ILogger<ChallengesController> _logger;
         private readonly BadgeService _badgeService;
         private readonly ChallengeService _challengeService;
+        private readonly ActivityService _activityService;
         private readonly SiteService _siteService;
         public ChallengesController(ILogger<ChallengesController> logger,
             ServiceFacade.Controller context,
             BadgeService badgeService,
             ChallengeService challengeService,
+            ActivityService activityService,
             SiteService siteService)
             : base(context)
         {
             _logger = Require.IsNotNull(logger, nameof(logger));
             _badgeService = Require.IsNotNull(badgeService, nameof(badgeService));
             _challengeService = Require.IsNotNull(challengeService, nameof(challengeService));
+            _activityService = Require.IsNotNull(activityService, nameof(activityService));
             _siteService = Require.IsNotNull(siteService, nameof(SiteService));
             PageTitle = "Challenges";
         }
@@ -686,5 +689,32 @@ namespace GRA.Controllers.MissionControl
             return RedirectToAction("Edit", new { id = viewModel.Challenge.Id });
         }
         #endregion
+
+        public async Task<IActionResult> Approve()
+        {
+            var tasks = await _challengeService.GetApprovalListAsync();
+            
+            var viewModel = new ChallengesApprovalListViewModel
+            {
+                Tasks = tasks,
+            };
+
+            return View("Approve", viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ApproveTask(int challengeId, int taskId, int userId, bool approve)
+        {
+            var challenge = await _challengeService.GetChallengeDetailsAsync(challengeId, userId);
+
+            var task = challenge.Tasks.Where(_ => _.Id == taskId).SingleOrDefault();
+            task.IsCompleted = approve;
+            task.SubmissionNeedsApproval = false;
+
+            await _activityService.UpdateChallengeTasksAsync(challengeId, challenge.Tasks);
+
+            return RedirectToAction("Approve");
+        }
     }
+    
 }

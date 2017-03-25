@@ -279,8 +279,13 @@ namespace GRA.Domain.Service
         public async Task<bool> UpdateChallengeTasksAsync(int challengeId,
             IEnumerable<ChallengeTask> challengeTasks)
         {
-            VerifyCanLog();
             int activeUserId = GetActiveUserId();
+            return await UpdateChallengeTasksAsync(challengeId, challengeTasks, activeUserId);
+        }
+        public async Task<bool> UpdateChallengeTasksAsync(int challengeId,
+            IEnumerable<ChallengeTask> challengeTasks, int userId)
+        {
+            VerifyCanLog();
             int authUserId = GetClaimId(ClaimType.UserId);
 
             var activeUser = await _userRepository.GetByIdAsync(activeUserId);
@@ -293,7 +298,7 @@ namespace GRA.Domain.Service
                 throw new GraException("Challenge tasks cannot be completed while there is a pending questionnaire to be taken.");
             }
 
-            var challenge = await _challengeRepository.GetActiveByIdAsync(challengeId, activeUserId);
+            var challenge = await _challengeRepository.GetActiveByIdAsync(challengeId, userId);
 
             if (challenge.IsCompleted == true)
             {
@@ -301,11 +306,11 @@ namespace GRA.Domain.Service
                 throw new GraException("Challenge is already completed.");
             }
 
-            var updateStatuses = await _challengeRepository.UpdateUserChallengeTasksAsync(activeUserId,
+            var updateStatuses = await _challengeRepository.UpdateUserChallengeTasksAsync(userId,
                 challengeTasks);
 
             // re-fetch challenge with tasks completed
-            challenge = await _challengeRepository.GetActiveByIdAsync(challengeId, activeUserId);
+            challenge = await _challengeRepository.GetActiveByIdAsync(challengeId, userId);
 
             // loop tasks to see if we need to perform any additional point translation/book tasks
             foreach (var updateStatus in updateStatuses)
@@ -334,14 +339,14 @@ namespace GRA.Domain.Service
                                     ChallengeId = challenge.Id
                                 };
                             }
-                            _logger.LogDebug($"Logging activity for {activeUserId} based on challenge task {updateStatus.ChallengeTask.Id}");
-                            var userLogResult = await LogActivityAsync(activeUserId,
+                            _logger.LogDebug($"Logging activity for {userId} based on challenge task {updateStatus.ChallengeTask.Id}");
+                            var userLogResult = await LogActivityAsync(userId,
                                 (int)challengeTaskDetails.ActivityCount,
                                 book);
 
                             // update record with user log result
                             _logger.LogDebug($"Update success, recording UserLogId {userLogResult.UserLogId} and BookId {userLogResult.BookId}");
-                            await _challengeRepository.UpdateUserChallengeTaskAsync(activeUserId,
+                            await _challengeRepository.UpdateUserChallengeTaskAsync(userId,
                                 updateStatus.ChallengeTask.Id,
                                 userLogResult.UserLogId,
                                 userLogResult.BookId);
@@ -351,22 +356,22 @@ namespace GRA.Domain.Service
                             // person un-completed the task
                             // unwind the points they earned
                             var challengeTaskInfo = await _challengeRepository
-                                .GetUserChallengeTaskResultAsync(activeUserId,
+                                .GetUserChallengeTaskResultAsync(userId,
                                     updateStatus.ChallengeTask.Id);
                             if (challengeTaskInfo == null)
                             {
-                                _logger.LogError($"Unable to unwind points for {activeUserId} on {updateStatus.ChallengeTask.Id} - no UserLogId recorded");
+                                _logger.LogError($"Unable to unwind points for {userId} on {updateStatus.ChallengeTask.Id} - no UserLogId recorded");
                             }
                             else
                             {
-                                _logger.LogDebug($"Unwinding points for {activeUserId} earned in UserLogId {challengeTaskInfo.UserLogId}");
-                                await RemoveActivityAsync(activeUserId, challengeTaskInfo.UserLogId);
+                                _logger.LogDebug($"Unwinding points for {userId} earned in UserLogId {challengeTaskInfo.UserLogId}");
+                                await RemoveActivityAsync(userId, challengeTaskInfo.UserLogId);
                                 // remove the title
                                 if (challengeTaskDetails.ChallengeTaskType == ChallengeTaskType.Book
                                     && challengeTaskInfo.BookId != null)
                                 {
-                                    _logger.LogDebug($"Removing for {activeUserId} book registration {challengeTaskInfo.BookId}");
-                                    await RemoveBookAsync(activeUserId, (int)challengeTaskInfo.BookId);
+                                    _logger.LogDebug($"Removing for {userId} book registration {challengeTaskInfo.BookId}");
+                                    await RemoveBookAsync(userId, (int)challengeTaskInfo.BookId);
                                 }
                             }
                         }
@@ -382,23 +387,23 @@ namespace GRA.Domain.Service
                 {
                     IsDeleted = false,
                     PointsEarned = pointsAwarded,
-                    UserId = activeUserId,
+                    UserId = userId,
                     ChallengeId = challengeId
                 };
                 if (challenge.BadgeId != null)
                 {
                     userLog.BadgeId = challenge.BadgeId;
                 }
-                await _userLogRepository.AddSaveAsync(activeUserId, userLog);
+                await _userLogRepository.AddSaveAsync(userId, userLog);
 
                 // update the score in the user record
                 var postUpdateUser = await AddPointsSaveAsync(authUserId,
-                    activeUserId,
-                    activeUserId,
+                    userId,
+                    userId,
                     pointsAwarded);
 
                 string badgeNotification = null;
-                Badge badge = await AwardBadgeAsync(activeUserId, challenge.BadgeId);
+                Badge badge = await AwardBadgeAsync(userId, challenge.BadgeId);
                 if (badge != null)
                 {
                     badgeNotification = $" and a badge";
@@ -409,7 +414,7 @@ namespace GRA.Domain.Service
                 {
                     PointsEarned = pointsAwarded,
                     Text = $"<span class=\"fa fa-star\"></span> You earned <strong>{pointsAwarded} points{badgeNotification}</strong> for completing the challenge: <strong>{challenge.Name}</strong>!",
-                    UserId = activeUserId,
+                    UserId = userId,
                     ChallengeId = challengeId
                 };
                 if (badge != null)

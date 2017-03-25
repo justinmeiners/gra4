@@ -19,7 +19,7 @@ namespace GRA.Domain.Repository
             int userId,
             string search = default(string));
         Task<IEnumerable<ChallengeTaskUpdateStatus>>
-            UpdateUserChallengeTasksAsync(int userId, IEnumerable<ChallengeTask> challengeTasks);
+        UpdateUserChallengeTasksAsync(int userId, IEnumerable<ChallengeTask> challengeTasks);
         Task UpdateUserChallengeTaskAsync(
             int userId,
             int challengeTaskId,
@@ -28,5 +28,8 @@ namespace GRA.Domain.Repository
         Task<ActivityLogResult> GetUserChallengeTaskResultAsync(int userId, int challengeTaskId);
         Task SetValidationAsync(int userId, int challengeId, bool valid);
         Task<bool> HasDependentsAsync(int challengeId);
+
+        Task<ChallengeTask> GetChallengeTaskAsync(int taskId, int userId);
+        Task<ICollection<ChallengeTask>> GetApprovalListAsync();
     }
 }
