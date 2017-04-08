@@ -63,6 +63,13 @@ namespace GRA.Domain.Service
                 SiteId = siteId,
                 AchieverPointAmount = 100,
                 Name = "Reading Program",
+                AskCard = false,
+                CardRequired = false,
+                AskEmail = true,
+                EmailRequired = false,
+                EditEmail = true,
+                AskPhoneNumber = true,
+                PhoneNumberRequired = false,
             };
             program = await _programRepository.AddSaveAsync(userId, program);
 
@@ -72,6 +79,7 @@ namespace GRA.Domain.Service
                 ActivityDescription = "book",
                 ActivityDescriptionPlural = "books",
                 IsSingleEvent = true,
+                AskBook = true,
                 PointsEarned = 10,
                 ProgramId = program.Id,
                 TranslationName = "One book, ten points",

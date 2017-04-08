@@ -110,6 +110,9 @@ namespace GRA.Controllers
                 viewModel.ProgramId = programList.SingleOrDefault().Id;
                 viewModel.ShowAge = program.AskAge;
                 viewModel.ShowSchool = program.AskSchool;
+                viewModel.ShowEmail = program.AskEmail;
+                viewModel.ShowPhoneNumber = program.AskPhoneNumber;
+                viewModel.ShowCard = program.AskCard;
             }
 
             return View(viewModel);
@@ -130,11 +133,18 @@ namespace GRA.Controllers
 
             bool askAge = false;
             bool askSchool = false;
+            bool askEmail = false;
+            bool askCard = false;
+            bool askPhoneNumber = false;
             if (model.ProgramId.HasValue)
             {
                 var program = await _siteService.GetProgramByIdAsync(model.ProgramId.Value);
                 askAge = program.AskAge;
                 askSchool = program.AskSchool;
+                askEmail = program.AskEmail;
+                askCard = program.AskCard;
+                askPhoneNumber = program.AskPhoneNumber;
+
                 if (program.AgeRequired && !model.Age.HasValue)
                 {
                     ModelState.AddModelError("Age", "The Age field is required.");
@@ -156,6 +166,18 @@ namespace GRA.Controllers
                         || program.SchoolRequired))
                 {
                     ModelState.AddModelError("SchoolDistrictId", "The School District field is required.");
+                }
+                if (program.CardRequired && string.IsNullOrWhiteSpace(model.Card))
+                {
+                    ModelState.AddModelError("Card", "The library card field is required.");
+                }
+                if (program.EmailRequired && string.IsNullOrWhiteSpace(model.Email))
+                {
+                    ModelState.AddModelError("Email", "The email field is required.");
+                }
+                if (program.PhoneNumberRequired && string.IsNullOrWhiteSpace(model.PhoneNumber))
+                {
+                    ModelState.AddModelError("PhoneNumber", "The phone number field is required.");
                 }
             }
 
@@ -180,6 +202,18 @@ namespace GRA.Controllers
                 {
                     model.SchoolId = null;
                     model.EnteredSchoolName = null;
+                }
+                if (!askCard)
+                {
+                    model.Card = null;
+                }
+                if (!askEmail)
+                {
+                    model.Email = null;
+                }
+                if (!askPhoneNumber)
+                {
+                    model.PhoneNumber = null;
                 }
 
                 User user = _mapper.Map<User>(model);
@@ -231,6 +265,9 @@ namespace GRA.Controllers
             model.RequirePostalCode = site.RequirePostalCode;
             model.ShowAge = askAge;
             model.ShowSchool = askSchool;
+            model.ShowEmail = askEmail;
+            model.ShowPhoneNumber = askPhoneNumber;
+            model.ShowCard = askCard;
 
             var districtList = await _schoolService.GetDistrictsAsync();
             if (model.SchoolId.HasValue)
@@ -378,7 +415,12 @@ namespace GRA.Controllers
             var programViewObject = _mapper.Map<List<ProgramViewModel>>(programList);
             var districtList = await _schoolService.GetDistrictsAsync();
 
-            Step2ViewModel viewModel = new Step2ViewModel()
+            if (programList.Count() > 1)
+            {
+                programList = programList.Prepend(new Program() { Id = -1 });
+            }
+
+            var viewModel = new Step2ViewModel()
             {
                 ProgramJson = Newtonsoft.Json.JsonConvert.SerializeObject(programViewObject),
                 ProgramList = new SelectList(programList.ToList(), "Id", "Name"),
@@ -392,6 +434,7 @@ namespace GRA.Controllers
                 viewModel.ProgramId = programList.SingleOrDefault().Id;
                 viewModel.ShowAge = program.AskAge;
                 viewModel.ShowSchool = program.AskSchool;
+                viewModel.ShowCard = program.AskCard;
             }
 
             return View(viewModel);
@@ -412,11 +455,15 @@ namespace GRA.Controllers
 
             bool askAge = false;
             bool askSchool = false;
+            bool askCard = false;
+
             if (model.ProgramId.HasValue)
             {
                 var program = await _siteService.GetProgramByIdAsync(model.ProgramId.Value);
                 askAge = program.AskAge;
                 askSchool = program.AskSchool;
+                askCard = program.AskCard;
+
                 if (program.AgeRequired && !model.Age.HasValue)
                 {
                     ModelState.AddModelError("Age", "The Age field is required.");
@@ -438,6 +485,11 @@ namespace GRA.Controllers
                         || program.SchoolRequired))
                 {
                     ModelState.AddModelError("SchoolDistrictId", "The School District field is required.");
+                }
+
+                if (program.CardRequired && string.IsNullOrWhiteSpace(model.Card))
+                {
+                    ModelState.AddModelError("Card", "The Library Card field is required");
                 }
             }
 
@@ -464,6 +516,11 @@ namespace GRA.Controllers
                     model.EnteredSchoolName = null;
                 }
 
+                if (!askAge)
+                {
+                    model.Card = null;
+                }
+
                 TempData[TempStep2] = Newtonsoft.Json.JsonConvert.SerializeObject(model);
                 return RedirectToAction("Step3");
             }
@@ -476,6 +533,7 @@ namespace GRA.Controllers
             model.ProgramJson = Newtonsoft.Json.JsonConvert.SerializeObject(programViewObject);
             model.ShowAge = askAge;
             model.ShowSchool = askSchool;
+            model.ShowCard = askCard;
 
             var districtList = await _schoolService.GetDistrictsAsync();
             if (model.SchoolId.HasValue)
@@ -508,6 +566,7 @@ namespace GRA.Controllers
         public async Task<IActionResult> Step3()
         {
             var site = await GetCurrentSiteAsync();
+
             if (site.SinglePageSignUp)
             {
                 return RedirectToAction("Index");
@@ -521,9 +580,26 @@ namespace GRA.Controllers
                 return RedirectToAction("Step2");
             }
 
-            PageTitle = $"{site.Name} - Join Now!";
+            string step2Json = (string)TempData.Peek(TempStep2);
+            var step2 = Newtonsoft.Json.JsonConvert.DeserializeObject<Step2ViewModel>(step2Json);
 
-            return View();
+            bool askEmail = false;
+            bool askPhone = false;
+            if (step2.ProgramId.HasValue)
+            {
+                var program = await _siteService.GetProgramByIdAsync(step2.ProgramId.Value);
+                askEmail = program.AskEmail;
+                askPhone = program.AskPhoneNumber;
+            }
+
+            var model = new Step3ViewModel
+            {
+                ShowEmail = askEmail,
+                ShowPhoneNumber = askPhone,
+            };
+
+            PageTitle = $"{site.Name} - Join Now!";
+            return View(model);
         }
 
         [HttpPost]
@@ -543,14 +619,35 @@ namespace GRA.Controllers
                 return RedirectToAction("Step2");
             }
 
+            string step1Json = (string)TempData.Peek(TempStep1);
+            string step2Json = (string)TempData.Peek(TempStep2);
+
+            var step1 = Newtonsoft.Json.JsonConvert.DeserializeObject<Step1ViewModel>(step1Json);
+            var step2 = Newtonsoft.Json.JsonConvert.DeserializeObject<Step2ViewModel>(step2Json);
+
+            bool askEmail = false;
+            bool askPhone = false;
+            if (step2.ProgramId.HasValue)
+            {
+                var program = await _siteService.GetProgramByIdAsync(step2.ProgramId.Value);
+                askEmail = program.AskEmail;
+                askPhone = program.AskPhoneNumber;
+
+                if (program.EmailRequired && string.IsNullOrWhiteSpace(model.Email))
+                {
+                    ModelState.AddModelError("Email", "The email field is required.");
+                }
+                if (program.PhoneNumberRequired && string.IsNullOrWhiteSpace(model.PhoneNumber))
+                {
+                    ModelState.AddModelError("PhoneNumber", "The phone number field is required.");
+                }
+            }
+
+            model.ShowEmail = askEmail;
+            model.ShowPhoneNumber = askPhone;
+
             if (ModelState.IsValid)
             {
-                string step1Json = (string)TempData.Peek(TempStep1);
-                string step2Json = (string)TempData.Peek(TempStep2);
-
-                var step1 = Newtonsoft.Json.JsonConvert.DeserializeObject<Step1ViewModel>(step1Json);
-                var step2 = Newtonsoft.Json.JsonConvert.DeserializeObject<Step2ViewModel>(step2Json);
-
                 User user = new User();
                 _mapper.Map<Step1ViewModel, User>(step1, user);
                 _mapper.Map<Step2ViewModel, User>(step2, user);

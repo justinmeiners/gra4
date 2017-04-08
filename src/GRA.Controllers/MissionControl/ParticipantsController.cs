@@ -223,6 +223,9 @@ namespace GRA.Controllers.MissionControl
                 viewModel.ProgramId = programList.SingleOrDefault().Id;
                 viewModel.ShowAge = program.AskAge;
                 viewModel.ShowSchool = program.AskSchool;
+                viewModel.ShowCard = program.AskCard;
+                viewModel.ShowEmail = program.AskEmail;
+                viewModel.ShowPhoneNumber = program.AskPhoneNumber;
             }
 
             return View(viewModel);
@@ -239,11 +242,19 @@ namespace GRA.Controllers.MissionControl
 
             bool askAge = false;
             bool askSchool = false;
+            bool askEmail = false;
+            bool askCard = false;
+            bool askPhoneNumber = false;
+
             if (model.ProgramId.HasValue)
             {
                 var program = await _siteService.GetProgramByIdAsync(model.ProgramId.Value);
                 askAge = program.AskAge;
                 askSchool = program.AskSchool;
+                askEmail = program.AskEmail;
+                askCard = program.AskCard;
+                askPhoneNumber = program.AskPhoneNumber;
+
                 if (program.AgeRequired && !model.Age.HasValue)
                 {
                     ModelState.AddModelError("Age", "The Age field is required.");
@@ -265,6 +276,19 @@ namespace GRA.Controllers.MissionControl
                         || program.SchoolRequired))
                 {
                     ModelState.AddModelError("SchoolDistrictId", "The School District field is required.");
+                }
+
+                if (program.CardRequired && string.IsNullOrWhiteSpace(model.Card))
+                {
+                    ModelState.AddModelError("Card", "The library card field is required.");
+                }
+                if (program.EmailRequired && string.IsNullOrWhiteSpace(model.Email))
+                {
+                    ModelState.AddModelError("Email", "The email field is required.");
+                }
+                if (program.PhoneNumberRequired && string.IsNullOrWhiteSpace(model.PhoneNumber))
+                {
+                    ModelState.AddModelError("PhoneNumber", "The phone number field is required.");
                 }
             }
 
@@ -289,6 +313,19 @@ namespace GRA.Controllers.MissionControl
                 {
                     model.SchoolId = null;
                     model.EnteredSchoolName = null;
+                }
+
+                if (!askCard)
+                {
+                    model.Card = null;
+                }
+                if (!askEmail)
+                {
+                    model.Email = null;
+                }
+                if (!askPhoneNumber)
+                {
+                    model.PhoneNumber = null;
                 }
 
                 User user = _mapper.Map<User>(model);
@@ -335,6 +372,9 @@ namespace GRA.Controllers.MissionControl
             model.RequirePostalCode = site.RequirePostalCode;
             model.ShowAge = askAge;
             model.ShowSchool = askSchool;
+            model.ShowEmail = askEmail;
+            model.ShowPhoneNumber = askPhoneNumber;
+            model.ShowCard = askCard;
 
             var districtList = await _schoolService.GetDistrictsAsync();
             if (model.SchoolId.HasValue)
@@ -395,7 +435,7 @@ namespace GRA.Controllers.MissionControl
                 var userProgram = programList.Where(_ => _.Id == user.ProgramId).SingleOrDefault();
                 var programViewObject = _mapper.Map<List<ProgramViewModel>>(programList);
 
-                ParticipantsDetailViewModel viewModel = new ParticipantsDetailViewModel()
+                var viewModel = new ParticipantsDetailViewModel()
                 {
                     User = user,
                     Id = user.Id,
@@ -407,7 +447,10 @@ namespace GRA.Controllers.MissionControl
                     CanEditDetails = UserHasPermission(Permission.EditParticipants),
                     RequirePostalCode = (await GetCurrentSiteAsync()).RequirePostalCode,
                     ShowAge = userProgram.AskAge,
-                    ShowSchool = userProgram.AskSchool,
+                    ShowSchool = userProgram.AskSchool,  
+                    ShowCard = userProgram.AskCard,
+                    ShowEmail = userProgram.AskEmail,
+                    ShowPhoneNumber = userProgram.AskPhoneNumber,                  
                     HasSchoolId = user.SchoolId.HasValue,
                     ProgramJson = Newtonsoft.Json.JsonConvert.SerializeObject(programViewObject),
                     BranchList = new SelectList(branchList.ToList(), "Id", "Name"),
@@ -446,6 +489,7 @@ namespace GRA.Controllers.MissionControl
         {
             var site = await GetCurrentSiteAsync();
             var program = await _siteService.GetProgramByIdAsync(model.User.ProgramId);
+
             if (site.RequirePostalCode && string.IsNullOrWhiteSpace(model.User.PostalCode))
             {
                 ModelState.AddModelError("User.PostalCode", "The Zip Code field is required.");
@@ -473,16 +517,35 @@ namespace GRA.Controllers.MissionControl
                 ModelState.AddModelError("SchoolDistrictId", "The School District field is required.");
             }
 
+            if (program.CardRequired && string.IsNullOrWhiteSpace(model.User.CardNumber))
+            {
+                ModelState.AddModelError("User.CardNumber", "The library card field is required.");
+            }
+            if (program.EmailRequired && string.IsNullOrWhiteSpace(model.User.Email))
+            {
+                ModelState.AddModelError("User.Email", "The email field is required.");
+            }
+            if (program.PhoneNumberRequired && string.IsNullOrWhiteSpace(model.User.PhoneNumber))
+            {
+                ModelState.AddModelError("User.PhoneNumber", "The phone number field is required.");
+            }
+
+            bool askAge = program.AskAge;
+            bool askSchool = program.AskSchool;
+            bool askEmail = program.AskEmail;
+            bool askCard = program.AskCard;
+            bool askPhoneNumber = program.AskPhoneNumber;
+
             if (ModelState.IsValid)
             {
                 try
                 {
                     bool hasSchool = false;
-                    if (!program.AskAge)
+                    if (!askAge)
                     {
                         model.User.Age = null;
                     }
-                    if (program.AskSchool)
+                    if (askSchool)
                     {
                         hasSchool = true;
                         if (model.NewEnteredSchool || model.User.EnteredSchoolId.HasValue)
@@ -494,6 +557,19 @@ namespace GRA.Controllers.MissionControl
                             model.User.EnteredSchoolId = null;
                             model.User.EnteredSchoolName = null;
                         }
+                    }
+                
+                    if (!askCard)
+                    {
+                        model.User.CardNumber = null;
+                    }
+                    if (!askEmail)
+                    {
+                        model.User.Email = null;
+                    }
+                    if (!askPhoneNumber)
+                    {
+                        model.User.PhoneNumber = null;
                     }
 
                     await _userService.MCUpdate(model.User, hasSchool, model.SchoolDistrictId);
@@ -521,8 +597,11 @@ namespace GRA.Controllers.MissionControl
             model.ProgramList = new SelectList(programList.ToList(), "Id", "Name");
             model.ProgramJson = Newtonsoft.Json.JsonConvert.SerializeObject(programViewObject);
             model.RequirePostalCode = site.RequirePostalCode;
-            model.ShowAge = program.AskAge;
-            model.ShowSchool = program.AskSchool;
+            model.ShowAge = askAge;
+            model.ShowSchool = askSchool;
+            model.ShowCard = askCard;
+            model.ShowEmail = askEmail;
+            model.ShowPhoneNumber = askPhoneNumber;
 
             var districtList = await _schoolService.GetDistrictsAsync();
             if (model.User.SchoolId.HasValue)
@@ -852,7 +931,7 @@ namespace GRA.Controllers.MissionControl
                     BranchList = new SelectList(branchList.ToList(), "Id", "Name"),
                     ProgramList = new SelectList(programList.ToList(), "Id", "Name"),
                     SystemList = new SelectList(systemList.ToList(), "Id", "Name"),
-                    SchoolDistrictList = new SelectList(districtList.ToList(), "Id", "Name")
+                    SchoolDistrictList = new SelectList(districtList.ToList(), "Id", "Name"),
                 };
 
                 return View("HouseholdAdd", viewModel);
@@ -883,11 +962,18 @@ namespace GRA.Controllers.MissionControl
 
             bool askAge = false;
             bool askSchool = false;
+            bool askCard = false;
+            bool askEmail = false;
+            bool askPhoneNumber = false;
             if (model.User.ProgramId >= 0)
             {
                 var program = await _siteService.GetProgramByIdAsync(model.User.ProgramId);
                 askAge = program.AskAge;
                 askSchool = program.AskSchool;
+                askCard = program.AskCard;
+                askEmail = program.AskEmail;
+                askPhoneNumber = program.AskPhoneNumber;
+                
                 if (program.AgeRequired && !model.User.Age.HasValue)
                 {
                     ModelState.AddModelError("User.Age", "The Age field is required.");
@@ -909,6 +995,19 @@ namespace GRA.Controllers.MissionControl
                         || program.SchoolRequired))
                 {
                     ModelState.AddModelError("SchoolDistrictId", "The School District field is required.");
+                }
+
+                if (program.CardRequired && string.IsNullOrWhiteSpace(model.User.CardNumber))
+                {
+                    ModelState.AddModelError("User.CardNumber", "The library card field is required.");
+                }
+                if (program.EmailRequired && string.IsNullOrWhiteSpace(model.User.Email))
+                {
+                    ModelState.AddModelError("User.Email", "The email field is required.");
+                }
+                if (program.PhoneNumberRequired && string.IsNullOrWhiteSpace(model.User.PhoneNumber))
+                {
+                    ModelState.AddModelError("User.PhoneNumber", "The phone number field is required.");
                 }
             }
 
@@ -935,6 +1034,18 @@ namespace GRA.Controllers.MissionControl
                     {
                         model.User.SchoolId = null;
                         model.User.EnteredSchoolName = null;
+                    }
+                    if (!askCard)
+                    {
+                        model.User.CardNumber = null;
+                    }
+                    if (!askEmail)
+                    {
+                        model.User.Email = null;
+                    }
+                    if (!askPhoneNumber)
+                    {
+                        model.User.PhoneNumber = null;
                     }
 
                     await _userService.AddHouseholdMemberAsync(headOfHousehold.Id, model.User,
@@ -964,6 +1075,9 @@ namespace GRA.Controllers.MissionControl
             model.RequirePostalCode = site.RequirePostalCode;
             model.ShowAge = askAge;
             model.ShowSchool = askSchool;
+            model.ShowCard = askCard;
+            model.ShowEmail = askEmail;
+            model.ShowPhone = askPhoneNumber;
 
             var districtList = await _schoolService.GetDistrictsAsync();
             if (model.User.SchoolId.HasValue)

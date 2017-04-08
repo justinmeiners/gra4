@@ -38,6 +38,8 @@ namespace GRA.Domain.Model
         [DisplayName("Zip Code")]
         [MaxLength(32)]
         public string PostalCode { get; set; }
+
+        [DisplayName("Library Card")]
         [MaxLength(64)]
         public string CardNumber { get; set; }
         public DateTime? LastAccess { get; set; }
