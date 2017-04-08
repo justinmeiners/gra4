@@ -1,6 +1,5 @@
 ﻿@model GRA.Controllers.ViewModel.Profile.ProfileDetailViewModel
 
-
 <div class="row">
     <div class="col-xs-12 col-sm-10 col-sm-offset-1">
         <div class="panel panel-default">
@@ -8,7 +7,6 @@
                 <span class="lead">My Profile</span>
             </div>
             <div class="panel-body">
-
                 @Html.Partial("_ProfilePartial")
 
                 <form asp-controller="Profile" asp-action="Index" method="post" role="form">
@@ -20,11 +18,10 @@
                             <input asp-for="NewEnteredSchool" type="hidden" />
                             <input asp-for="User.Id" type="hidden" />
                             <input asp-for="User.AvatarId" type="hidden" />
-                            <input asp-for="User.CardNumber" type="hidden" />
                             <input asp-for="User.EnteredSchoolId" type="hidden" />
 
                             @if (!string.IsNullOrWhiteSpace(Model.User.Username))
-            {
+                            {
                                 <div class="row row-spacing">
                                     <div class="col-xs-12">
                                         <label asp-for="User.Username" class="control-label"></label>
@@ -49,35 +46,8 @@
                                 </div>
                             </div>
 
-                            @if (Model.RequirePostalCode)
-            {
-                                <div class="row row-spacing">
-                                    <div class="col-xs-12">
-                                        <label asp-for="User.PostalCode" class="control-label"></label>
-                                        <input asp-for="User.PostalCode" class="form-control" />
-                                        <span asp-validation-for="User.PostalCode" class="text-danger"></span>
-                                    </div>
-                                </div>
-                            }
-
-                            <div class="row row-spacing">
-                                <div class="col-xs-12">
-                                    <label asp-for="User.Email" class="control-label"></label>
-                                    <input asp-for="User.Email" class="form-control" type="email" />
-                                    <span asp-validation-for="User.Email" class="text-danger"></span>
-                                </div>
-                            </div>
-
-                            <div class="row row-spacing">
-                                <div class="col-xs-12">
-                                    <label asp-for="User.PhoneNumber" class="control-label"></label>
-                                    <input asp-for="User.PhoneNumber" class="form-control" type="tel" />
-                                    <span asp-validation-for="User.PhoneNumber" class="text-danger"></span>
-                                </div>
-                            </div>
-
                             @if (Model.SystemList.Count() > 1)
-            {
+                            {
                                 <div class="row row-spacing">
                                     <div class="col-xs-12">
                                         <label asp-for="User.SystemId" class="control-label"></label>
@@ -92,7 +62,7 @@
                             }
 
                             @if (Model.SystemList.Count() > 1 || Model.BranchList.Count() > 1)
-            {
+                            {
                                 <div class="row row-spacing">
                                     <div class="col-xs-12">
                                         <label asp-for="User.BranchId" class="control-label"></label>
@@ -107,11 +77,11 @@
                             }
 
                             @if (Model.ProgramList.Count() > 1)
-            {
+                            {
                                 <div class="row row-spacing">
                                     <div class="col-xs-12">
                                         <label asp-for="User.ProgramId" class="control-label"></label>
-                                        <select asp-for="User.ProgramId" asp-items="Model.ProgramList" class="form-control"></select>
+                                        <select asp-for="User.ProgramId" asp-items="Model.ProgramList" class="form-control" disabled="@(Model.EditProgram ? null : "disabled")"></select>
                                         <span asp-validation-for="User.ProgramId" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -121,11 +91,46 @@
                                 <input asp-for="User.ProgramId" type="hidden" />
                             }
 
+                            <div id="cardField" class="row row-spacing @(Model.ShowCard ? "": "hide")">
+                                <div class="col-xs-12">
+                                    <label asp-for="User.CardNumber" class="control-label"></label>
+                                    <input id="cardFieldInput" asp-for="User.CardNumber" class="form-control" readonly="@(Model.EditCard ? null : "readonly")" />
+                                    <span asp-validation-for="User.CardNumber" class="text-danger"></span>
+                                </div>
+                            </div>
+
                             <div id="ageField" class="row row-spacing @(Model.ShowAge ? "": "hide")">
                                 <div class="col-xs-12">
                                     <label asp-for="User.Age" class="control-label"></label>
-                                    <input asp-for="User.Age" class="form-control" type="text" />
+                                    <input id="ageFieldInput" asp-for="User.Age" class="form-control" type="text" readonly="@(Model.EditAge ? null : "readonly")"/>
                                     <span id="ageMessage" asp-validation-for="User.Age" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            @if (Model.RequirePostalCode)
+                            {
+                                <div class="row row-spacing">
+                                    <div class="col-xs-12">
+                                        <label asp-for="User.PostalCode" class="control-label"></label>
+                                        <input asp-for="User.PostalCode" class="form-control" />
+                                        <span asp-validation-for="User.PostalCode" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            }
+
+                            <div class="row row-spacing @(Model.ShowEmail ? "": "hide")">
+                                <div class="col-xs-12">
+                                    <label asp-for="User.Email" class="control-label"></label>
+                                    <input id="emailFieldInput" asp-for="User.Email" class="form-control" type="email" readonly="@(Model.EditEmail ? null : "readonly")" />
+                                    <span asp-validation-for="User.Email" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="row row-spacing @(Model.ShowPhone ? "": "hide")">
+                                <div class="col-xs-12">
+                                    <label asp-for="User.PhoneNumber" class="control-label"></label>
+                                    <input id="phoneFieldInput" asp-for="User.PhoneNumber" class="form-control" type="tel" readonly="@(Model.EditPhone ? null : "readonly")"/>
+                                    <span asp-validation-for="User.PhoneNumber" class="text-danger"></span>
                                 </div>
                             </div>
 
@@ -232,6 +237,11 @@
             })[0];
             if (selectedProgram != null)
             {
+                $('#ageFieldInput').prop('readonly', !selectedProgram.EditAge);
+                $('#cardFieldInput').prop('readonly', !selectedProgram.EditCard);
+                $('#emailFieldInput').prop('readonly', !selectedProgram.EditEmail);
+                $('#phoneFieldInput').prop('readonly', !selectedProgram.EditPhoneNumber);
+
                 if (selectedProgram.AskAge)
                 {
                     $("#ageField").removeClass("hide");
@@ -249,6 +259,33 @@
                 else
                 {
                     $("#schoolFields").addClass("hide");
+                }
+
+                if (selectedProgram.AskCard)
+                {
+                    $("#cardField").removeClass("hide");
+                }
+                else
+                {
+                    $("#cardField").addClass("hide");
+                }
+
+                if (selectedProgram.AskEmail)
+                {
+                    $("#emailField").removeClass("hide");
+                }
+                else
+                {
+                    $("#emailField").addClass("hide");
+                }
+
+                if (selectedProgram.AskPhoneNumber)
+                {
+                    $("#phoneField").removeClass("hide");
+                }
+                else
+                {
+                    $("#phoneField").addClass("hide");
                 }
             }
         });

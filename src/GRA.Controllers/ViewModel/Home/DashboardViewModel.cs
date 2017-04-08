@@ -12,6 +12,7 @@ namespace GRA.Controllers.ViewModel.Home
         public string ActivityDescriptionPlural { get; set; }
 
         public int? ActivityAmount { get; set; }
+        public bool? AskBook { get; set; }
         public string Title { get; set; }
         public string Author { get; set; }
 

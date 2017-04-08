@@ -30,5 +30,7 @@ namespace GRA.Controllers.ViewModel.Join
         [Phone]
         [MaxLength(15)]
         public string PhoneNumber { get; set; }
+        public bool ShowEmail {get; set; }
+        public bool ShowPhoneNumber {get; set; }
     }
 }

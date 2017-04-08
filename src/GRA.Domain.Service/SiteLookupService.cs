@@ -119,6 +119,8 @@ namespace GRA.Domain.Service
                 OutgoingMailPort = outgoingMailPort,
                 RegistrationOpens = DateTime.Now,
                 ProgramStarts = DateTime.Now,
+                RequirePostalCode = false,
+                AllowProgramSwitch = true,
                 ProgramEnds = DateTime.Now.AddDays(60),
                 AccessClosed = DateTime.Now.AddDays(90),
                 UseDynamicAvatars = true
