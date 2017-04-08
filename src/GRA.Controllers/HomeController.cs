@@ -73,7 +73,8 @@ namespace GRA.Controllers
                     CurrentPointTotal = user.PointsEarned,
                     SingleEvent = pointTranslation.IsSingleEvent,
                     ActivityDescriptionPlural = pointTranslation.ActivityDescriptionPlural,
-                    Badges = badges.Data
+                    Badges = badges.Data,
+                    AskBook = pointTranslation.AskBook,
                 };
 
                 if (site.UseDynamicAvatars)
@@ -200,6 +201,7 @@ namespace GRA.Controllers
                 valid = false;
                 TempData[ActivityErrorMessage] = "Please enter a whole number greater than 0.";
             }
+
             if (string.IsNullOrWhiteSpace(viewModel.Title)
                 && !string.IsNullOrWhiteSpace(viewModel.Author))
             {
@@ -212,6 +214,7 @@ namespace GRA.Controllers
             }
             else
             {
+                // the service ignores the book if title is empty
                 var book = new Domain.Model.Book
                 {
                     Author = viewModel.Author,

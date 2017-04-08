@@ -23,33 +23,6 @@
                 </div>
             </div>
 
-            @if (Model.RequirePostalCode)
-            {
-                <div class="row row-spacing">
-                    <div class="col-xs-12">
-                        <label asp-for="User.PostalCode" class="control-label"></label>
-                        <input asp-for="User.PostalCode" class="form-control" />
-                        <span asp-validation-for="User.PostalCode" class="text-danger"></span>
-                    </div>
-                </div>
-            }
-
-            <div class="row row-spacing">
-                <div class="col-xs-12">
-                    <label asp-for="User.Email" class="control-label"></label>
-                    <input asp-for="User.Email" class="form-control" type="email" />
-                    <span asp-validation-for="User.Email" class="text-danger"></span>
-                </div>
-            </div>
-
-            <div class="row row-spacing">
-                <div class="col-xs-12">
-                    <label asp-for="User.PhoneNumber" class="control-label"></label>
-                    <input asp-for="User.PhoneNumber" class="form-control" type="tel" />
-                    <span asp-validation-for="User.PhoneNumber" class="text-danger"></span>
-                </div>
-            </div>
-
             <div class="row row-spacing">
                 <div class="col-xs-12">
                     <label asp-for="User.SystemId" class="control-label"></label>
@@ -76,11 +49,46 @@
                 </div>
             </div>
 
+            <div id="cardField" class="row row-spacing @(Model.ShowCard ? "": "hide")">
+                <div class="col-xs-12">
+                    <label asp-for="User.CardNumber" class="control-label"></label>
+                    <input asp-for="User.CardNumber" class="form-control" />
+                    <span asp-validation-for="User.CardNumber" class="text-danger"></span>
+                </div>
+            </div>
+
             <div id="ageField" class="row row-spacing @(Model.ShowAge ? "": "hide")">
                 <div class="col-xs-12">
                     <label asp-for="User.Age" class="control-label"></label>
                     <input asp-for="User.Age" class="form-control" type="text" />
                     <span id="ageMessage" asp-validation-for="User.Age" class="text-danger"></span>
+                </div>
+            </div>
+
+            @if (Model.RequirePostalCode)
+            {
+                <div class="row row-spacing">
+                    <div class="col-xs-12">
+                        <label asp-for="User.PostalCode" class="control-label"></label>
+                        <input asp-for="User.PostalCode" class="form-control" />
+                        <span asp-validation-for="User.PostalCode" class="text-danger"></span>
+                    </div>
+                </div>
+            }
+            
+            <div class="row row-spacing @(Model.ShowEmail ? "": "hide")">
+                <div class="col-xs-12">
+                    <label asp-for="User.Email" class="control-label"></label>
+                    <input asp-for="User.Email" class="form-control" type="email" />
+                    <span asp-validation-for="User.Email" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row row-spacing @(Model.ShowPhone ? "": "hide")">
+                <div class="col-xs-12">
+                    <label asp-for="User.PhoneNumber" class="control-label"></label>
+                    <input asp-for="User.PhoneNumber" class="form-control" type="tel" />
+                    <span asp-validation-for="User.PhoneNumber" class="text-danger"></span>
                 </div>
             </div>
 
@@ -186,6 +194,33 @@
                 else
                 {
                     $("#schoolFields").addClass("hide");
+                }
+
+                if (selectedProgram.AskCard)
+                {
+                    $("#cardField").removeClass("hide");
+                }
+                else
+                {
+                    $("#cardField").addClass("hide");
+                }
+
+                if (selectedProgram.AskEmail)
+                {
+                    $("#emailField").removeClass("hide");
+                }
+                else
+                {
+                    $("#emailField").addClass("hide");
+                }
+
+                if (selectedProgram.AskPhoneNumber)
+                {
+                    $("#phoneField").removeClass("hide");
+                }
+                else
+                {
+                    $("#phoneField").addClass("hide");
                 }
             }
         });

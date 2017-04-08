@@ -35,31 +35,39 @@
                         </div>
                     </div>
 
-                    <hr />
-
-                    <div class="row row-spacing">
-                        <div class="col-xs-12">
-                            <p>
-                                Email and Phone Number are not required however at least one is needed in order to be eligible for prizes.
-                            </p>
+                    @if (Model.ShowEmail || Model.ShowPhoneNumber)
+                    {
+                        <hr />
+                        <div class="row row-spacing">
+                            <div class="col-xs-12">
+                                <p>
+                                    Email and Phone Number are not required however at least one is needed in order to be eligible for prizes.
+                                </p>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="row row-spacing">
-                        <div class="col-xs-12">
-                            <label asp-for="Email" class="control-label"></label>
-                            <input asp-for="Email" class="form-control" type="email" />
-                            <span asp-validation-for="Email" class="text-danger"></span>
-                        </div>
-                    </div>
+                        @if (Model.ShowEmail)
+                        {
+                            <div class="row row-spacing">
+                                <div class="col-xs-12">
+                                    <label asp-for="Email" class="control-label"></label>
+                                    <input asp-for="Email" class="form-control" type="email" />
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                            </div>
+                        }
 
-                    <div class="row row-spacing">
-                        <div class="col-xs-12">
-                            <label asp-for="PhoneNumber" class="control-label"></label>
-                            <input asp-for="PhoneNumber" class="form-control" type="tel" />
-                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-                        </div>
-                    </div>
+                        @if (Model.ShowPhoneNumber)
+                        {
+                            <div class="row row-spacing">
+                                <div class="col-xs-12">
+                                    <label asp-for="PhoneNumber" class="control-label"></label>
+                                    <input asp-for="PhoneNumber" class="form-control" type="tel" />
+                                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                </div>
+                            </div>
+                        }
+                    }
                 </div>
                 <div class="panel-footer clearfix">
                     <div class="pull-right">

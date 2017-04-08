@@ -29,6 +29,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 - Added ajax username/secret code available checking
 - Added suppress notifications attribute
 - Add disable and spinner to join submit buttons
+- Added additional registration and program fields
 
 ### Changed
 - Changed dynamic avatars

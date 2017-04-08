@@ -67,8 +67,17 @@ namespace GRA.Domain.Service
                 Position = programCount++,
                 AgeRequired = true,
                 AskAge = true,
+                EditAge = true,
                 SchoolRequired = false,
                 AskSchool = false,
+                AskCard = false,
+                CardRequired = false,
+                AskEmail = true,
+                EditEmail = true,
+                EmailRequired = false,
+                AskPhoneNumber = true,
+                EditPhoneNumber = true,
+                PhoneNumberRequired = false,
                 AgeMaximum = 4
             };
             program = await _programRepository.AddSaveAsync(userId, program);
@@ -79,6 +88,7 @@ namespace GRA.Domain.Service
                 ActivityDescription = "minute",
                 ActivityDescriptionPlural = "minutes",
                 IsSingleEvent = false,
+                AskBook = true,
                 PointsEarned = 1,
                 ProgramId = program.Id,
                 TranslationName = "One minute, one point",
@@ -95,8 +105,17 @@ namespace GRA.Domain.Service
                 Position = programCount++,
                 AgeRequired = true,
                 AskAge = true,
+                EditAge = true,
                 SchoolRequired = true,
                 AskSchool = true,
+                AskCard = false,
+                CardRequired = false,
+                AskEmail = true,
+                EditEmail = true,
+                EmailRequired = false,
+                AskPhoneNumber = true,
+                EditPhoneNumber = true,
+                PhoneNumberRequired = false,
                 AgeMaximum = 11,
                 AgeMinimum = 5
             };
@@ -113,8 +132,17 @@ namespace GRA.Domain.Service
                 Position = programCount++,
                 AgeRequired = true,
                 AskAge = true,
+                EditAge = true,
                 SchoolRequired = false,
                 AskSchool = true,
+                AskCard = false,
+                CardRequired = false,
+                AskEmail = true,
+                EditEmail = true,
+                EmailRequired = false,
+                AskPhoneNumber = true,
+                EditPhoneNumber = true,
+                PhoneNumberRequired = false,
                 AgeMaximum = 17,
                 AgeMinimum = 12
             };
@@ -133,6 +161,14 @@ namespace GRA.Domain.Service
                 AskAge = false,
                 SchoolRequired = false,
                 AskSchool = false,
+                AskCard = false,
+                CardRequired = false,
+                AskEmail = true,
+                EditEmail = true,
+                EmailRequired = false,
+                AskPhoneNumber = true,
+                EditPhoneNumber = true,
+                PhoneNumberRequired = false,
                 AgeMinimum = 18
             };
             program = await _programRepository.AddSaveAsync(userId, program);

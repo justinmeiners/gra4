@@ -8,7 +8,6 @@
                     <span class="lead"><grasite property="name"></grasite> - Join Now!</span>
                 </div>
                 <div class="panel-body">
-
                     <input asp-for="NewEnteredSchool" type="hidden" />
 
                     <div class="row row-spacing">
@@ -54,17 +53,6 @@
                         </div>
                     </div>
 
-                    @if (Model.RequirePostalCode)
-                    {
-                        <div class="row row-spacing">
-                            <div class="col-xs-12">
-                                <label asp-for="PostalCode" class="control-label"></label>
-                                <input asp-for="PostalCode" class="form-control" />
-                                <span asp-validation-for="PostalCode" class="text-danger"></span>
-                            </div>
-                        </div>
-                    }
-
                     @if (Model.SystemList.Count() > 1)
                     {
                         <div class="row row-spacing">
@@ -82,14 +70,21 @@
                         <input asp-for="SystemId" type="hidden" />
                     }
 
-                    <div class="row row-spacing">
-                        <div class="col-xs-12">
-                            <label asp-for="BranchId" class="control-label"></label>
-                            <select asp-for="BranchId" asp-items="Model.BranchList" class="form-control">
-                            </select>
-                            <span asp-validation-for="BranchId" class="text-danger"></span>
+                    @if (Model.SystemList.Count() > 1 || Model.BranchList.Count() > 1)
+                    {
+                        <div class="row row-spacing">
+                            <div class="col-xs-12">
+                                <label asp-for="BranchId" class="control-label"></label>
+                                <select asp-for="BranchId" asp-items="Model.BranchList" class="form-control">
+                                </select>
+                                <span asp-validation-for="BranchId" class="text-danger"></span>
+                            </div>
                         </div>
-                    </div>
+                    }
+                    else
+                    {
+                        <input asp-for="BranchId" type="hidden" />
+                    }
 
                     @if (Model.ProgramList.Count() > 1)
                     {
@@ -108,11 +103,55 @@
                         <input asp-for="ProgramId" type="hidden" />
                     }
 
+                    <div id="cardField" class="row row-spacing @(Model.ShowCard ? "": "hide")">
+                        <div class="col-xs-12">
+                            <label asp-for="Card" class="control-label"></label>
+                            <input asp-for="Card" class="form-control" />
+                            <span asp-validation-for="Card" class="text-danger"></span>
+                        </div>
+                    </div>
+
                     <div id="ageField" class="row row-spacing @(Model.ShowAge ? "": "hide")">
                         <div class="col-xs-12">
                             <label asp-for="Age" class="control-label"></label>
                             <input asp-for="Age" class="form-control" type="text" />
                             <span id="ageMessage" asp-validation-for="Age" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    @if (Model.RequirePostalCode)
+                    {
+                        <div class="row row-spacing">
+                            <div class="col-xs-12">
+                                <label asp-for="PostalCode" class="control-label"></label>
+                                <input asp-for="PostalCode" class="form-control" />
+                                <span asp-validation-for="PostalCode" class="text-danger"></span>
+                            </div>
+                        </div>
+                    }
+
+                    <hr />
+                    <div class="row row-spacing">
+                        <div class="col-xs-12">
+                            <p>
+                                Email and Phone Number are not required however at least one is needed in order to be eligible for prizes.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div id="emailField" class="row row-spacing @(Model.ShowEmail ? "": "hide")">
+                        <div class="col-xs-12">
+                            <label asp-for="Email" class="control-label"></label>
+                            <input asp-for="Email" class="form-control" type="email" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div id="phoneField" class="row row-spacing @(Model.ShowPhoneNumber ? "": "hide")">
+                        <div class="col-xs-12">
+                            <label asp-for="PhoneNumber" class="control-label"></label>
+                            <input asp-for="PhoneNumber" class="form-control" type="tel" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                         </div>
                     </div>
 
@@ -157,33 +196,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <hr />
-
-                    <div class="row row-spacing">
-                        <div class="col-xs-12">
-                            <p>
-                                Email and Phone Number are not required however at least one is needed in order to be eligible for prizes.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="row row-spacing">
-                        <div class="col-xs-12">
-                            <label asp-for="Email" class="control-label"></label>
-                            <input asp-for="Email" class="form-control" type="email" />
-                            <span asp-validation-for="Email" class="text-danger"></span>
-                        </div>
-                    </div>
-
-                    <div class="row row-spacing">
-                        <div class="col-xs-12">
-                            <label asp-for="PhoneNumber" class="control-label"></label>
-                            <input asp-for="PhoneNumber" class="form-control" type="tel" />
-                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-                        </div>
-                    </div>
-
                 </div>
                 <div class="panel-footer clearfix">
                     <div class="pull-right">
@@ -247,6 +259,33 @@
                 else
                 {
                     $("#schoolFields").addClass("hide");
+                }
+
+                if (selectedProgram.AskCard)
+                {
+                    $("#cardField").removeClass("hide");
+                }
+                else
+                {
+                    $("#cardField").addClass("hide");
+                }
+
+                if (selectedProgram.AskEmail)
+                {
+                    $("#emailField").removeClass("hide");
+                }
+                else
+                {
+                    $("#emailField").addClass("hide");
+                }
+
+                if (selectedProgram.AskPhoneNumber)
+                {
+                    $("#phoneField").removeClass("hide");
+                }
+                else
+                {
+                    $("#phoneField").addClass("hide");
                 }
             }
         });

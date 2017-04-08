@@ -22,11 +22,16 @@ namespace GRA.Controllers.ViewModel.Join
         [MaxLength(255)]
         public string EnteredSchoolName { get; set; }
 
+        [DisplayName("Library Card")]
+        [MaxLength(64)]
+        public string Card { get; set; }
         public bool ShowAge { get; set; }
         public bool ShowSchool { get; set; }
+        public bool ShowCard { get; set; }
         public bool NewEnteredSchool { get; set; }
         public int? SchoolDistrictId { get; set; }
         public int? SchoolTypeId { get; set; }
+        
         public string ProgramJson { get; set; }
 
         public SelectList ProgramList { get; set; }

@@ -14,6 +14,9 @@ namespace GRA.Controllers.ViewModel.MissionControl.Participants
         public bool RequirePostalCode { get; set; }
         public bool ShowAge { get; set; }
         public bool ShowSchool { get; set; }
+        public bool ShowCard { get; set; }
+        public bool ShowEmail { get; set; }
+        public bool ShowPhoneNumber { get; set; }
         public bool HasSchoolId { get; set; }
         public bool NewEnteredSchool { get; set; }
         public int? SchoolDistrictId { get; set; }

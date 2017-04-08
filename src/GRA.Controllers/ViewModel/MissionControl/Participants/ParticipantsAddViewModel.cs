@@ -25,6 +25,10 @@ namespace GRA.Controllers.ViewModel.MissionControl.Participants
         [DisplayName("Last Name")]
         [MaxLength(255)]
         public string LastName { get; set; }
+        
+        [DisplayName("Library Card")]
+        [MaxLength(64)]
+        public string Card { get; set; }
 
         [DisplayName("Zip Code")]
         [MaxLength(32)]
@@ -63,6 +67,9 @@ namespace GRA.Controllers.ViewModel.MissionControl.Participants
         public string PhoneNumber { get; set; }
 
         public bool RequirePostalCode { get; set; }
+        public bool ShowEmail {get; set; }
+        public bool ShowCard {get; set; }
+        public bool ShowPhoneNumber {get; set; }
         public bool ShowAge { get; set; }
         public bool ShowSchool { get; set; }
         public bool NewEnteredSchool { get; set; }
