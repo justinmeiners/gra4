@@ -12,6 +12,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 - Added suppress notifications attribute
 - Add disable and spinner to join submit buttons
 
+### Changed
+- Move profile, dashboard, and sign-up to be inside containers to make the site compatible with having a background color/image
+- Ensure all elements are in a container with a white background (#291)
+
 ### Fixed
 - Fix alert spacing
 - Fix signup empty program exception
