@@ -417,7 +417,7 @@ namespace GRA.Controllers
 
             if (programList.Count() > 1)
             {
-                programList = programList.Prepend(new Program() { Id = -1 });
+                programList = programList.Prepend(new Program());
             }
 
             var viewModel = new Step2ViewModel()
