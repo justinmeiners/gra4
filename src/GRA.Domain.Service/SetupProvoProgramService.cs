@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace GRA.Domain.Service
 {
-    public class SetupMultipleProgramService
-        : BaseService<SetupMultipleProgramService>, IInitialSetupService
+    public class SetupProvoProgramService
+        : BaseService<SetupProvoProgramService>, IInitialSetupService
     {
         private readonly IAuthorizationCodeRepository _authorizationCodeRepository;
         private readonly IBranchRepository _branchRepository;
@@ -17,7 +17,7 @@ namespace GRA.Domain.Service
         private readonly ISystemRepository _systemRepository;
         private readonly IPointTranslationRepository _pointTranslationRepository;
 
-        public SetupMultipleProgramService(ILogger<SetupMultipleProgramService> logger,
+        public SetupProvoProgramService(ILogger<SetupProvoProgramService> logger,
             IAuthorizationCodeRepository authorizationCodeRepository,
             IBranchRepository branchRepository,
             IChallengeTaskRepository challengeTaskRepository,
@@ -46,7 +46,7 @@ namespace GRA.Domain.Service
             var system = new Model.System
             {
                 SiteId = siteId,
-                Name = "Library District"
+                Name = "Provo"
             };
             system = await _systemRepository.AddSaveAsync(userId, system);
 
@@ -54,35 +54,24 @@ namespace GRA.Domain.Service
             {
                 SiteId = siteId,
                 SystemId = system.Id,
-                Name = "Main Library",
+                Name = "Provo City Library",
             };
             branch = await _branchRepository.AddSaveAsync(userId, branch);
 
-            int programCount = 0;
-            var program = new Model.Program
+            var playPointTranslation = new Model.PointTranslation
             {
-                SiteId = siteId,
-                AchieverPointAmount = 1000,
-                Name = "Prereaders (ages 4 and below)",
-                Position = programCount++,
-                AgeRequired = true,
-                AskAge = true,
-                EditAge = true,
-                SchoolRequired = false,
-                AskSchool = false,
-                AskCard = false,
-                CardRequired = false,
-                AskEmail = true,
-                EditEmail = true,
-                EmailRequired = false,
-                AskPhoneNumber = true,
-                EditPhoneNumber = true,
-                PhoneNumberRequired = false,
-                AgeMaximum = 4
+                ActivityAmount = 1,
+                ActivityDescription = "minute",
+                ActivityDescriptionPlural = "minutes",
+                IsSingleEvent = false,
+                AskBook = false,
+                PointsEarned = 1,
+                TranslationName = "Playing (minutes)",
+                TranslationDescriptionPastTense = "played",
+                TranslationDescriptionPresentTense = "playing"
             };
-            program = await _programRepository.AddSaveAsync(userId, program);
 
-            var pointTranslation = new Model.PointTranslation
+            var readMinutesPointTranslation = new Model.PointTranslation
             {
                 ActivityAmount = 1,
                 ActivityDescription = "minute",
@@ -90,66 +79,130 @@ namespace GRA.Domain.Service
                 IsSingleEvent = false,
                 AskBook = true,
                 PointsEarned = 1,
-                ProgramId = program.Id,
-                TranslationName = "One minute, one point",
-                TranslationDescriptionPastTense = "read {0}",
-                TranslationDescriptionPresentTense = "reading {0}"
+                TranslationName = "Reading (minutes)",
+                TranslationDescriptionPastTense = "read",
+                TranslationDescriptionPresentTense = "reading"
             };
-            await _pointTranslationRepository.AddSaveAsync(userId, pointTranslation);
 
-            program = new Model.Program
+            var booksPointTranslation = new Model.PointTranslation
+            {
+                ActivityAmount = 1,
+                ActivityDescription = "book",
+                ActivityDescriptionPlural = "books",
+                IsSingleEvent = false,
+                AskBook = true,
+                PointsEarned = 1,
+                TranslationName = "Reading (books)",
+                TranslationDescriptionPastTense = "read",
+                TranslationDescriptionPresentTense = "reading"
+            };
+
+            int programCount = 0;
+            var program = new Model.Program
             {
                 SiteId = siteId,
                 AchieverPointAmount = 1000,
-                Name = "Kids (ages 5 to 11)",
+                Name = "Apprentices (ages 3 and below)",
                 Position = programCount++,
                 AgeRequired = true,
                 AskAge = true,
-                EditAge = true,
-                SchoolRequired = true,
-                AskSchool = true,
-                AskCard = false,
-                CardRequired = false,
-                AskEmail = true,
-                EditEmail = true,
+                EditAge = false,
+                SchoolRequired = false,
+                AskSchool = false,
+                AskCard = true,
+                CardRequired = true,
+                AskEmail = false,
+                EditEmail = false,
                 EmailRequired = false,
-                AskPhoneNumber = true,
-                EditPhoneNumber = true,
+                AskPhoneNumber = false,
+                EditPhoneNumber = false,
                 PhoneNumberRequired = false,
-                AgeMaximum = 11,
-                AgeMinimum = 5
+                AgeMaximum = 3
             };
             program = await _programRepository.AddSaveAsync(userId, program);
 
-            pointTranslation.ProgramId = program.Id;
-            await _pointTranslationRepository.AddSaveAsync(userId, pointTranslation);
+            playPointTranslation.ProgramId = program.Id;
+            await _pointTranslationRepository.AddSaveAsync(userId, playPointTranslation);
 
             program = new Model.Program
             {
                 SiteId = siteId,
                 AchieverPointAmount = 1000,
-                Name = "Teens (ages 12 to 17)",
+                Name = "Journeymen (ages 4 to 8)",
                 Position = programCount++,
                 AgeRequired = true,
                 AskAge = true,
                 EditAge = true,
                 SchoolRequired = false,
-                AskSchool = true,
-                AskCard = false,
-                CardRequired = false,
+                AskSchool = false,
+                AskCard = true,
+                CardRequired = true,
+                AskEmail = false,
+                EditEmail = false,
+                EmailRequired = false,
+                AskPhoneNumber = false,
+                EditPhoneNumber = false,
+                PhoneNumberRequired = false,
+                AgeMaximum = 8,
+                AgeMinimum = 4
+            };
+            program = await _programRepository.AddSaveAsync(userId, program);
+
+            readMinutesPointTranslation.ProgramId = program.Id;
+            await _pointTranslationRepository.AddSaveAsync(userId, readMinutesPointTranslation);
+
+            program = new Model.Program
+            {
+                SiteId = siteId,
+                AchieverPointAmount = 1000,
+                Name = "Master Craftsmen (ages 9 to 12)",
+                Position = programCount++,
+                AgeRequired = true,
+                AskAge = true,
+                EditAge = true,
+                SchoolRequired = false,
+                AskSchool = false,
+                AskCard = true,
+                CardRequired = true,
+                AskEmail = false,
+                EditEmail = false,
+                EmailRequired = false,
+                AskPhoneNumber = false,
+                EditPhoneNumber = false,
+                PhoneNumberRequired = false,
+                AgeMaximum = 12,
+                AgeMinimum = 9
+            };
+            program = await _programRepository.AddSaveAsync(userId, program);
+
+            booksPointTranslation.ProgramId = program.Id;
+            await _pointTranslationRepository.AddSaveAsync(userId, booksPointTranslation);
+
+            program = new Model.Program
+            {
+                SiteId = siteId,
+                AchieverPointAmount = 1000,
+                Name = "Teen (ages 12 to 18)",
+                Position = programCount,
+                AgeRequired = true,
+                AskAge = true,
+                SchoolRequired = false,
+                AskSchool = false,
+                AskCard = true,
+                CardRequired = true,
                 AskEmail = true,
                 EditEmail = true,
-                EmailRequired = false,
-                AskPhoneNumber = true,
-                EditPhoneNumber = true,
+                EmailRequired = true,
+                AskPhoneNumber = false,
+                EditPhoneNumber = false,
                 PhoneNumberRequired = false,
-                AgeMaximum = 17,
+                AgeMaximum = 18,
                 AgeMinimum = 12
             };
             program = await _programRepository.AddSaveAsync(userId, program);
 
-            pointTranslation.ProgramId = program.Id;
-            await _pointTranslationRepository.AddSaveAsync(userId, pointTranslation);
+            booksPointTranslation.ProgramId = program.Id;
+            await _pointTranslationRepository.AddSaveAsync(userId, booksPointTranslation);
 
             program = new Model.Program
             {
@@ -157,24 +210,24 @@ namespace GRA.Domain.Service
                 AchieverPointAmount = 1000,
                 Name = "Adults (ages 18 and up)",
                 Position = programCount,
-                AgeRequired = false,
-                AskAge = false,
+                AgeRequired = true,
+                AskAge = true,
                 SchoolRequired = false,
                 AskSchool = false,
-                AskCard = false,
-                CardRequired = false,
+                AskCard = true,
+                CardRequired = true,
                 AskEmail = true,
                 EditEmail = true,
-                EmailRequired = false,
-                AskPhoneNumber = true,
-                EditPhoneNumber = true,
+                EmailRequired = true,
+                AskPhoneNumber = false,
+                EditPhoneNumber = false,
                 PhoneNumberRequired = false,
                 AgeMinimum = 18
             };
             program = await _programRepository.AddSaveAsync(userId, program);
 
-            pointTranslation.ProgramId = program.Id;
-            await _pointTranslationRepository.AddSaveAsync(userId, pointTranslation);
+            booksPointTranslation.ProgramId = program.Id;
+            await _pointTranslationRepository.AddSaveAsync(userId, booksPointTranslation);
 
             // required for a user to be an administrator
             var adminRole = await _roleRepository.AddSaveAsync(userId, new Model.Role

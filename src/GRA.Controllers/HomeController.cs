@@ -84,12 +84,15 @@ namespace GRA.Controllers
                 }
 
                 var pointTranslation = await _activityService.GetUserPointTranslationAsync();
-                DashboardViewModel viewModel = new DashboardViewModel()
+                var viewModel = new DashboardViewModel()
                 {
                     FirstName = user.FirstName,
                     CurrentPointTotal = user.PointsEarned,
                     SingleEvent = pointTranslation.IsSingleEvent,
+                    ActivityDescription = pointTranslation.ActivityDescription,
                     ActivityDescriptionPlural = pointTranslation.ActivityDescriptionPlural,
+                    TranslationDescriptionPresentTense = pointTranslation.TranslationDescriptionPresentTense,
+                    TranslationDescriptionPastTense = pointTranslation.TranslationDescriptionPastTense,
                     Badges = badges.Data,
                     AskBook = pointTranslation.AskBook,
                 };

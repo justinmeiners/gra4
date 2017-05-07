@@ -9,8 +9,11 @@ namespace GRA.Controllers.ViewModel.Home
         public int CurrentPointTotal { get; set; }
         public string AvatarPath { get; set; }
         public bool SingleEvent { get; set; }
-        public string ActivityDescriptionPlural { get; set; }
 
+        public string ActivityDescription { get; set; }
+        public string ActivityDescriptionPlural { get; set; }
+        public string TranslationDescriptionPresentTense { get; set; }
+        public string TranslationDescriptionPastTense { get; set; }
         public int? ActivityAmount { get; set; }
         public bool? AskBook { get; set; }
         public string Title { get; set; }

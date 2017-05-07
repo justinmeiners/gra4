@@ -81,7 +81,7 @@
                                 </div>
                             }
                             <button type="submit" class="btn center-block btn-success btn-lg btn-spinner">
-                                <span class="buttonText">I read a book!</span>
+                                <span class="buttonText">Log @Model.ActivityDescription</span>
                                 <span class="fa fa-spinner fa-pulse fa-lg fa-fw hidden"></span>
                             </button>
                         </form>
@@ -98,7 +98,7 @@
                         <form asp-controller="Home" asp-action="LogActivity" method="post" role="form">
                             <div class="row row-spacing">
                                 <div class="col-xs-12">
-                                    <label class="control-label">Enter @Model.ActivityDescriptionPlural read</label>
+                                    <label class="control-label">Enter @Model.ActivityDescriptionPlural @Model.TranslationDescriptionPastTense</label>
                                     <input asp-for="ActivityAmount" type="text" value="@Model.ActivityAmount" class="form-control" />
                                     <span asp-validation-for="ActivityAmount" class="text-danger"></span>
                                 </div>
@@ -122,7 +122,7 @@
                                 </div>
 
                                 <button type="submit" class="btn center-block btn-success btn-lg btn-spinner">
-                                    <span class="buttonText">Log Minutes</span>
+                                    <span class="buttonText">Log @Model.ActivityDescriptionPlural</span>
                                     <span class="fa fa-spinner fa-pulse fa-lg fa-fw hidden"></span>
                                 </button>
                             }
@@ -138,7 +138,7 @@
                     <form asp-controller="Home" asp-action="LogSecretCode" method="post" role="form">
                         <div class="row row-spacing" style="text-align:center;">
                             <div class="col-xs-12">
-                                <small>Secret codes can be found by attending library events and on promotional materials. If you find one, enter it below!</small>
+                                <small>Secret codes can be found by attending library events. If you find one, enter it below!</small>
                             </div>
                         </div>
                         <div class="row row-spacing">

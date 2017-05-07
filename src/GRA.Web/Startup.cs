@@ -190,7 +190,7 @@ namespace GRA.Web
             services.AddScoped<VendorCodeService>();
 
             // service resolution
-            services.AddScoped<IInitialSetupService, SetupMultipleProgramService>();
+            services.AddScoped<IInitialSetupService, SetupProvoProgramService>();
 
             // repositories
             services.AddScoped<Domain.Repository.IAnswerRepository, Data.Repository.AnswerRepository>();
