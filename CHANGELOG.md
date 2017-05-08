@@ -19,6 +19,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 - Add field to site object to allow forcing https even if the Web server believes the request came in via http.
 - Fix questionnaire controller not requiring authorization
 - Fix jquery validation message not displaying on questionnaire
+- Fix not being able to submit action tasks
+- Fix participant sorting
 
 ## [4.0.0-alpha5] 2017-05-01
 ### Added
