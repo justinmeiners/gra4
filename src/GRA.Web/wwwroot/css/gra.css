@@ -107,30 +107,30 @@ ul.navbar-nav li.active {
     overflow: hidden;
 }
 
-    .btn-file input[type=file] {
-        position: absolute;
-        top: 0;
-        right: 0;
-        min-width: 100%;
-        min-height: 100%;
-        font-size: 100px;
-        text-align: right;
-        filter: alpha(opacity=0);
-        opacity: 0;
-        outline: none;
-        background: white;
-        cursor: inherit;
-        display: block;
-    }
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
 
 .infolinks {
     text-align: center;
     font-size: 1.2em;
 }
 
-    .infolinks .active {
-        font-weight: bold;
-    }
+.infolinks .active {
+    font-weight: bold;
+}
 
 .total-row {
     background-color: rgb(215, 240, 240);
@@ -183,10 +183,10 @@ ul.navbar-nav li.active {
     text-align: center;
 }
 
-    .join-header .active {
-        color: black;
-        font-weight: bold;
-    }
+.join-header .active {
+    color: black;
+    font-weight: bold;
+}
 
 .center-label {
     text-align: center;
@@ -209,19 +209,19 @@ input.form-checkbox {
     border: 1px solid #ddd;
 }
 
-    .page-button:hover {
-        z-index: 2;
-        color: #23527c;
-        background-color: #eee;
-        border-color: #ddd;
-    }
+.page-button:hover {
+    z-index: 2;
+    color: #23527c;
+    background-color: #eee;
+    border-color: #ddd;
+}
 
-    .page-button.disabled {
-        color: #777;
-        cursor: not-allowed;
-        background-color: #fff;
-        border-color: #ddd;
-    }
+.page-button.disabled {
+    color: #777;
+    cursor: not-allowed;
+    background-color: #fff;
+    border-color: #ddd;
+}
 
 .text-strong {
     font-weight: bold;
@@ -244,113 +244,66 @@ input.form-checkbox {
     text-decoration: none;
 }
 
-    .plain-link:hover {
-        color: unset;
-        text-decoration: none;
-    }
+.plain-link:hover {
+    color: unset;
+    text-decoration: none;
+}
 
-    .plain-link:visited {
-        color: unset;
-        text-decoration: none;
-    }
+.plain-link:visited {
+    color: unset;
+    text-decoration: none;
+}
 
 /* Responsive avatar display */
 
 .dynamic-avatar-container {
-    width: 280px;
-    height: 400px;
+    width: 210px;
+    height: 300px;
     position: relative;
 }
 
 .dynamic-avatar-container-dashboard {
     width: 280px;
-    height: 220px;
+    height: 400px;
     margin-left: auto;
     margin-right: auto;
     position: relative;
     overflow: hidden;
 }
 
-    .dynamic-avatar-container-dashboard img {
-        width: 280px;
-    }
-
 .dynamic-avatar {
     position: absolute;
     top: 0;
     left: 0;
+    width: 100%;
 }
 
 /* Small Devices, Tablets */
 @media only screen and (min-width : 768px) {
+    
     .dynamic-avatar-container-dashboard {
-        height: 220px;
         width: 150px;
+        height: 214px;
     }
 
-    .dynamic-avatar-layer-dashboard {
-        top: 0;
-        height: 250px;
-        width: 150px;
+    .dynamic-avatar-container {
+        width: 280px;
+        height: 400px;
     }
-
-        .dynamic-avatar-container-dashboard img {
-            width: 170px;
-        }
 }
 
 /* Medium Devices, Desktops */
 @media only screen and (min-width : 992px) {
+    
     .dynamic-avatar-container-dashboard {
-        height: 308px;
         width: 210px;
-    }
-
-    .dynamic-avatar-layer-dashboard {
-        height: 350px;
-        width: 210px;
+        height: 300px;
     }
 
     .dynamic-avatar-container {
-        width: 300px;
+        width: 350px;
         height: 500px;
     }
-
-    .dynamic-avatar-layer-selector {
-        width: 100px;
-    }
-
-    .dynamic-avatar-layer-button {
-        padding: 10px 16px;
-        font-size: 18px;
-        line-height: 1.3333333;
-    }
-
-    .dynamic-avatar-container-dashboard img {
-        width: 220px;
-    }
-}
-
-/* Large Devices, Wide Screens */
-@media only screen and (min-width : 1200px) {
-    .dynamic-avatar-container-dashboard {
-<<<<<<< HEAD
-        width: 280px;
-        height: 220px;
-=======
-        height: 374px;
-        width: 255px;
-    }
-
-    .dynamic-avatar-layer-dashboard {
-        height: 425px;
-        width: 255px;
->>>>>>> 8ab1a3a... Fix avatar display on the dashboard (#292)
-    }
-
-    .dynamic-avatar-container-dashboard img {
-        width: 280px;
-     }
 }
 
 .gra-search-container {
@@ -371,59 +324,30 @@ input.form-checkbox {
     border-radius: 1rem;
 }
 
-    .questionnaire div.story p {
-        padding-top: 1rem;
-        font-size: 1.7rem;
-        text-indent: 3rem;
-        padding-bottom: 1rem;
-    }
-
-    .questionnaire img {
-        max-width: 640px;
-        margin-left: auto;
-        margin-right: auto;
-        display: block;
-        padding-top: 3rem;
-        padding-bottom: 3rem;
-    }
-
-    .questionnaire .question p {
-        margin-top: 0;
-        margin-bottom: 0;
-        font-size: 1.8rem;
-    }
-
-    .questionnaire .answer-selection {
-        padding-bottom: 0.5rem;
-    }
-
-.avatar-background {
-    margin: -20px -15px;
-    padding-bottom: 15px;
+.questionnaire div.story p {
+    padding-top: 1rem;
+    font-size: 1.7rem;
+    text-indent: 3rem;
+    padding-bottom: 1rem;
 }
 
-/* Small Devices, Tablets */
-@media only screen and (min-width : 768px) {
-    .avatar-background {
-        margin: 0 -51px 0 -20px;
-        padding: 20px 51px 0 20px;
-    }
+.questionnaire img {
+    max-width: 640px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
 }
 
-/* Medium Devices, Desktops */
-@media only screen and (min-width : 992px) {
-    .avatar-background {
-        margin: 0 -28px 0 -20px;
-        padding: 20px 28px 15px 20px;
-    }
+.questionnaire .question p {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 1.8rem;
 }
 
-/* Large Devices, Wide Screens */
-@media only screen and (min-width : 1200px) {
-    .avatar-background {
-        margin: 0 -14px 0 -20px;
-        padding: 20px 14px 15px 20px;
-    }
+.questionnaire .answer-selection {
+    padding-bottom: 0.5rem;
 }
 
 .sign-up-step {
@@ -431,19 +355,19 @@ input.form-checkbox {
     padding-bottom: 0;
 }
 
-    .sign-up-step p {
-        color: #999;
-    }
+.sign-up-step p {
+    color: #999;
+}
 
-    .sign-up-step.active {
-        background-color: #5cb85c;
-        border-color: #398439;
-        border-radius: 1rem;
-    }
+.sign-up-step.active {
+    background-color: #5cb85c;
+    border-color: #398439;
+    border-radius: 1rem;
+}
 
-        .sign-up-step.active p {
-            color: white;
-        }
+.sign-up-step.active p {
+    color: white;
+}
 
 .info-page {
     background: white;
