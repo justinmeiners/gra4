@@ -102,11 +102,16 @@ namespace GRA.Controllers
                     }
                 }
 
+                var pointGoal = user.PointGoal ?? 3;
+                float dec = user.PointsEarned / (float)pointGoal;
+                int percent = (int)(dec * 100.0f);
+
                 var viewModel = new DashboardViewModel()
                 {
                     FirstName = user.FirstName,
                     TeamName = teamName,
                     CurrentPointTotal = user.PointsEarned,
+                    GoalPercent = percent,
                     SingleEvent = pointTranslation.IsSingleEvent,
                     ActivityDescription = pointTranslation.ActivityDescription,
                     ActivityDescriptionPlural = pointTranslation.ActivityDescriptionPlural,

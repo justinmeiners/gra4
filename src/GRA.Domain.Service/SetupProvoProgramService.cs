@@ -81,7 +81,7 @@ namespace GRA.Domain.Service
                 ActivityDescription = "minute",
                 ActivityDescriptionPlural = "minutes",
                 IsSingleEvent = false,
-                AskBook = true,
+                AskBook = false,
                 PointsEarned = 1,
                 TranslationName = "Reading (minutes)",
                 TranslationDescriptionPastTense = "read",
@@ -197,9 +197,9 @@ namespace GRA.Domain.Service
                 AskEmail = true,
                 EditEmail = true,
                 EmailRequired = true,
-                AskPhoneNumber = false,
-                EditPhoneNumber = false,
-                PhoneNumberRequired = false,
+                AskPhoneNumber = true,
+                EditPhoneNumber = true,
+                PhoneNumberRequired = true,
                 AgeMaximum = 18,
                 AgeMinimum = 12
             };
@@ -223,9 +223,9 @@ namespace GRA.Domain.Service
                 AskEmail = true,
                 EditEmail = true,
                 EmailRequired = true,
-                AskPhoneNumber = false,
-                EditPhoneNumber = false,
-                PhoneNumberRequired = false,
+                AskPhoneNumber = true,
+                EditPhoneNumber = true,
+                PhoneNumberRequired = true,
                 AgeMinimum = 18
             };
             program = await _programRepository.AddSaveAsync(userId, program);
@@ -252,21 +252,21 @@ namespace GRA.Domain.Service
             var team = new Model.Team 
             {
                 SiteId = siteId,
-                Name = "Red Team"
+                Name = "Green"
             };
             team = await _teamRepository.AddSaveAsync(userId, team);
 
             team = new Model.Team 
             {
                 SiteId = siteId,
-                Name = "Blue Team"
+                Name = "Yellow"
             };
             team = await _teamRepository.AddSaveAsync(userId, team);
 
             team = new Model.Team 
             {
                 SiteId = siteId,
-                Name = "Green Team"
+                Name = "Orange"
             };
             team = await _teamRepository.AddSaveAsync(userId, team);
 

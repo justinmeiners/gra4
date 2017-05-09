@@ -76,7 +76,7 @@ namespace GRA.Domain.Model
         public string DynamicAvatar { get; set; }
 
         public int? TeamId { get; set; }
-
+        public int? PointGoal { get; set; }
         public bool HasNewMail { get; set; }
         public bool HasUnclaimedPrize { get; set; }
         public bool HasPendingQuestionnaire { get; set; }
