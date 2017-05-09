@@ -185,6 +185,7 @@ namespace GRA.Web
             services.AddScoped<SiteService>();
             services.AddScoped<StaticAvatarService>();
             services.AddScoped<SystemInformationService>();
+            services.AddScoped<TeamService>();
             services.AddScoped<TriggerService>();
             services.AddScoped<UserService>();
             services.AddScoped<VendorCodeService>();
@@ -228,6 +229,7 @@ namespace GRA.Web
             services.AddScoped<Domain.Repository.IStaticAvatarRepository, Data.Repository.StaticAvatarRepository>();
             services.AddScoped<Domain.Repository.ISystemInformationRepository, Data.Repository.SystemInformationRepository>();
             services.AddScoped<Domain.Repository.ISystemRepository, Data.Repository.SystemRepository>();
+            services.AddScoped<Domain.Repository.ITeamRepository, Data.Repository.TeamRepository>();
             services.AddScoped<Domain.Repository.ITriggerRepository, Data.Repository.TriggerRepository>();
             services.AddScoped<Domain.Repository.IUserLogRepository, Data.Repository.UserLogRepository>();
             services.AddScoped<Domain.Repository.IUserRepository, Data.Repository.UserRepository>();

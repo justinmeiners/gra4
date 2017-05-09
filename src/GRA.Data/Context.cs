@@ -145,6 +145,7 @@ namespace GRA.Data
         public DbSet<Model.Site> Sites { get; set; }
         public DbSet<Model.StaticAvatar> StaticAvatars { get; set; }
         public DbSet<Model.System> Systems { get; set; }
+        public DbSet<Model.Team> Teams { get; set; }
         public DbSet<Model.Trigger> Triggers { get; set; }
         public DbSet<Model.TriggerBadge> TriggerBadges { get; set; }
         public DbSet<Model.TriggerChallenge> TriggerChallenges { get; set; }

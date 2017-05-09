@@ -83,7 +83,7 @@ namespace GRA.Controllers
 
         private async Task<IActionResult> StaticIndex(int? id)
         {
-            var avatarList = (await _staticAvatarService.GetAvartarListAsync()).ToList();
+            var avatarList = (await _staticAvatarService.GetAvatarListAsync()).ToList();
 
             if (avatarList.Count() > 0)
             {

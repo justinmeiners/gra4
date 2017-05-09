@@ -18,7 +18,7 @@ namespace GRA.Data.Repository
         {
         }
 
-        public async Task<IEnumerable<StaticAvatar>> GetAvartarListAsync(int siteId)
+        public async Task<IEnumerable<StaticAvatar>> GetAvatarListAsync(int siteId)
         {
             return await DbSet
                 .AsNoTracking()

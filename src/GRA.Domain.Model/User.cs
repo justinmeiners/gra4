@@ -75,6 +75,8 @@ namespace GRA.Domain.Model
         [MaxLength(16)]
         public string DynamicAvatar { get; set; }
 
+        public int? TeamId { get; set; }
+
         public bool HasNewMail { get; set; }
         public bool HasUnclaimedPrize { get; set; }
         public bool HasPendingQuestionnaire { get; set; }

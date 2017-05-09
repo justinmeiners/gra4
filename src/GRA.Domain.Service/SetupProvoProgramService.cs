@@ -17,6 +17,8 @@ namespace GRA.Domain.Service
         private readonly ISystemRepository _systemRepository;
         private readonly IPointTranslationRepository _pointTranslationRepository;
 
+        private readonly ITeamRepository _teamRepository;
+
         public SetupProvoProgramService(ILogger<SetupProvoProgramService> logger,
             IAuthorizationCodeRepository authorizationCodeRepository,
             IBranchRepository branchRepository,
@@ -24,7 +26,8 @@ namespace GRA.Domain.Service
             IProgramRepository programRepository,
             IRoleRepository roleRepository,
             ISystemRepository systemRepository,
-            IPointTranslationRepository pointTranslationRepository) : base(logger)
+            IPointTranslationRepository pointTranslationRepository,
+            ITeamRepository teamRepository) : base(logger)
         {
             _authorizationCodeRepository = Require.IsNotNull(authorizationCodeRepository,
                 nameof(authorizationCodeRepository));
@@ -37,6 +40,7 @@ namespace GRA.Domain.Service
             _systemRepository = Require.IsNotNull(systemRepository, nameof(systemRepository));
             _pointTranslationRepository = Require.IsNotNull(pointTranslationRepository,
                 nameof(pointTranslationRepository));
+            _teamRepository = Require.IsNotNull(teamRepository, nameof(teamRepository));
         }
 
         public async Task InsertAsync(int siteId, string initialAuthorizationCode, int userId = -1)
@@ -244,6 +248,27 @@ namespace GRA.Domain.Service
                 RoleId = adminRole.Id,
                 SiteId = siteId
             });
+
+            var team = new Model.Team 
+            {
+                SiteId = siteId,
+                Name = "Red Team"
+            };
+            team = await _teamRepository.AddSaveAsync(userId, team);
+
+            team = new Model.Team 
+            {
+                SiteId = siteId,
+                Name = "Blue Team"
+            };
+            team = await _teamRepository.AddSaveAsync(userId, team);
+
+            team = new Model.Team 
+            {
+                SiteId = siteId,
+                Name = "Green Team"
+            };
+            team = await _teamRepository.AddSaveAsync(userId, team);
 
             // system permissions
             foreach (var value in Enum.GetValues(typeof(Model.Permission)))

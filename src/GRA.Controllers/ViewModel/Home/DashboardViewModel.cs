@@ -18,6 +18,7 @@ namespace GRA.Controllers.ViewModel.Home
         public bool? AskBook { get; set; }
         public string Title { get; set; }
         public string Author { get; set; }
+        public string TeamName { get; set; }
 
         [DisplayName("Code")]
         public string SecretCode { get; set; }

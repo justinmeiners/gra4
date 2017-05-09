@@ -48,6 +48,7 @@ namespace GRA.Data.Profile
             CreateMap<Model.Site, Domain.Model.Site>().ReverseMap();
             CreateMap<Model.StaticAvatar, Domain.Model.StaticAvatar>().ReverseMap();
             CreateMap<Model.System, Domain.Model.System>().ReverseMap();
+            CreateMap<Model.Team, Domain.Model.Team>().ReverseMap();
             CreateMap<Model.Trigger, Domain.Model.Trigger>()
                 .ForMember(dest => dest.BadgeIds, opt => opt.MapFrom(src
                 => src.RequiredBadges.Select(_ => _.BadgeId).ToList()))

@@ -26,6 +26,8 @@ namespace GRA.Controllers
         private readonly SiteService _siteService;
         private readonly StaticAvatarService _staticAvatarService;
         private readonly UserService _userService;
+
+        private readonly TeamService _teamService;
         public HomeController(ILogger<HomeController> logger,
             ServiceFacade.Controller context,
             ActivityService activityService,
@@ -33,7 +35,8 @@ namespace GRA.Controllers
             EmailReminderService emailReminderService,
             SiteService siteService,
             StaticAvatarService staticAvatarService,
-            UserService userService)
+            UserService userService,
+            TeamService teamService)
             : base(context)
         {
             _logger = Require.IsNotNull(logger, nameof(logger));
@@ -46,6 +49,7 @@ namespace GRA.Controllers
                 nameof(staticAvatarService));
             _siteService = Require.IsNotNull(siteService, nameof(siteService));
             _userService = Require.IsNotNull(userService, nameof(userService));
+            _teamService = Require.IsNotNull(teamService, nameof(teamService));
         }
 
         public async Task<IActionResult> Index()
@@ -84,9 +88,24 @@ namespace GRA.Controllers
                 }
 
                 var pointTranslation = await _activityService.GetUserPointTranslationAsync();
+
+
+                string teamName = null;
+
+                if (user.TeamId.HasValue)
+                {
+                    var team = await _teamService.GetByIdAsync(user.TeamId.Value);
+
+                    if (team != null)
+                    {
+                        teamName = team.Name;
+                    }
+                }
+
                 var viewModel = new DashboardViewModel()
                 {
                     FirstName = user.FirstName,
+                    TeamName = teamName,
                     CurrentPointTotal = user.PointsEarned,
                     SingleEvent = pointTranslation.IsSingleEvent,
                     ActivityDescription = pointTranslation.ActivityDescription,

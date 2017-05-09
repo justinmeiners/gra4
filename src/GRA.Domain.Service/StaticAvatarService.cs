@@ -18,10 +18,10 @@ namespace GRA.Domain.Service
                 nameof(staticAvatarRepository));
         }
 
-        public async Task<IEnumerable<StaticAvatar>> GetAvartarListAsync()
+        public async Task<IEnumerable<StaticAvatar>> GetAvatarListAsync()
         {
             int siteId = GetClaimId(ClaimType.SiteId);
-            return await _staticAvatarRepository.GetAvartarListAsync(siteId);
+            return await _staticAvatarRepository.GetAvatarListAsync(siteId);
         }
 
         public async Task<StaticAvatar> GetByIdAsync(int id)
