@@ -95,7 +95,7 @@ namespace GRA.Domain.Service
                 ActivityDescriptionPlural = "books",
                 IsSingleEvent = false,
                 AskBook = true,
-                PointsEarned = 1,
+                PointsEarned = 200,
                 TranslationName = "Reading (books)",
                 TranslationDescriptionPastTense = "read",
                 TranslationDescriptionPresentTense = "reading"
@@ -244,7 +244,7 @@ namespace GRA.Domain.Service
             {
                 Code = initialAuthorizationCode.Trim().ToLower(),
                 Description = "Initial code to grant system administrator status.",
-                IsSingleUse = true,
+                IsSingleUse = false,
                 RoleId = adminRole.Id,
                 SiteId = siteId
             });

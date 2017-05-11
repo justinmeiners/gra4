@@ -33,6 +33,9 @@
                                     <a id="actionTab" href="#action" aria-controls="action" role="tab" data-toggle="tab">Action</a>
                                 </li>
                                 <li role="presentation">
+                                    <a id="submissionTab" href="#submission" aria-controls="submission" role="tab" data-toggle="tab">Submission</a>
+                                </li>
+                                <li role="presentation">
                                     <a id="bookTab" href="#book" aria-controls="book" role="tab" data-toggle="tab">Book</a>
                                 </li>
                             </ul>
@@ -41,6 +44,10 @@
                                 <div role="tabpanel" class="tab-pane gra-tab-pane active" id="action">
                                     <label asp-for="Task.Title" class="control-label">Name</label>
                                     <input asp-for="Task.Title" id="actionTitle" class="form-control" data-val-required="The Name field is required." />
+                                </div>
+                                <div role="tabpanel" class="tab-pane gra-tab-pane active" id="submission">
+                                    <label asp-for="Task.Title" class="control-label">Name</label>
+                                    <input asp-for="Task.Title" id="submissionTitle" class="form-control" data-val-required="The Name field is required." />
                                 </div>
                                 <div role="tabpanel" class="tab-pane gra-tab-pane" id="book">
                                     <div class="form-group">
@@ -97,6 +104,9 @@
                                 <li role="presentation" class="@(Model.Task.ChallengeTaskType == ChallengeTaskType.Action ? "active" : "")">
                                     <a id="actionTab" href="#action" aria-controls="action" role="tab" data-toggle="tab">Action</a>
                                 </li>
+                                <li role="presentation" class="@(Model.Task.ChallengeTaskType == ChallengeTaskType.Submission ? "active" : "")">
+                                    <a id="submissionTab" href="#submission" aria-controls="submission" role="tab" data-toggle="tab">Submission</a>
+                                </li>
                                 <li role="presentation" class="@(Model.Task.ChallengeTaskType == ChallengeTaskType.Book ? "active" : "")">
                                     <a id="bookTab" href="#book" aria-controls="book" role="tab" data-toggle="tab">Book</a>
                                 </li>
@@ -106,6 +116,10 @@
                                 <div role="tabpanel" class="tab-pane gra-tab-pane @(Model.Task.ChallengeTaskType == ChallengeTaskType.Action ? "active" : "")" id="action">
                                     <label asp-for="Task.Title" class="control-label">Name</label>
                                     <input asp-for="Task.Title" id="actionTitle" class="form-control" data-val-required="The Name field is required." disabled="@(Model.Task.ChallengeTaskType == ChallengeTaskType.Action ? null : "disabled")" />
+                                </div>
+                                <div role="tabpanel" class="tab-pane gra-tab-pane active" id="submission">
+                                    <label asp-for="Task.Title" class="control-label">Name</label>
+                                    <input asp-for="Task.Title" id="submissionTitle" class="form-control" data-val-required="The Name field is required." />
                                 </div>
                                 <div role="tabpanel" class="tab-pane gra-tab-pane @(Model.Task.ChallengeTaskType == ChallengeTaskType.Book ? "active" : "")" id="book">
                                     <div class="form-group">
@@ -542,13 +556,21 @@
             $("#Task_ChallengeTaskType").val("@ChallengeTaskType.Action");
             $("#actionTitle").removeAttr("disabled");
             $("#bookTitle").attr("disabled", "disabled");
+            $("#submissionTitle").attr("disabled", "disabled");
         });
 
         $("#bookTab").on('show.bs.tab', function () {
             $("#Task_ChallengeTaskType").val("@ChallengeTaskType.Book");
             $("#bookTitle").removeAttr("disabled");
             $("#actionTitle").attr("disabled", "disabled");
+            $("#submissionTitle").attr("disabled", "disabled");
+        });
 
+        $("#submissionTitle").on('show.bs.tab', function () {
+            $("#Task_ChallengeTaskType").val("@ChallengeTaskType.Submission");
+            $("#submissionTitle").removeAttr("disabled");
+            $("#actionTitle").attr("disabled", "disabled");
+            $("#bookTitle").attr("disabled", "disabled");
         });
     </script>
 }

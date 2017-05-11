@@ -596,7 +596,7 @@ namespace GRA.Controllers.MissionControl
 
             if (ModelState.IsValid)
             {
-                if (viewModel.Task.ChallengeTaskType == ChallengeTaskType.Action)
+                if (viewModel.Task.ChallengeTaskType != ChallengeTaskType.Book)
                 {
                     viewModel.Task.Author = null;
                     viewModel.Task.Isbn = null;
