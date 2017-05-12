@@ -496,7 +496,7 @@ namespace GRA.Controllers.MissionControl
                     viewModel.SchoolDistrictList = new SelectList(districtList.ToList(), "Id", "Name");
                 }
 
-                return View(viewModel);
+               return View(viewModel);
             }
             catch (GraException gex)
             {
@@ -1548,7 +1548,14 @@ namespace GRA.Controllers.MissionControl
         [Authorize(Policy = Policy.ViewUserPrizes)]
         public async Task<IActionResult> RedeemWinner(int prizeWinnerId, int userId, int page = 1)
         {
-            await _prizeWinnerService.RedeemPrizeAsync(prizeWinnerId);
+            try
+            {
+                await _prizeWinnerService.RedeemPrizeAsync(prizeWinnerId);
+            }
+            catch (GraException gex)
+            {
+                ShowAlertWarning("Unable to redeem prize: ", gex);
+            }
             return RedirectToAction("Prizes", new { id = userId, page = page });
         }
 
@@ -1556,7 +1563,14 @@ namespace GRA.Controllers.MissionControl
         [Authorize(Policy = Policy.ViewUserPrizes)]
         public async Task<IActionResult> UndoRedemption(int prizeWinnerId, int userId, int page = 1)
         {
-            await _prizeWinnerService.UndoRedemptionAsync(prizeWinnerId);
+            try
+            {
+                await _prizeWinnerService.UndoRedemptionAsync(prizeWinnerId);
+            }
+            catch (GraException gex)
+            {
+                ShowAlertWarning("Unable to undo redemption: ", gex);
+            }
             return RedirectToAction("Prizes", new { id = userId, page = page });
         }
         #endregion
