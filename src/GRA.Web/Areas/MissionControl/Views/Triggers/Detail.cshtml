@@ -120,6 +120,8 @@
     <input asp-for="EditVendorCode" type="hidden" />
     <input asp-for="AwardsPrize" type="hidden" />
     <input asp-for="AwardsMail" type="hidden" />
+    <input asp-for="AwardsAvatar" type="hidden" />
+
     @if (Model.Action == "Edit")
     {
         <input asp-for="Trigger.Id" type="hidden" />
@@ -536,6 +538,29 @@
         </div>
     }
 
+    <div class="panel-group" id="accordionAvatar" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-info">
+            <div class="panel-heading" role="tab" id="headingAvatar">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordionAvatar" href="#collapseAvatar" aria-expanded="true" aria-controls="collapseAvatar">
+                        <span id="avatarIcon" class="fa fa-lg @(Model.AwardsAvatar ? "fa-caret-down" : "fa-caret-right")"></span>
+                        Award Avatar
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseAvatar" class="panel-collapse collapse @(Model.AwardsAvatar ? "in" : "")" role="tabpanel" aria-labelledby="headingAvatar">
+                <div class="panel-body">
+                    <label asp-for="Trigger.AwardAvatarId" class="control-label col-sm-4"></label>
+                    <div class="col-sm-8">
+                        <select asp-for="Trigger.AwardAvatarId" asp-items="Model.AvatarList" class="form-control">
+                        </select>
+                        <span asp-validation-for="Trigger.AwardAvatarId" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <div class="form-group">
         <a asp-action="Index" class="btn btn-default">Return to List</a>
@@ -757,6 +782,15 @@
         $("#collapseMail").on("hide.bs.collapse", function() {
             $("#AwardsMail").val("false");
             $("#mailIcon").removeClass("fa-caret-down").addClass("fa-caret-right");
+        });
+
+        $("#collapseAvatar").on("show.bs.collapse", function() {
+            $("#AwardsAvatar").val("true");
+            $("#avatarIcon").removeClass("fa-caret-right").addClass("fa-caret-down");
+        });
+        $("#collapseAvatar").on("hide.bs.collapse", function() {
+            $("#AwardsAvatar").val("false");
+            $("#avatarIcon").removeClass("fa-caret-down").addClass("fa-caret-right");
         });
 
         $("#Trigger_SecretCode").on("blur", function () {

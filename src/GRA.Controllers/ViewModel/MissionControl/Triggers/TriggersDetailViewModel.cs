@@ -34,9 +34,13 @@ namespace GRA.Controllers.ViewModel.MissionControl.Triggers
         public bool AwardsMail { get; set; }
         public bool AwardsPrize { get; set; }
 
+        public bool AwardsAvatar { get; set; }
+
         public SelectList SystemList { get; set; }
         public SelectList BranchList { get; set; }
         public SelectList ProgramList { get; set; }
         public SelectList VendorCodeTypeList { get; set; }
+
+        public SelectList AvatarList { get; set; }
     }
 }

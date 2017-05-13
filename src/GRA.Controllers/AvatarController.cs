@@ -8,6 +8,7 @@ using System;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace GRA.Controllers
 {
@@ -121,7 +122,7 @@ namespace GRA.Controllers
                     nextAvatarId = avatarList[currentIndex + 1].Id;
                 }
 
-                AvatarSelectionViewModel viewModel = new AvatarSelectionViewModel()
+                var viewModel = new AvatarSelectionViewModel()
                 {
                     Avatar = avatarList.FirstOrDefault(_ => _.Id == viewingAvatarId),
                     PreviousAvatarId = previousAvatarId,
@@ -168,7 +169,16 @@ namespace GRA.Controllers
                 }
 
                 // check for a default avatar
-                var defaultDynamic = await _dynamicAvatarService.GetDefaultAvatarAsync(userId);
+
+                Dictionary<int, int> defaultDynamic = null;
+
+                try
+                {
+                    defaultDynamic = await _dynamicAvatarService.GetDefaultAvatarAsync(userId);
+                } catch {
+                    defaultDynamic = null;
+                }
+
                 if (defaultDynamic == null || defaultDynamic.Count() == 0)
                 {
                     // there is no default avatar, redirect to home page, avatars not configured

@@ -19,6 +19,8 @@ namespace GRA.Domain.Repository
             int take,
             string search = default(string));
 
-        new Task<DynamicAvatar> GetByIdAsync(int id);
+        Task<ICollection<DynamicAvatar>> GetAvatarListAsync();
+
+        Task AddUserAvatar(int userId, int avatarId);
     }
 }

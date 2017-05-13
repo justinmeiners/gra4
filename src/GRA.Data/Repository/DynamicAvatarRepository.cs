@@ -60,6 +60,16 @@ namespace GRA.Data.Repository
                     .ToListAsync();
         }
 
+        public async Task<ICollection<DynamicAvatar>> GetAvatarListAsync()
+        {
+            var avatars = DbSet.AsNoTracking();
+            
+            return await avatars.OrderBy(_ => _.Position)
+                    .ThenBy(_ => _.Name)
+                    .ProjectTo<DynamicAvatar>()
+                    .ToListAsync();
+        }
+
         new public async Task<DynamicAvatar> GetByIdAsync(int id)
         {
             var avatar = await DbSet

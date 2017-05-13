@@ -25,21 +25,24 @@ namespace GRA.Controllers.MissionControl
         private readonly SiteService _siteService;
         private readonly TriggerService _triggerService;
         private readonly VendorCodeService _vendorCodeService;
+        private readonly DynamicAvatarService _dynamicAvatarService;
         public TriggersController(ILogger<TriggersController> logger,
             ServiceFacade.Controller context,
             BadgeService badgeService,
             EventService eventService,
             SiteService siteService,
             TriggerService triggerService,
-            VendorCodeService vendorCodeService)
+            VendorCodeService vendorCodeService,
+            DynamicAvatarService dynamicAvatarService)
             : base(context)
         {
             _logger = Require.IsNotNull(logger, nameof(logger));
             _badgeService = Require.IsNotNull(badgeService, nameof(badgeService));
             _eventService = Require.IsNotNull(eventService, nameof(eventService));
-            _siteService = Require.IsNotNull(siteService, nameof(SiteService));
+            _siteService = Require.IsNotNull(siteService, nameof(siteService));
             _triggerService = Require.IsNotNull(triggerService, nameof(triggerService));
             _vendorCodeService = Require.IsNotNull(vendorCodeService, nameof(vendorCodeService));
+            _dynamicAvatarService = Require.IsNotNull(dynamicAvatarService, nameof(dynamicAvatarService));
             PageTitle = "Triggers";
         }
 
@@ -80,7 +83,7 @@ namespace GRA.Controllers.MissionControl
 
             var triggerList = await _triggerService.GetPaginatedListAsync(filter);
 
-            PaginateViewModel paginateModel = new PaginateViewModel()
+            var paginateModel = new PaginateViewModel()
             {
                 ItemCount = triggerList.Count,
                 CurrentPage = page,
@@ -104,7 +107,7 @@ namespace GRA.Controllers.MissionControl
             var systemList = (await _siteService.GetSystemList())
                 .OrderByDescending(_ => _.Id == GetId(ClaimType.SystemId)).ThenBy(_ => _.Name);
 
-            TriggersListViewModel viewModel = new TriggersListViewModel()
+            var viewModel = new TriggersListViewModel()
             {
                 Triggers = triggerList.Data,
                 PaginateModel = paginateModel,
@@ -170,7 +173,7 @@ namespace GRA.Controllers.MissionControl
         {
             var site = await GetCurrentSiteAsync();
             var siteUrl = await _siteService.GetBaseUrl(Request.Scheme, Request.Host.Value);
-            TriggersDetailViewModel viewModel = new TriggersDetailViewModel()
+            var viewModel = new TriggersDetailViewModel()
             {
                 Action = "Create",
                 IsSecretCode = true,
@@ -180,7 +183,8 @@ namespace GRA.Controllers.MissionControl
                 EditVendorCode = UserHasPermission(Permission.ManageVendorCodes),
                 SystemList = new SelectList((await _siteService.GetSystemList()), "Id", "Name"),
                 BranchList = new SelectList((await _siteService.GetAllBranches()), "Id", "Name"),
-                ProgramList = new SelectList((await _siteService.GetProgramList()), "Id", "Name")
+                ProgramList = new SelectList((await _siteService.GetProgramList()), "Id", "Name"),
+                AvatarList = new SelectList((await _dynamicAvatarService.GetAvatarListAsync()), "Id", "Name")
             };
             if (viewModel.EditVendorCode)
             {
@@ -305,7 +309,10 @@ namespace GRA.Controllers.MissionControl
                         model.Trigger.AwardMailSubject = "";
                         model.Trigger.AwardMail = "";
                     }
-
+                    if (!model.AwardsAvatar)
+                    {
+                        model.Trigger.AwardAvatarId = null;
+                    }
                     if (model.BadgeUploadImage != null
                         || !string.IsNullOrWhiteSpace(model.BadgeMakerImage))
                     {
@@ -370,6 +377,8 @@ namespace GRA.Controllers.MissionControl
                     (await _vendorCodeService.GetTypeAllAsync()), "Id", "Description");
             }
 
+            model.AvatarList = new SelectList((await _dynamicAvatarService.GetAvatarListAsync()), "Id", "Name");
+
             PageTitle = "Create Trigger";
             return View("Detail", model);
         }
@@ -379,7 +388,8 @@ namespace GRA.Controllers.MissionControl
             var trigger = await _triggerService.GetByIdAsync(id);
             var site = await GetCurrentSiteAsync();
             var siteUrl = await _siteService.GetBaseUrl(Request.Scheme, Request.Host.Value);
-            TriggersDetailViewModel viewModel = new TriggersDetailViewModel()
+            
+            var viewModel = new TriggersDetailViewModel()
             {
                 Trigger = trigger,
                 Action = "Edit",
@@ -390,6 +400,7 @@ namespace GRA.Controllers.MissionControl
                 EditVendorCode = UserHasPermission(Permission.ManageVendorCodes),
                 AwardsMail = !string.IsNullOrWhiteSpace(trigger.AwardMailSubject),
                 AwardsPrize = !string.IsNullOrWhiteSpace(trigger.AwardPrizeName),
+                AwardsAvatar = trigger.AwardAvatarId.HasValue,
                 DependentTriggers = await _triggerService.GetDependentsAsync(trigger.AwardBadgeId),
                 TriggerRequirements = await _triggerService.GetTriggerRequirementsAsync(trigger),
                 BadgeRequiredList = string.Join("", trigger.BadgeIds
@@ -397,7 +408,8 @@ namespace GRA.Controllers.MissionControl
                 ChallengeRequiredList = string.Join("", trigger.ChallengeIds
                 .Select(_ => "<" + _.ToString() + ">")),
                 SystemList = new SelectList((await _siteService.GetSystemList()), "Id", "Name"),
-                ProgramList = new SelectList((await _siteService.GetProgramList()), "Id", "Name")
+                ProgramList = new SelectList((await _siteService.GetProgramList()), "Id", "Name"),
+                AvatarList = new SelectList((await _dynamicAvatarService.GetAvatarListAsync()), "Id", "Name")
             };
 
             if (viewModel.EditVendorCode)
@@ -547,6 +559,10 @@ namespace GRA.Controllers.MissionControl
                         model.Trigger.AwardMailSubject = "";
                         model.Trigger.AwardMail = "";
                     }
+                    if (!model.AwardsAvatar)
+                    {
+                        model.Trigger.AwardAvatarId = null;
+                    }
                     if (model.BadgeUploadImage != null
                         || !string.IsNullOrWhiteSpace(model.BadgeMakerImage))
                     {
@@ -615,6 +631,8 @@ namespace GRA.Controllers.MissionControl
                 model.VendorCodeType = (await _vendorCodeService
                     .GetTypeById(model.Trigger.AwardVendorCodeTypeId.Value)).Description;
             }
+            model.AvatarList = new SelectList((await _dynamicAvatarService.GetAvatarListAsync()), "Id", "Name");
+
             PageTitle = $"Edit Trigger - {model.Trigger.Name}";
             return View("Detail", model);
         }

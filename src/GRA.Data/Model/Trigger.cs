@@ -53,5 +53,7 @@ namespace GRA.Data.Model
         public string AwardPrizeName { get; set; }
         [MaxLength(1000)]
         public string AwardPrizeRedemptionInstructions { get; set; }
+
+        public int? AwardAvatarId { get; set; }
     }
 }

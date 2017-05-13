@@ -25,6 +25,8 @@ namespace GRA.Domain.Service
         private readonly IUserLogRepository _userLogRepository;
         private readonly IVendorCodeRepository _vendorCodeRepository;
         private readonly IVendorCodeTypeRepository _vendorCodeTypeRepository;
+
+        private readonly IDynamicAvatarRepository _dynamicAvatarRepository;
         private readonly ICodeSanitizer _codeSanitizer;
         private readonly MailService _mailService;
         private readonly PrizeWinnerService _prizeWinnerService;
@@ -45,6 +47,7 @@ namespace GRA.Domain.Service
             IVendorCodeRepository vendorCodeRepository,
             IVendorCodeTypeRepository vendorCodeTypeRepository,
             ICodeSanitizer codeSanitizer,
+            IDynamicAvatarRepository dynamicAvatarRepository,
             MailService mailService,
             PrizeWinnerService prizeWinnerService) : base(logger, userContext)
         {
@@ -68,6 +71,8 @@ namespace GRA.Domain.Service
                 nameof(vendorCodeRepository));
             _vendorCodeTypeRepository = Require.IsNotNull(vendorCodeTypeRepository,
                 nameof(vendorCodeTypeRepository));
+            _dynamicAvatarRepository = Require.IsNotNull(dynamicAvatarRepository,
+                nameof(dynamicAvatarRepository));
             _codeSanitizer = Require.IsNotNull(codeSanitizer, nameof(codeSanitizer));
             _mailService = Require.IsNotNull(mailService, nameof(mailService));
             _prizeWinnerService = Require.IsNotNull(prizeWinnerService,
@@ -628,6 +633,12 @@ namespace GRA.Domain.Service
                     BadgeId = trigger.AwardBadgeId,
                     Description = trigger.AwardMessage
                 });
+
+                // award avatar
+                if (trigger.AwardAvatarId.HasValue)
+                {
+                    await _dynamicAvatarRepository.AddUserAvatar(userId, trigger.AwardAvatarId.Value);
+                }
 
                 // award any vendor code that is necessary
                 await AwardVendorCodeAsync(userId, trigger.AwardVendorCodeTypeId, siteId);

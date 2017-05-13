@@ -33,6 +33,13 @@ namespace GRA.Domain.Service
             SetManagementPermission(Permission.ManageAvatars);
         }
 
+        public async Task<IEnumerable<DynamicAvatar>> GetAvatarListAsync()
+        {
+            VerifyManagementPermission();
+            int siteId = GetClaimId(ClaimType.SiteId);
+            return await _dynamicAvatarRepository.GetAvatarListAsync();
+        }
+
         public async Task<IEnumerable<DynamicAvatar>> GetPaginatedAvatarListAsync(int skip,
             int take,
             string Search)
