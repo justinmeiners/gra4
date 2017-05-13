@@ -1,5 +1,27 @@
 ﻿@model GRA.Controllers.ViewModel.Home.DashboardViewModel
 
+<div class="row">
+    <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModelLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="confirmModalLabel">Submit Log</h4>
+                </div>
+                <div class="modal-body">
+                    <span id="modal-text"></span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" style="margin-right: 1em;">Cancel</button>
+                    <button id="modal-confirmbutton" onclick="$('#log-activity').submit();" type="submit" class="btn btn-success pull-right" aria-label="Confirm">
+                        Submit
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="row" style="font-size: larger;">
     <div class="col-sm-3 text-center">
         <div class="panel panel-default">
@@ -65,82 +87,74 @@
 
         @if ((GRA.Domain.Model.SiteStage)Context.Items[GRA.Controllers.ItemKey.SiteStage] == GRA.Domain.Model.SiteStage.ProgramOpen)
         {
-            @if (Model.SingleEvent)
-            {
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <span class="lead">Enter Activity</span>
-                    </div>
-                    <div class="panel-body">
-                        <form asp-controller="Home" asp-action="LogActivity" method="post" role="form">
-                            <input asp-for="SingleEvent" type="hidden" />
-                            @if (Model.AskBook ?? false)
-                            {
-                                <div class="row row-spacing">
-                                    <div class="col-xs-12">
-                                        <label asp-for="Title" class="control-label"></label>
-                                        <input asp-for="Title" class="form-control" />
-                                        <span asp-validation-for="Title" class="text-danger"></span>
-                                    </div>
-                                </div>
-
-                                <div class="row row-spacing">
-                                    <div class="col-xs-12">
-                                        <label asp-for="Author" class="control-label"></label>
-                                        <input asp-for="Author" class="form-control" />
-                                    </div>
-                                </div>
-                            }
-                            <button type="submit" class="btn center-block btn-success btn-lg btn-spinner">
-                                <span class="buttonText">Log @Model.ActivityDescription</span>
-                                <span class="fa fa-spinner fa-pulse fa-lg fa-fw hidden"></span>
-                            </button>
-                        </form>
-                    </div>
+             <div class="panel panel-default">
+                <div class="panel-heading">
+                    <span class="lead">Enter Activity</span>
                 </div>
-            }
-            else
-            {
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <span class="lead">Enter Activity</span>
-                    </div>
-                    <div class="panel-body">
-                        <form asp-controller="Home" asp-action="LogActivity" method="post" role="form">
+                
+                <div class="panel-body">
+                    <form id="log-activity" asp-controller="Home" asp-action="LogActivity" method="post" role="form">
+                        @if (Model.SingleEvent)
+                        {
+                            <input asp-for="SingleEvent" type="hidden" />
+                        }
+                        else
+                        {
                             <div class="row row-spacing">
                                 <div class="col-xs-12">
                                     <label class="control-label">Enter @Model.ActivityDescriptionPlural @Model.TranslationDescriptionPastTense</label>
-                                    <input asp-for="ActivityAmount" type="text" value="@Model.ActivityAmount" class="form-control" />
+                                    <input id="amount-field" asp-for="ActivityAmount" type="text" value="@Model.ActivityAmount" class="form-control" />
                                     <span asp-validation-for="ActivityAmount" class="text-danger"></span>
                                 </div>
                             </div>
+                        }
 
-                            @if (Model.AskBook ?? false)
+                        @if (Model.AskTitle ?? false)
+                        {
+                            <div class="row row-spacing">
+                                <div class="col-xs-12">
+                                    <label asp-for="Title" class="control-label"></label>
+                                    <span asp-validation-for="Title" class="text-danger"></span>
+                                    <input id="title-field" asp-for="Title" class="form-control" />
+                                </div>
+                            </div>
+                        }
+
+                        @if (Model.AskAuthor ?? false)
+                        {
+                            <div class="row row-spacing">
+                                <div class="col-xs-12">
+                                    <label asp-for="Author" class="control-label"></label>
+                                    <input id="author-field" asp-for="Author" class="form-control" />
+                                </div>
+                            </div>
+                        }
+
+                        @if (Model.AskReview ?? false)
+                        {
+                            <div class="row row-spacing">
+                                <div class="col-xs-12">
+                                    <label asp-for="Review" class="control-label"></label>
+                                    <input id="review-field" asp-for="Review" class="form-control" />
+                                </div>
+                            </div>
+                        }
+                        <button type="button"
+                                class="btn center-block btn-success btn-lg"
+                                data-toggle="modal"
+                                data-target="#confirmModal">
+                            @if (Model.SingleEvent)
                             {
-                                <div class="row row-spacing">
-                                    <div class="col-xs-12">
-                                        <label asp-for="Title" class="control-label"></label>
-                                        <input asp-for="Title" class="form-control" />
-                                        <span asp-validation-for="Title" class="text-danger"></span>
-                                    </div>
-                                </div>
-
-                                <div class="row row-spacing">
-                                    <div class="col-xs-12">
-                                        <label asp-for="Author" class="control-label"></label>
-                                        <input asp-for="Author" class="form-control" />
-                                    </div>
-                                </div>
-
-                                <button type="submit" class="btn center-block btn-success btn-lg btn-spinner">
-                                    <span class="buttonText">Log @Model.ActivityDescriptionPlural</span>
-                                    <span class="fa fa-spinner fa-pulse fa-lg fa-fw hidden"></span>
-                                </button>
+                                <span class="buttonText">Log @Model.ActivityDescription</span>
                             }
-                        </form>
-                    </div>
+                            else
+                            {
+                                <span class="buttonText">Log @Model.ActivityDescriptionPlural</span>
+                            }
+                        </button>
+                    </form>
                 </div>
-            }
+            </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <span class="lead">Enter Secret Code</span>
@@ -204,3 +218,23 @@
         </div>
     </div>
 </div>
+
+@section scripts
+{
+    <script>
+        $('#confirmModal').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget);
+            var modal = $(this);
+
+            var text = 'Are you sure you want to submit?';
+
+            text += $('#title-field').text();
+            text += ', ' + $('#author-field').text();
+            text += $('#review-field').text();
+
+
+            modal.find('#modal-text').text(text);
+            modal.find("#modal-confirmButton").show();
+        })
+    </script>
+}

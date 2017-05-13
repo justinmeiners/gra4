@@ -89,13 +89,10 @@ namespace GRA.Controllers
 
                 var pointTranslation = await _activityService.GetUserPointTranslationAsync();
 
-
                 string teamName = null;
-
                 if (user.TeamId.HasValue)
                 {
                     var team = await _teamService.GetByIdAsync(user.TeamId.Value);
-
                     if (team != null)
                     {
                         teamName = team.Name;
@@ -118,7 +115,9 @@ namespace GRA.Controllers
                     TranslationDescriptionPresentTense = pointTranslation.TranslationDescriptionPresentTense,
                     TranslationDescriptionPastTense = pointTranslation.TranslationDescriptionPastTense,
                     Badges = badges.Data,
-                    AskBook = pointTranslation.AskBook,
+                    AskTitle = pointTranslation.AskTitle,
+                    AskAuthor = pointTranslation.AskAuthor,
+                    AskReview = pointTranslation.AskReview,
                 };
 
                 if (!string.IsNullOrEmpty(staticAvatarPath))
@@ -239,7 +238,8 @@ namespace GRA.Controllers
             {
                 valid = false;
                 TempData[AuthorMissingTitle] = "Please include the Title of the book";
-            }
+            }                
+
             if (!valid)
             {
                 TempData[ModelData] = Newtonsoft.Json.JsonConvert.SerializeObject(viewModel);
@@ -250,7 +250,8 @@ namespace GRA.Controllers
                 var book = new Domain.Model.Book
                 {
                     Author = viewModel.Author,
-                    Title = viewModel.Title
+                    Title = viewModel.Title,
+                    Review = viewModel.Review
                 };
                 await _activityService
                     .LogActivityAsync(GetActiveUserId(), viewModel.ActivityAmount ?? 1, book);

@@ -68,7 +68,9 @@ namespace GRA.Domain.Service
                 ActivityDescription = "minute",
                 ActivityDescriptionPlural = "minutes",
                 IsSingleEvent = false,
-                AskBook = false,
+                AskTitle = false,
+                AskAuthor = false,
+                AskReview = false,
                 PointsEarned = 1,
                 TranslationName = "Playing (minutes)",
                 TranslationDescriptionPastTense = "played",
@@ -81,20 +83,39 @@ namespace GRA.Domain.Service
                 ActivityDescription = "minute",
                 ActivityDescriptionPlural = "minutes",
                 IsSingleEvent = false,
-                AskBook = false,
+                AskTitle = false,
+                AskAuthor = false,
+                AskReview = false,
                 PointsEarned = 1,
                 TranslationName = "Reading (minutes)",
                 TranslationDescriptionPastTense = "read",
                 TranslationDescriptionPresentTense = "reading"
             };
 
-            var booksPointTranslation = new Model.PointTranslation
+            var kidsBooksPointTranslation = new Model.PointTranslation
             {
                 ActivityAmount = 1,
                 ActivityDescription = "book",
                 ActivityDescriptionPlural = "books",
-                IsSingleEvent = false,
-                AskBook = true,
+                IsSingleEvent = true,
+                AskTitle = true,
+                AskAuthor = true,
+                AskReview = false,
+                PointsEarned = 200,
+                TranslationName = "Reading (books)",
+                TranslationDescriptionPastTense = "read",
+                TranslationDescriptionPresentTense = "reading"
+            };
+
+            var adultBooksPointTranslation = new Model.PointTranslation
+            {
+                ActivityAmount = 1,
+                ActivityDescription = "book",
+                ActivityDescriptionPlural = "books",
+                IsSingleEvent = true,
+                AskTitle = true,
+                AskAuthor = true,
+                AskReview = true,
                 PointsEarned = 200,
                 TranslationName = "Reading (books)",
                 TranslationDescriptionPastTense = "read",
@@ -179,8 +200,8 @@ namespace GRA.Domain.Service
             };
             program = await _programRepository.AddSaveAsync(userId, program);
 
-            booksPointTranslation.ProgramId = program.Id;
-            await _pointTranslationRepository.AddSaveAsync(userId, booksPointTranslation);
+            kidsBooksPointTranslation.ProgramId = program.Id;
+            await _pointTranslationRepository.AddSaveAsync(userId, kidsBooksPointTranslation);
 
             program = new Model.Program
             {
@@ -205,8 +226,8 @@ namespace GRA.Domain.Service
             };
             program = await _programRepository.AddSaveAsync(userId, program);
 
-            booksPointTranslation.ProgramId = program.Id;
-            await _pointTranslationRepository.AddSaveAsync(userId, booksPointTranslation);
+            adultBooksPointTranslation.ProgramId = program.Id;
+            await _pointTranslationRepository.AddSaveAsync(userId, adultBooksPointTranslation);
 
             program = new Model.Program
             {
@@ -230,8 +251,8 @@ namespace GRA.Domain.Service
             };
             program = await _programRepository.AddSaveAsync(userId, program);
 
-            booksPointTranslation.ProgramId = program.Id;
-            await _pointTranslationRepository.AddSaveAsync(userId, booksPointTranslation);
+            adultBooksPointTranslation.ProgramId = program.Id;
+            await _pointTranslationRepository.AddSaveAsync(userId, adultBooksPointTranslation);
 
             // required for a user to be an administrator
             var adminRole = await _roleRepository.AddSaveAsync(userId, new Model.Role

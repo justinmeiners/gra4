@@ -748,7 +748,7 @@ namespace GRA.Controllers
 
             User user = await _userService.GetDetails(GetActiveUserId());
 
-            BookListViewModel viewModel = new BookListViewModel()
+            var viewModel = new BookListViewModel()
             {
                 Books = books.Data,
                 PaginateModel = paginateModel,

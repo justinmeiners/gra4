@@ -23,7 +23,13 @@ namespace GRA.Data.Model
         public bool IsSingleEvent { get; set; }
 
         [Required]
-        public bool AskBook { get; set; }
+        public bool AskTitle { get; set; }
+
+        [Required]
+        public bool AskAuthor { get; set; }
+
+        [Required]
+        public bool AskReview { get; set; }
 
         [Required]
         public string TranslationDescriptionPresentTense { get; set; }

@@ -35,11 +35,13 @@ namespace GRA.Domain.Model
         [Phone]
         [MaxLength(15)]
         public string PhoneNumber { get; set; }
+
         [DisplayName("Zip Code")]
         [MaxLength(32)]
         public string PostalCode { get; set; }
 
         [DisplayName("Library Card")]
+        [RegularExpression(@"^\d+\s*$", ErrorMessage="This does not appear to be a valid library card.")]
         [MaxLength(64)]
         public string CardNumber { get; set; }
         public DateTime? LastAccess { get; set; }

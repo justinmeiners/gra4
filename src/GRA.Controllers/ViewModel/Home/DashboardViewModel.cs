@@ -16,9 +16,12 @@ namespace GRA.Controllers.ViewModel.Home
         public string TranslationDescriptionPresentTense { get; set; }
         public string TranslationDescriptionPastTense { get; set; }
         public int? ActivityAmount { get; set; }
-        public bool? AskBook { get; set; }
+        public bool? AskTitle { get; set; }
+        public bool? AskAuthor { get; set; }
+        public bool? AskReview { get; set; }
         public string Title { get; set; }
         public string Author { get; set; }
+        public string Review { get; set; }
         public string TeamName { get; set; }
 
         [DisplayName("Code")]

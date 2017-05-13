@@ -133,7 +133,7 @@ namespace GRA.Controllers
 
             foreach (var task in challenge.Tasks)
             {
-                TaskDetailViewModel taskModel = new TaskDetailViewModel()
+                var taskModel = new TaskDetailViewModel()
                 {
                     Id = task.Id,
                     IsCompleted = task.IsCompleted ?? false,

@@ -31,6 +31,7 @@ namespace GRA.Controllers.ViewModel.Join
         public string LastName { get; set; }
 
         [DisplayName("Library Card")]
+        [RegularExpression(@"^\d+\s*$", ErrorMessage="This does not appear to be a valid library card.")]
         [MaxLength(64)]
         public string Card { get; set; }
 
