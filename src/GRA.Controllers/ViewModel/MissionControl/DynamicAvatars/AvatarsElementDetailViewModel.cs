@@ -8,6 +8,7 @@ namespace GRA.Controllers.ViewModel.MissionControl.DynamicAvatars
     public class AvatarsElementDetailViewModel
     {
         public int AvatarId { get; set; }
+        public string LayerName { get; set; }
         public int LayerId { get; set; }
         public IFormFile UploadImage { get; set; }
         public string BaseAvatarUrl { get; set; }

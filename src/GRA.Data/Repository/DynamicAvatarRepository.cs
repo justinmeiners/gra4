@@ -26,7 +26,7 @@ namespace GRA.Data.Repository
                 _context.UserAvatars.Add(new Model.UserAvatar
                 {
                     UserId = userId,
-                    AvatarId = avatarId,
+                    DynamicAvatarId = avatarId,
                     CreatedAt = DateTime.Now
                 });
                 await _context.SaveChangesAsync();
@@ -36,7 +36,7 @@ namespace GRA.Data.Repository
         public async Task<bool> UserHasAvatar(int userId, int avatarId)
         {
             return null != await _context.UserAvatars
-                .Where(_ => _.UserId == userId && _.AvatarId == avatarId)
+                .Where(_ => _.UserId == userId && _.DynamicAvatarId == avatarId)
                 .SingleOrDefaultAsync();
         }
          public async Task<ICollection<DynamicAvatar>> GetPaginatedAvatarListAsync(
@@ -75,7 +75,7 @@ namespace GRA.Data.Repository
         {
             _context.DynamicAvatarElements
                                .AsNoTracking()
-                               .Where(_ => _.AvatarId == id)
+                               .Where(_ => _.DynamicAvatarId == id)
                                .ToList().ForEach(x => _context.DynamicAvatarElements.Remove(x));
 
             _context.DynamicAvatarElements.RemoveRange();
@@ -85,15 +85,15 @@ namespace GRA.Data.Repository
         public async Task AddElement(int avatarId, int layerId)
         {
             var exists = await _context.DynamicAvatarElements
-                                .Where(_ => _.AvatarId == avatarId && _.LayerId == layerId)
+                                .Where(_ => _.DynamicAvatarId == avatarId && _.DynamicAvatarLayerId == layerId)
                                 .AnyAsync();
 
             if (!exists)
             {
                 var newElement =  new Model.DynamicAvatarElement
                 {
-                    AvatarId = avatarId,
-                    LayerId = layerId,
+                    DynamicAvatarId = avatarId,
+                    DynamicAvatarLayerId = layerId,
                 };
 
                 _context.DynamicAvatarElements.Add(newElement);
@@ -106,12 +106,12 @@ namespace GRA.Data.Repository
         {
             return await _context.UserAvatars
                                 .AsNoTracking()
-                                .Where(_ => _.AvatarId == avatarId)
+                                .Where(_ => _.DynamicAvatarId == avatarId)
                                 .Join(_context.DynamicAvatarElements,
-                                u => u.AvatarId,
-                                e => e.AvatarId,
+                                u => u.DynamicAvatarId,
+                                e => e.DynamicAvatarId,
                                 (u, e) => e)
-                                .Where(_ => _.LayerId == layerId)
+                                .Where(_ => _.DynamicAvatarLayerId == layerId)
                                 .AnyAsync();
         }
 
@@ -119,7 +119,7 @@ namespace GRA.Data.Repository
         {
             var entity = await _context.DynamicAvatarElements
                 .AsNoTracking()
-                .Where(_ => _.AvatarId == avatarId && _.LayerId == dynamicAvatarLayerId)
+                .Where(_ => _.DynamicAvatarId == avatarId && _.DynamicAvatarLayerId == dynamicAvatarLayerId)
                 .SingleOrDefaultAsync();
             
             if (entity == null)
@@ -131,44 +131,51 @@ namespace GRA.Data.Repository
 
         public async Task<int> GetFirstElement(int layerId, int userId)
         {
-            var element = await _context.UserAvatars
-                            .AsNoTracking()
-                            .Where(_ => _.UserId == userId)
-                            .Join(_context.DynamicAvatars, 
-                                   u => u.AvatarId, 
-                                   a => a.Id, 
-                                   (u, a) => ( a ))
-                            .SelectMany(_ => _.Elements)
-                            .Where(_ => _.LayerId == layerId)
-                            .FirstOrDefaultAsync();
+            var composite = await _context.UserAvatars
+                                .AsNoTracking()
+                                .Where(_ => _.UserId == userId)
+                                .Join(_context.DynamicAvatarElements, 
+                                    u => u.DynamicAvatarId, 
+                                    e => e.DynamicAvatarId, 
+                                    (u, e) => ( e ))
+                                .Where(_ => _.DynamicAvatarLayerId == layerId)
+                                .Join(_context.DynamicAvatars,
+                                        e => e.DynamicAvatarId,
+                                        a => a.Id,
+                                        (e, a) => new { Element = e, Position = a.Position })
+                                .OrderBy(_ => _.Position)
+                                .FirstOrDefaultAsync();
 
-            if (element == null)
+            if (composite == null || composite.Element == null)
             {
                 throw new Exception($"Couldn't find first element for layer {layerId}");
             }
 
-            return element.AvatarId;
+            return composite.Element.DynamicAvatarId;
         }
         public async Task<int> GetLastElement(int layerId, int userId)
         {
-            var element = await _context.UserAvatars
-                .AsNoTracking()
-                .Where(_ => _.UserId == userId)
-                .Join(_context.DynamicAvatars, 
-                        u => u.AvatarId, 
-                        a => a.Id, 
-                        (u, a) => ( a ))
-                .OrderByDescending(_ => _.Position)
-                .SelectMany(_ => _.Elements)
-                .Where(_ => _.LayerId == layerId)
-                .FirstOrDefaultAsync();
+            var composite = await _context.UserAvatars
+                            .AsNoTracking()
+                            .Where(_ => _.UserId == userId)
+                            .Join(_context.DynamicAvatarElements, 
+                                u => u.DynamicAvatarId, 
+                                e => e.DynamicAvatarId, 
+                                (u, e) => ( e ))
+                            .Where(_ => _.DynamicAvatarLayerId == layerId)
+                            .Join(_context.DynamicAvatars,
+                                    e => e.DynamicAvatarId,
+                                    a => a.Id,
+                                    (e, a) => new { Element = e, Position = a.Position })
+                            .OrderByDescending(_ => _.Position)
+                            .FirstOrDefaultAsync();
 
-            if (element == null)
+            if (composite == null || composite.Element == null) 
             {
                 throw new Exception($"Couldn't find first element for layer {layerId}");
             }
 
-            return element.AvatarId;
+            return composite.Element.DynamicAvatarId;
         }
 
         public async Task<int?> GetNextElement(int layerId, int avatarId, int userId)
@@ -182,22 +189,25 @@ namespace GRA.Data.Repository
                 throw new Exception($"Couldn't find avatar {avatarId}");
             }
 
-            var nextElement = await _context.UserAvatars
-                .AsNoTracking()
-                .Where(_ => _.UserId == userId)
-                .Join(_context.DynamicAvatars, 
-                        u => u.AvatarId, 
-                        a => a.Id, 
-                        (u, a) => ( a ))
-                .Where(_ => _.Position > avatar.Position)
-                .OrderBy(_ => _.Position)
-                .SelectMany(_ => _.Elements)
-                .Where(_ => _.LayerId == layerId)
-                .FirstOrDefaultAsync();
+            var nextComposite = await _context.UserAvatars
+                                    .AsNoTracking()
+                                    .Where(_ => _.UserId == userId)
+                                    .Join(_context.DynamicAvatarElements, 
+                                        u => u.DynamicAvatarId, 
+                                        e => e.DynamicAvatarId, 
+                                        (u, e) => ( e ))
+                                    .Where(_ => _.DynamicAvatarLayerId == layerId)
+                                    .Join(_context.DynamicAvatars,
+                                            e => e.DynamicAvatarId,
+                                            a => a.Id,
+                                            (e, a) => new { Element = e, Position = a.Position })
+                                    .OrderBy(_ => _.Position)
+                                    .Where(_ => _.Position > avatar.Position)
+                                    .FirstOrDefaultAsync();
 
-            if (nextElement != null)
+            if (nextComposite != null && nextComposite.Element != null)
             {
-                return nextElement.AvatarId;
+                return nextComposite.Element.DynamicAvatarId;
             }
 
             return await GetFirstElement(layerId, userId);
@@ -215,22 +225,25 @@ namespace GRA.Data.Repository
                 throw new Exception($"Couldn't find  avatar {avatarId}");
             }
 
-            var previousElement = await _context.UserAvatars
-                .AsNoTracking()
-                .Where(_ => _.UserId == userId)
-                .Join(_context.DynamicAvatars, 
-                        u => u.AvatarId, 
-                        a => a.Id, 
-                        (u, a) => ( a ))
-                .Where(_ => _.Position < avatar.Position)
-                .OrderByDescending(_ => _.Position)
-                .SelectMany(_ => _.Elements)
-                .Where(_ => _.LayerId == layerId)
-                .FirstOrDefaultAsync();
+            var nextComposite = await _context.UserAvatars
+                        .AsNoTracking()
+                        .Where(_ => _.UserId == userId)
+                        .Join(_context.DynamicAvatarElements, 
+                            u => u.DynamicAvatarId, 
+                            e => e.DynamicAvatarId, 
+                            (u, e) => ( e ))
+                        .Where(_ => _.DynamicAvatarLayerId == layerId)
+                        .Join(_context.DynamicAvatars,
+                                e => e.DynamicAvatarId,
+                                a => a.Id,
+                                (e, a) => new { Element = e, Position = a.Position })
+                        .OrderByDescending(_ => _.Position)
+                        .Where(_ => _.Position < avatar.Position)
+                        .FirstOrDefaultAsync();
 
-            if (previousElement != null)
+            if (nextComposite != null && nextComposite.Element != null)
             {
-                return previousElement.AvatarId;
+                return nextComposite.Element.DynamicAvatarId;
             }
 
             return await GetLastElement(layerId, userId);

@@ -41,7 +41,7 @@ namespace GRA.Data
             modelBuilder.Entity<Model.ChallengeCategory>()
                 .HasKey(_ => new { _.ChallengeId, _.CategoryId });
             modelBuilder.Entity<Model.DynamicAvatarElement>()
-                .HasKey(_ => new { _.AvatarId, _.LayerId });
+                .HasKey(_ => new { _.DynamicAvatarId, _.DynamicAvatarLayerId });
             modelBuilder.Entity<Model.RolePermission>()
                 .HasKey(_ => new { _.RoleId, _.PermissionId });
             modelBuilder.Entity<Model.TriggerBadge>()
@@ -51,7 +51,7 @@ namespace GRA.Data
             modelBuilder.Entity<Model.UserAnswer>()
                 .HasKey(_ => new { _.UserId, _.AnswerId });
             modelBuilder.Entity<Model.UserAvatar>()
-                .HasKey(_ => new { _.UserId, _.AvatarId });
+                .HasKey(_ => new { _.UserId, _.DynamicAvatarId });
             modelBuilder.Entity<Model.UserBadge>()
                 .HasKey(_ => new { _.UserId, _.BadgeId });
             modelBuilder.Entity<Model.UserBook>()

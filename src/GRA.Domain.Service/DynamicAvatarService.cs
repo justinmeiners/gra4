@@ -156,13 +156,13 @@ namespace GRA.Domain.Service
             await _dynamicAvatarRepository.RemoveSaveAsync(GetClaimId(ClaimType.UserId), avatarId);
         }
 
-        public void DeleteElementFile(DynamicAvatarElement element)
+        public void DeleteElementFile(int avatarId, int layerId)
         {
             VerifyManagementPermission();
-            var destinationRoot = Path.Combine($"site{GetCurrentSiteId()}", "dynamicavatars", $"layer{element.DynamicAvatarLayerId}");
+            var destinationRoot = Path.Combine($"site{GetCurrentSiteId()}", "dynamicavatars", $"layer{layerId}");
             var destinationPath = _pathResolver.ResolveContentFilePath(destinationRoot);
 
-            var fullFilePath = Path.Combine(destinationPath, $"{element.Id}.png");
+            var fullFilePath = Path.Combine(destinationPath, $"{avatarId}.png");
 
             if (File.Exists(fullFilePath))
             {
@@ -172,7 +172,7 @@ namespace GRA.Domain.Service
                 }
                 catch (IOException)
                 {
-                    _logger.LogWarning($"Failed to delete element: {element.Id}");
+                    _logger.LogWarning($"Failed to delete element: {avatarId}");
                 }
             }
         }

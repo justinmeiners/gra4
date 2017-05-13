@@ -5,9 +5,9 @@ namespace GRA.Data.Model
     public class DynamicAvatarElement
     {
         [Required]
-        public int AvatarId { get; set; }
+        public int DynamicAvatarId { get; set; }
 
         [Required]
-        public int LayerId { get; set; }
+        public int DynamicAvatarLayerId { get; set; }
     }
 }

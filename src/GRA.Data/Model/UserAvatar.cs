@@ -6,8 +6,8 @@ namespace GRA.Data.Model
     {
         public int UserId { get; set; }
         public User User { get; set; }
-        public int AvatarId { get; set; }
-        public DynamicAvatar Avatar { get; set; }
+        public int DynamicAvatarId { get; set; }
+        public DynamicAvatar DynamicAvatar { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

@@ -134,6 +134,7 @@ namespace GRA.Controllers.MissionControl
                 var newElement = new AvatarsElementDetailViewModel()
                 {
                     AvatarId = avatar.Id,
+                    LayerName = layer.Name,
                     LayerId = layer.Id,
                     BaseAvatarUrl = avatarRoot
                 };
@@ -178,10 +179,11 @@ namespace GRA.Controllers.MissionControl
             {
                 // delete all avatar files
                 var avatar = await _avatarService.GetAvatarDetailsAsync(id);
+                var layers = await _avatarService.GetAllLayersAsync();
 
-                foreach (var element in avatar.Elements)
+                foreach (var layer in layers)
                 {
-                    _avatarService.DeleteElementFile(element);
+                    _avatarService.DeleteElementFile(avatar.Id, layer.Id);
                 }
 
                 // remove from database
