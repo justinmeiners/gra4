@@ -3,17 +3,15 @@
 <h3>@Model.Layer.Name</h3>
 
 <form asp-controller="DynamicAvatars" asp-action="EditElement" method="post" enctype="multipart/form-data" role="form">
-    <input asp-for="Element.Id" type="hidden" />
-    <input asp-for="Create" type="hidden"/>
     <input asp-for="AvatarId" type="hidden" />
-    <input asp-for="Layer.Id" type="hidden" />
+    <input asp-for="LayerId" type="hidden" />
 
     @if (Model.Element != null)
     {
         <div class="row row-spacing">
             <div class="col-xs-12 col-sm-4 col-md-3">
                     <img id="elementImage" class="img-thumbnail badge-lg"
-                        src="~/content/@(Model.BaseAvatarUrl)/layer@(Model.Layer.Id)/@(Model.Element.Id).png?@DateTime.Now.ToString("yyMMddHHmmss")"
+                        src="~/content/@(Model.BaseAvatarUrl)/layer@(Model.LayerId)/@(Model.AvatarId).png?@DateTime.Now.ToString("yyMMddHHmmss")"
                         asp-append-version="true" />
             </div>
         </div>

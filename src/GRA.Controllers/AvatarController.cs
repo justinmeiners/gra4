@@ -148,7 +148,8 @@ namespace GRA.Controllers
             if (details.DynamicAvatarPaths.Count == 0)
             {
                 // the requested avatar was not found, show the user's avatar
-                var currentUser = await _userService.GetDetails(GetActiveUserId());
+                int userId = GetActiveUserId();
+                var currentUser = await _userService.GetDetails(userId);
                 if (!string.IsNullOrEmpty(currentUser.DynamicAvatar))
                 {
                     // validate avatar
@@ -167,7 +168,7 @@ namespace GRA.Controllers
                 }
 
                 // check for a default avatar
-                var defaultDynamic = await _dynamicAvatarService.GetDefaultAvatarAsync();
+                var defaultDynamic = await _dynamicAvatarService.GetDefaultAvatarAsync(userId);
                 if (defaultDynamic == null || defaultDynamic.Count() == 0)
                 {
                     // there is no default avatar, redirect to home page, avatars not configured
@@ -212,6 +213,8 @@ namespace GRA.Controllers
         {
             var newValue = new StringBuilder();
             int counter = 0;
+            int userId = GetActiveUserId();
+
             foreach (string elementIdHex in details.DynamicAvatarString.SplitInParts(2))
             {
                 counter++;
@@ -221,12 +224,12 @@ namespace GRA.Controllers
                     if (increase)
                     {
                         elementIdInt
-                            = await _dynamicAvatarService.GetNextElement(layerNumber, elementIdInt);
+                            = await _dynamicAvatarService.GetNextElement(layerNumber, elementIdInt, userId);
                     }
                     else
                     {
                         elementIdInt
-                            = await _dynamicAvatarService.GetPreviousElement(layerNumber, elementIdInt);
+                            = await _dynamicAvatarService.GetPreviousElement(layerNumber, elementIdInt, userId);
                     }
                     newValue.Append(elementIdInt.ToString("x2"));
                 }

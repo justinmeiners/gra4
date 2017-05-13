@@ -58,9 +58,9 @@ namespace GRA.Data.Repository
 
         public async Task<bool> UserHasBadge(int userId, int badgeId)
         {
-            return null != await _context.UserBadges
-                .Where(_ => _.UserId == userId && _.BadgeId == badgeId)
-                .SingleOrDefaultAsync();
+            return await _context.UserBadges
+                   .Where(_ => _.UserId == userId && _.BadgeId == badgeId)
+                   .AnyAsync();
         }
     }
 }

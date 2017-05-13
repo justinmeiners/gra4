@@ -14,21 +14,18 @@ namespace GRA.Domain.Service
     public class DynamicAvatarService : BaseUserService<DynamicAvatarService>
     {
         private readonly IDynamicAvatarRepository _dynamicAvatarRepository;
-        private readonly IDynamicAvatarElementRepository _dynamicAvatarElementRepository;
         private readonly IDynamicAvatarLayerRepository _dynamicAvatarLayerRepository;
         private readonly IPathResolver _pathResolver;
         public DynamicAvatarService(ILogger<DynamicAvatarService> logger,
             IUserContextProvider userContextProvider,
             IDynamicAvatarRepository dynamicAvatarRepository,
-            IDynamicAvatarElementRepository dynamicAvatarElementRepository,
             IDynamicAvatarLayerRepository dynamicAvatarLayerRepository,
             IPathResolver pathResolver)
             : base(logger, userContextProvider)
         {
             _dynamicAvatarRepository = Require.IsNotNull(dynamicAvatarRepository,
                 nameof(dynamicAvatarRepository));
-            _dynamicAvatarElementRepository = Require.IsNotNull(dynamicAvatarElementRepository,
-                nameof(dynamicAvatarElementRepository));
+    
             _dynamicAvatarLayerRepository = Require.IsNotNull(dynamicAvatarLayerRepository,
                 nameof(dynamicAvatarLayerRepository));
             _pathResolver = Require.IsNotNull(pathResolver, nameof(pathResolver));
@@ -57,7 +54,7 @@ namespace GRA.Domain.Service
             return await _dynamicAvatarRepository.UpdateSaveAsync(GetClaimId(ClaimType.UserId), graAvatar);
         }
 
-        public async Task<Dictionary<int, int>> GetDefaultAvatarAsync()
+        public async Task<Dictionary<int, int>> GetDefaultAvatarAsync(int userId)
         {
             var layerIds = await _dynamicAvatarLayerRepository.GetLayerIdsAsync();
 
@@ -65,14 +62,14 @@ namespace GRA.Domain.Service
 
             foreach (var layerId in layerIds)
             {
-                var elementId = await _dynamicAvatarElementRepository.GetFirstElement(layerId);
+                var elementId = await _dynamicAvatarRepository.GetFirstElement(layerId, userId);
                 avatarParts.Add(layerId, elementId);
             }
 
             return avatarParts;
         }
 
-        public async Task<Dictionary<int, int>> ReturnValidated(IEnumerable<int> elementIds)
+        public async Task<Dictionary<int, int>> ReturnValidated(IEnumerable<int> elementIds, int userId)
         {
             var avatarParts = new Dictionary<int, int>();
             var layerIds = await _dynamicAvatarLayerRepository.GetLayerIdsAsync();
@@ -88,7 +85,7 @@ namespace GRA.Domain.Service
 
             foreach (var layerId in layerElements.Keys)
             {
-                if (!await _dynamicAvatarElementRepository.ExistsAsync(layerId, layerElements[layerId]))
+                if (!await _dynamicAvatarRepository.ElementIsAvailable(layerId, layerElements[layerId], userId))
                 {
                     return null;
                 }
@@ -96,29 +93,29 @@ namespace GRA.Domain.Service
             return layerElements;
         }
 
-        public async Task<int> GetNextElement(int layerNumber, int elementId)
+        public async Task<int> GetNextElement(int layerNumber, int elementId, int userId)
         {
             var layerIds = await _dynamicAvatarLayerRepository.GetLayerIdsAsync();
             int layerId = layerIds.ElementAt(layerNumber - 1);
-            var nextId = await _dynamicAvatarElementRepository.GetNextElement(layerId, elementId);
+            var nextId = await _dynamicAvatarRepository.GetNextElement(layerId, elementId, userId);
 
             if (nextId == null)
             {
-                nextId = await _dynamicAvatarElementRepository.GetFirstElement(layerId);
+                nextId = await _dynamicAvatarRepository.GetFirstElement(layerId, userId);
             }
 
             return (int)nextId;
         }
 
-        public async Task<int> GetPreviousElement(int layerNumber, int elementId)
+        public async Task<int> GetPreviousElement(int layerNumber, int elementId, int userId)
         {
             var layerIds = await _dynamicAvatarLayerRepository.GetLayerIdsAsync();
             int layerId = layerIds.ElementAt(layerNumber - 1);
-            var prevId = await _dynamicAvatarElementRepository.GetPreviousElement(layerId, elementId);
+            var prevId = await _dynamicAvatarRepository.GetPreviousElement(layerId, elementId, userId);
 
             if (prevId == null)
             {
-                prevId = await _dynamicAvatarElementRepository.GetLastElement(layerId);
+                prevId = await _dynamicAvatarRepository.GetLastElement(layerId, userId);
             }
 
             return (int)prevId;
@@ -147,16 +144,10 @@ namespace GRA.Domain.Service
                 dynamicAvatarLayer);
         }
 
-        public async Task<DynamicAvatarElement> AddElementAsync(DynamicAvatarElement dynamicAvatarElement)
+        public async Task AddElementAsync(int avatarId, int layerId)
         {
             VerifyManagementPermission();
-            return await _dynamicAvatarElementRepository.AddSaveAsync(GetClaimId(ClaimType.UserId), dynamicAvatarElement);
-        }
-
-        public async Task<DynamicAvatarElement> EditElementAsync(DynamicAvatarElement dynamicAvatarElement)
-        {
-            VerifyManagementPermission();
-            return await _dynamicAvatarElementRepository.UpdateSaveAsync(GetClaimId(ClaimType.UserId), dynamicAvatarElement);
+            await _dynamicAvatarRepository.AddElement(avatarId, layerId);
         }
 
         public async Task RemoveAvatarAsync(int avatarId)
@@ -185,10 +176,10 @@ namespace GRA.Domain.Service
                 }
             }
         }
-        public void WriteElementFile(DynamicAvatarElement element, byte[] imageFile)
+        public void WriteElementFile(int avatarId, int layerId, byte[] imageFile)
         {
             VerifyManagementPermission();
-            var destinationRoot = Path.Combine($"site{GetCurrentSiteId()}", "dynamicavatars", $"layer{element.DynamicAvatarLayerId}");
+            var destinationRoot = Path.Combine($"site{GetCurrentSiteId()}", "dynamicavatars", $"layer{layerId}");
             var destinationPath = _pathResolver.ResolveContentFilePath(destinationRoot);
 
             if (!Directory.Exists(destinationPath))
@@ -196,7 +187,7 @@ namespace GRA.Domain.Service
                 Directory.CreateDirectory(destinationPath);
             }
 
-            var fullFilePath = Path.Combine(destinationPath, $"{element.Id}.png");
+            var fullFilePath = Path.Combine(destinationPath, $"{avatarId}.png");
 
             _logger.LogInformation($"Writing out avatar file {fullFilePath}...");
             File.WriteAllBytes(fullFilePath, imageFile);

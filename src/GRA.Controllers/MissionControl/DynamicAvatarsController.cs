@@ -131,14 +131,10 @@ namespace GRA.Controllers.MissionControl
 
             foreach (var layer in layerList)
             {
-                var element = avatar.Elements.Where(_ => _.DynamicAvatarLayerId == layer.Id).FirstOrDefault();
-
                 var newElement = new AvatarsElementDetailViewModel()
                 {
                     AvatarId = avatar.Id,
-                    Element = element,
-                    Create = element == null,
-                    Layer = layer,
+                    LayerId = layer.Id,
                     BaseAvatarUrl = avatarRoot
                 };
                 elementViewModels.Add(newElement);
@@ -204,18 +200,8 @@ namespace GRA.Controllers.MissionControl
         [HttpPost]
         public async Task<IActionResult> EditElement(AvatarsElementDetailViewModel viewModel)
         {
-            var element = viewModel.Element;
-            element.DynamicAvatarId = viewModel.AvatarId;
-            element.DynamicAvatarLayerId = viewModel.Layer.Id;
-
-            if (viewModel.Create || element == null)
-            {
-                element = await _avatarService.AddElementAsync(element);
-            }
-            else
-            {
-                element = await _avatarService.EditElementAsync(element);
-            }
+            var avatarId = viewModel.AvatarId;
+            var layerId = viewModel.LayerId;
 
             if (viewModel.UploadImage != null)
             {
@@ -230,7 +216,8 @@ namespace GRA.Controllers.MissionControl
                     }
                 }
 
-                _avatarService.WriteElementFile(element, avatarBytes);
+                _avatarService.WriteElementFile(avatarId, layerId, avatarBytes);
+                await _avatarService.AddElementAsync(avatarId, layerId);
             }
 
             return RedirectToAction("Edit", new { id = viewModel.AvatarId });

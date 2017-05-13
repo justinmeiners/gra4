@@ -20,6 +20,7 @@ namespace GRA.Controllers.Base
         protected async Task<DynamicAvatarDetails> GetDynamicAvatarDetailsAsync(string dynamicAvatar,
             DynamicAvatarService dynamicAvatarService)
         {
+            int userId = GetActiveUserId();
             bool problem = false;
             Dictionary<int, int> avatarLayerElement = null;
             if (!string.IsNullOrEmpty(dynamicAvatar))
@@ -39,7 +40,7 @@ namespace GRA.Controllers.Base
                 }
                 if (!problem)
                 {
-                    avatarLayerElement = await dynamicAvatarService.ReturnValidated(elementIds);
+                    avatarLayerElement = await dynamicAvatarService.ReturnValidated(elementIds, userId);
                     if (avatarLayerElement == null)
                     {
                         problem = true;

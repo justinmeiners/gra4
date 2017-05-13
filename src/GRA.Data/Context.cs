@@ -40,6 +40,8 @@ namespace GRA.Data
             // https://docs.microsoft.com/en-us/ef/core/modeling/keys
             modelBuilder.Entity<Model.ChallengeCategory>()
                 .HasKey(_ => new { _.ChallengeId, _.CategoryId });
+            modelBuilder.Entity<Model.DynamicAvatarElement>()
+                .HasKey(_ => new { _.AvatarId, _.LayerId });
             modelBuilder.Entity<Model.RolePermission>()
                 .HasKey(_ => new { _.RoleId, _.PermissionId });
             modelBuilder.Entity<Model.TriggerBadge>()
@@ -48,6 +50,8 @@ namespace GRA.Data
                 .HasKey(_ => new { _.TriggerId, _.ChallengeId });
             modelBuilder.Entity<Model.UserAnswer>()
                 .HasKey(_ => new { _.UserId, _.AnswerId });
+            modelBuilder.Entity<Model.UserAvatar>()
+                .HasKey(_ => new { _.UserId, _.AvatarId });
             modelBuilder.Entity<Model.UserBadge>()
                 .HasKey(_ => new { _.UserId, _.BadgeId });
             modelBuilder.Entity<Model.UserBook>()
@@ -153,6 +157,7 @@ namespace GRA.Data
         public DbSet<Model.User> Users { get; set; }
         public DbSet<Model.UserAnswer> UserAnswers { get; set; }
         public DbSet<Model.UserChallengeTask> UserChallengeTasks { get; set; }
+        public DbSet<Model.UserAvatar> UserAvatars { get; set; }
         public DbSet<Model.UserBadge> UserBadges { get; set; }
         public DbSet<Model.UserBook> UserBooks { get; set; }
         public DbSet<Model.UserQuestionnaire> UserQuestionnaires { get; set; }

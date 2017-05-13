@@ -2,12 +2,12 @@
 
 namespace GRA.Data.Model
 {
-    public class DynamicAvatarElement : Abstract.BaseDbEntity
+    public class DynamicAvatarElement
     {
         [Required]
-        public int DynamicAvatarId { get; set; }
+        public int AvatarId { get; set; }
 
         [Required]
-        public int DynamicAvatarLayerId { get; set; }
+        public int LayerId { get; set; }
     }
 }

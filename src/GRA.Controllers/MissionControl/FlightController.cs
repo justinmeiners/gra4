@@ -179,16 +179,10 @@ namespace GRA.Controllers.MissionControl
 
                     var avatar = avatars[elementNumber];
 
-                    var element = new DynamicAvatarElement
-                    {
-                        DynamicAvatarId = avatar.Id,
-                        DynamicAvatarLayerId = layer.Id,
-                    };
-
-                    element = await _dynamicAvatarService.AddElementAsync(element);
+                    await _dynamicAvatarService.AddElementAsync(avatar.Id, layer.Id);
 
                     System.IO.File.Copy(avatarElementPath,
-                        Path.Combine(destinationPath, $"{element.Id}{extension}"));
+                        Path.Combine(destinationPath, $"{avatar.Id}{extension}"));
 
                     elementCount++;
                     elementNumber++;
