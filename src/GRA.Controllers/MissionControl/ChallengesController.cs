@@ -157,7 +157,7 @@ namespace GRA.Controllers.MissionControl
                 }
             }
 
-            PaginateViewModel paginateModel = new PaginateViewModel()
+            var paginateModel = new PaginateViewModel()
             {
                 ItemCount = challengeList.Count,
                 CurrentPage = (filter.Skip.Value / filter.Take.Value) + 1,
@@ -166,7 +166,7 @@ namespace GRA.Controllers.MissionControl
 
             var systemList = (await _siteService.GetSystemList())
                 .OrderByDescending(_ => _.Id == GetId(ClaimType.SystemId)).ThenBy(_ => _.Name);
-            ChallengesListViewModel viewModel = new ChallengesListViewModel()
+            var viewModel = new ChallengesListViewModel()
             {
                 Challenges = challengeList.Data,
                 PaginateModel = paginateModel,
@@ -470,7 +470,7 @@ namespace GRA.Controllers.MissionControl
                     }
                     if (challenge.BadgeId == null)
                     {
-                        Badge newBadge = new Badge()
+                        var newBadge = new Badge()
                         {
                             Filename = filename
                         };

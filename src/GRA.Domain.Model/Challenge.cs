@@ -30,7 +30,7 @@ namespace GRA.Domain.Model
 
         [Required]
         [DisplayName("Points Awarded")]
-        [Range(1, int.MaxValue, ErrorMessage = "The minimum points that can be awarded is {1}")]
+        [Range(0, int.MaxValue, ErrorMessage = "The minimum points that can be awarded is {1}")]
         public int? PointsAwarded { get; set; }
 
         [Required]
