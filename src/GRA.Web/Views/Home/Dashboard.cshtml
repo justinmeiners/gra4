@@ -9,7 +9,8 @@
                     <h4 class="modal-title" id="confirmModalLabel">Submit Log</h4>
                 </div>
                 <div class="modal-body">
-                    <span id="modal-text"></span>
+                    <p id="modal-text"></p>
+                    <p id="modal-review-text"></p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal" style="margin-right: 1em;">Cancel</button>
@@ -135,7 +136,13 @@
                             <div class="row row-spacing">
                                 <div class="col-xs-12">
                                     <label asp-for="Review" class="control-label"></label>
-                                    <input id="review-field" asp-for="Review" class="form-control" />
+                                    <textarea id="review-field" 
+                                              asp-for="Review" 
+                                              class="form-control"
+                                              style="resize: none;"
+                                              rows=4>
+
+                                    </textarea>
                                 </div>
                             </div>
                         }
@@ -226,14 +233,32 @@
             var button = $(event.relatedTarget);
             var modal = $(this);
 
-            var text = 'Are you sure you want to submit?';
+            var text = 'You are about to submit: ';
 
-            text += $('#title-field').text();
-            text += ', ' + $('#author-field').text();
-            text += $('#review-field').text();
+            
+            var amountText = $('#amount-field').val();
 
+            if (amountText)
+            {
+                text += amountText;
+            }
+
+            var titleText = $('#title-field').val();
+
+            if (titleText)
+            {
+                text += titleText;
+            }
+
+            var authorText = $('#author-field').val();
+            if (authorText)
+            {
+                text += ', By: ' + authorText;
+            }
 
             modal.find('#modal-text').text(text);
+
+            modal.find('#modal-review-text').text($('#review-field').val());
             modal.find("#modal-confirmButton").show();
         })
     </script>

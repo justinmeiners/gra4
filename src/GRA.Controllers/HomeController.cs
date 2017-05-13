@@ -14,7 +14,11 @@ namespace GRA.Controllers
     public class HomeController : Base.UserController
     {
         private const string ActivityErrorMessage = "ActivityErrorMessage";
-        private const string AuthorMissingTitle = "AuthorMissingTitle";
+        private const string MissingTitle = "MissingTitle";
+        private const string MissingAuthor = "MissingAuthor";
+
+        private const string MissingReview = "MissingReview";
+
         private const string ModelData = "ModelData";
         private const string SecretCodeMessage = "SecretCodeMessage";
         private const int BadgesToDisplay = 6;
@@ -143,10 +147,21 @@ namespace GRA.Controllers
                     ModelState.AddModelError("ActivityAmount", (string)TempData[ActivityErrorMessage]);
                     viewModel.ActivityAmount = null;
                 }
-                if (TempData.ContainsKey(AuthorMissingTitle))
+                if (TempData.ContainsKey(MissingTitle))
                 {
-                    ModelState.AddModelError("Title", (string)TempData[AuthorMissingTitle]);
+                    ModelState.AddModelError("Title", (string)TempData[MissingTitle]);
                 }
+
+                if (TempData.ContainsKey(MissingAuthor))
+                {
+                    ModelState.AddModelError("Author", (string)TempData[MissingAuthor]);
+                }
+
+                if (TempData.ContainsKey(MissingReview))
+                {
+                    ModelState.AddModelError("Review", (string)TempData[MissingReview]);
+                }
+
                 if (TempData.ContainsKey(SecretCodeMessage))
                 {
                     viewModel.SecretCodeMessage = (string)TempData[SecretCodeMessage];
@@ -225,6 +240,8 @@ namespace GRA.Controllers
         [HttpPost]
         public async Task<IActionResult> LogActivity(DashboardViewModel viewModel)
         {
+            var pointTranslation = await _activityService.GetUserPointTranslationAsync();
+
             bool valid = true;
             if (!viewModel.SingleEvent
                 && (viewModel.ActivityAmount == null || viewModel.ActivityAmount <= 0))
@@ -233,12 +250,23 @@ namespace GRA.Controllers
                 TempData[ActivityErrorMessage] = "Please enter a whole number greater than 0.";
             }
 
-            if (string.IsNullOrWhiteSpace(viewModel.Title)
-                && !string.IsNullOrWhiteSpace(viewModel.Author))
+            if (pointTranslation.AskTitle && string.IsNullOrWhiteSpace(viewModel.Title))
             {
                 valid = false;
-                TempData[AuthorMissingTitle] = "Please include the Title of the book";
-            }                
+                TempData[MissingTitle] = "Please include the Title of the book";
+            }
+
+            if (pointTranslation.AskAuthor && string.IsNullOrWhiteSpace(viewModel.Author))
+            {
+                valid = false;
+                TempData[MissingAuthor] = "Please include the Author of the book";
+            }       
+
+            if (pointTranslation.AskReview && string.IsNullOrWhiteSpace(viewModel.Review))
+            {
+                valid = false;
+                TempData[MissingReview] = "Please include the Review of the book";
+            }             
 
             if (!valid)
             {
