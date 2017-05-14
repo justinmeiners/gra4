@@ -62,6 +62,14 @@
                 </div>
             </div>
 
+            <div id="goalField" class="row row-spacing @(Model.ShowGoal ? "": "hide")">
+                <div class="col-xs-12">
+                    <label asp-for="User.Goal" class="control-label"></label>
+                    <input asp-for="User.Goal" class="form-control" type="text" />
+                    <span id="goalMessage" asp-validation-for="User.Goal" class="text-danger"></span>
+                </div>
+            </div>
+
             <div id="ageField" class="row row-spacing @(Model.ShowAge ? "": "hide")">
                 <div class="col-xs-12">
                     <label asp-for="User.Age" class="control-label"></label>
@@ -264,6 +272,15 @@
                 else
                 {
                     $("#phoneField").addClass("hide");
+                }
+
+                if (selectedProgram.AskGoal)
+                {
+                    $("#goalField").removeClass("hide");
+                }
+                else
+                {
+                    $("#goalField").addClass("hide");
                 }
             }
         });

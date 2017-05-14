@@ -11,9 +11,11 @@ namespace GRA.Data.Model
         [Required]
         [MaxLength(255)]
         public string Name { get; set; }
-        [Required]
-        public int AchieverPointAmount { get; set; }
-
+        
+        // AchieverGoalMultiplier and AchieverPointAmount are mutually exclusive
+        // either a program has a fixed point amount, or uses a point multiplier
+        public int? AchieverGoalMultiplier { get; set; }
+        public int? AchieverTotal { get; set; }
         public int? AchieverBadgeId { get; set; }
         [MaxLength(255)]
         public string AchieverBadgeName { get; set; }
@@ -53,6 +55,12 @@ namespace GRA.Data.Model
         [Required]
         public bool EditPhoneNumber { get; set; }
 
+        [Required]
+        public bool AskGoal { get; set; }
+        [Required]
+        public bool GoalRequired { get; set; }
+        [Required]
+        public bool EditGoal { get; set; }
         [Required]
         public int Position { get; set; }
         public int? AgeMaximum { get; set; }

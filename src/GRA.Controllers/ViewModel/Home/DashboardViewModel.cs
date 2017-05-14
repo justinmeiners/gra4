@@ -7,7 +7,8 @@ namespace GRA.Controllers.ViewModel.Home
     {
         public string FirstName { get; set; }
         public int CurrentPointTotal { get; set; }
-        public int GoalPercent { get; set; }
+        public int? Goal { get; set; }
+        public int? AchieverProgressPercent { get; set; }
         public string AvatarPath { get; set; }
         public bool SingleEvent { get; set; }
 

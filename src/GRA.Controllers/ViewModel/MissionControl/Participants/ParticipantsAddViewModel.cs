@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace GRA.Controllers.ViewModel.MissionControl.Participants
@@ -61,6 +60,9 @@ namespace GRA.Controllers.ViewModel.MissionControl.Participants
         [MaxLength(254)]
         public string Email { get; set; }
 
+        [DisplayName("Daily Goal")]
+        public int? Goal;
+
         [DisplayName("Phone Number")]
         [Phone]
         [MaxLength(15)]
@@ -72,6 +74,7 @@ namespace GRA.Controllers.ViewModel.MissionControl.Participants
         public bool ShowPhoneNumber {get; set; }
         public bool ShowAge { get; set; }
         public bool ShowSchool { get; set; }
+        public bool ShowGoal { get; set; }
         public bool NewEnteredSchool { get; set; }
         public int? SchoolDistrictId { get; set; }
         public int? SchoolTypeId { get; set; }

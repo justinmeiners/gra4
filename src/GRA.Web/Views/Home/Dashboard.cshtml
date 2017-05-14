@@ -60,11 +60,24 @@
             </p>
             <div class="dashboard-activity">
                 <p style="font-size: x-large;">You have <strong>@Model.CurrentPointTotal points</strong>.</p>
-                <div class="progress">
-                    <div class="progress-bar" role="progressbar" aria-valuenow="@Model.GoalPercent" aria-valuemin="0" aria-valuemax="100" style="width: @Model.GoalPercent%;">
-                        @Model.GoalPercent%
-                    </div>
-                </div>
+                
+                @if (Model.Goal.HasValue)
+                {
+                    <p>
+                        Your goal is @Model.Goal.Value @Model.ActivityDescriptionPlural.
+                    </p>
+                }
+
+                @if (Model.AchieverProgressPercent.HasValue)
+                {
+                    <p>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="@Model.AchieverProgressPercent.Value" aria-valuemin="0" aria-valuemax="100" style="width: @Model.AchieverProgressPercent.Value%;">
+                                @Model.AchieverProgressPercent.Value%
+                            </div>
+                        </div>
+                    </p>
+                }
                 <p>See your <a asp-controller="Profile" asp-action="History">activity history</a>.</p>
             </div>
         </div>

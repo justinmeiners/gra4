@@ -59,7 +59,7 @@ namespace GRA.Data.Model
         public string DynamicAvatar { get; set; }
         public int? TeamId { get; set; }
 
-        public int? PointGoal { get; set; }
+        public int? Goal { get; set; }
 
     }
 }

@@ -73,7 +73,7 @@ namespace GRA.Controllers
 
             var site = await GetCurrentSiteAsync();
 
-            ProfileDetailViewModel viewModel = new ProfileDetailViewModel()
+            var viewModel = new ProfileDetailViewModel()
             {
                 User = user,
                 HouseholdCount = householdCount,
@@ -84,6 +84,8 @@ namespace GRA.Controllers
                 ShowSchool = userProgram.AskSchool,
                 ShowCard = userProgram.AskCard,
                 EditCard = userProgram.EditCard,
+                ShowGoal = userProgram.AskGoal,
+                EditGoal = userProgram.EditGoal,
                 ShowEmail = userProgram.AskEmail,
                 EditEmail = userProgram.EditEmail,
                 ShowPhone = userProgram.AskPhoneNumber,
@@ -136,6 +138,7 @@ namespace GRA.Controllers
             var askSchool = program.AskSchool;
             var askEmail = program.AskEmail;
             var askCard = program.AskCard;
+            var askGoal = program.AskGoal;
             var askPhoneNumber = program.AskPhoneNumber;
 
             if (site.RequirePostalCode && string.IsNullOrWhiteSpace(model.User.PostalCode))
@@ -168,6 +171,10 @@ namespace GRA.Controllers
             if (program.CardRequired && string.IsNullOrWhiteSpace(model.User.CardNumber))
             {
                 ModelState.AddModelError("User.CardNumber", "The library card field is required.");
+            }
+            if (program.GoalRequired && !model.User.Goal.HasValue)
+            {
+                ModelState.AddModelError("User.Goal", "The goal field is required.");
             }
             if (program.EmailRequired && string.IsNullOrWhiteSpace(model.User.Email))
             {
@@ -206,6 +213,10 @@ namespace GRA.Controllers
                     {
                         model.User.CardNumber = null;
                     }
+                    if (!askGoal)
+                    {
+                        model.User.Goal = null;
+                    }
                     if (!askEmail)
                     {
                         model.User.Email = null;
@@ -242,6 +253,8 @@ namespace GRA.Controllers
             model.ShowSchool = askSchool;
             model.ShowCard = askCard;
             model.EditCard = program.EditCard;
+            model.ShowGoal = askGoal;
+            model.EditGoal = program.EditGoal;
             model.ShowEmail = askEmail;
             model.EditEmail = program.EditEmail;
             model.ShowPhone = askPhoneNumber;
@@ -306,7 +319,7 @@ namespace GRA.Controllers
                 .GetHouseholdAsync(authUser.HouseholdHeadUserId ?? authUser.Id, authUserIsHead,
                 authUserIsHead, authUserIsHead);
 
-            HouseholdListViewModel viewModel = new HouseholdListViewModel()
+            var viewModel = new HouseholdListViewModel()
             {
                 Users = household,
                 HouseholdCount = household.Count(),

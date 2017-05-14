@@ -477,15 +477,27 @@ namespace GRA.Domain.Service
             // update the user's achiever status if they've crossed the threshhold
             var program = await _programRepository.GetByIdAsync(earnedUser.ProgramId);
 
+            int? achieveAmount = null;
+
+            if (program.AchieverGoalMultiplier.HasValue && earnedUser.Goal.HasValue)
+            {
+                achieveAmount = earnedUser.Goal.Value * program.AchieverGoalMultiplier.Value;
+            }
+            else if (program.AchieverTotal.HasValue)
+            {
+                achieveAmount = program.AchieverTotal.Value;
+            }
+
             if (!earnedUser.IsAchiever
-                && earnedUser.PointsEarned >= program.AchieverPointAmount)
+                && achieveAmount.HasValue
+                && earnedUser.PointsEarned >= achieveAmount.Value)
             {
                 earnedUser.IsAchiever = true;
 
                 var notification = new Notification
                 {
                     PointsEarned = 0,
-                    Text = $"<span class=\"fa fa-certificate\"></span> Congratulations! You've achieved <strong>{program.AchieverPointAmount} points</strong> reaching the goal of the program!",
+                    Text = $"<span class=\"fa fa-certificate\"></span> Congratulations! You've achieved <strong>{achieveAmount.Value} points</strong> reaching your gol!",
                     UserId = earnedUser.Id,
                     IsAchiever = true
                 };
@@ -500,7 +512,7 @@ namespace GRA.Domain.Service
                         PointsEarned = 0,
                         IsDeleted = false,
                         BadgeId = badge.Id,
-                        Description = $"You reached the goal of {program.AchieverPointAmount} points!"
+                        Description = $"You reached the goal of {achieveAmount.Value} points!"
                     });
                     notification.Text += " You've also earned a badge!";
                     notification.BadgeId = badge.Id;
@@ -557,7 +569,18 @@ namespace GRA.Domain.Service
             // update the user's achiever status if they've crossed the threshhold
             var program = await _programRepository.GetByIdAsync(removeUser.ProgramId);
 
-            if (removeUser.PointsEarned >= program.AchieverPointAmount)
+            int? achieveAmount = null;
+
+            if (program.AchieverGoalMultiplier.HasValue && removeUser.Goal.HasValue)
+            {
+                achieveAmount = removeUser.Goal.Value * program.AchieverGoalMultiplier.Value;
+            }
+            else if (program.AchieverTotal.HasValue)
+            {
+                achieveAmount = program.AchieverTotal.Value;
+            }
+
+            if (achieveAmount.HasValue && removeUser.PointsEarned >= achieveAmount.Value)
             {
                 removeUser.IsAchiever = true;
             }

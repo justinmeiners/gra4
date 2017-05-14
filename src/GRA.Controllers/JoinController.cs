@@ -78,7 +78,7 @@ namespace GRA.Controllers
             var programViewObject = _mapper.Map<List<ProgramViewModel>>(programList);
             var districtList = await _schoolService.GetDistrictsAsync();
 
-            SinglePageViewModel viewModel = new SinglePageViewModel()
+            var viewModel = new SinglePageViewModel()
             {
                 RequirePostalCode = site.RequirePostalCode,
                 ProgramJson = Newtonsoft.Json.JsonConvert.SerializeObject(programViewObject),
@@ -113,6 +113,7 @@ namespace GRA.Controllers
                 viewModel.ShowEmail = program.AskEmail;
                 viewModel.ShowPhoneNumber = program.AskPhoneNumber;
                 viewModel.ShowCard = program.AskCard;
+                viewModel.ShowGoal = program.AskGoal;
             }
 
             return View(viewModel);
@@ -135,6 +136,7 @@ namespace GRA.Controllers
             bool askSchool = false;
             bool askEmail = false;
             bool askCard = false;
+            bool askGoal = false;
             bool askPhoneNumber = false;
             if (model.ProgramId.HasValue)
             {
@@ -143,6 +145,7 @@ namespace GRA.Controllers
                 askSchool = program.AskSchool;
                 askEmail = program.AskEmail;
                 askCard = program.AskCard;
+                askGoal = program.AskGoal;
                 askPhoneNumber = program.AskPhoneNumber;
 
                 if (program.AgeRequired && !model.Age.HasValue)
@@ -170,6 +173,10 @@ namespace GRA.Controllers
                 if (program.CardRequired && string.IsNullOrWhiteSpace(model.Card))
                 {
                     ModelState.AddModelError("Card", "The library card field is required.");
+                }
+                if (program.GoalRequired && !model.Goal.HasValue)
+                {
+                    ModelState.AddModelError("Goal", "The goal is required.");
                 }
                 if (program.EmailRequired && string.IsNullOrWhiteSpace(model.Email))
                 {
@@ -207,6 +214,10 @@ namespace GRA.Controllers
                 {
                     model.Card = null;
                 }
+                if (!askGoal)
+                {
+                    model.Goal = null;
+                }
                 if (!askEmail)
                 {
                     model.Email = null;
@@ -216,7 +227,7 @@ namespace GRA.Controllers
                     model.PhoneNumber = null;
                 }
 
-                User user = _mapper.Map<User>(model);
+                var user = _mapper.Map<User>(model);
                 user.SiteId = site.Id;
                 try
                 {
@@ -268,6 +279,7 @@ namespace GRA.Controllers
             model.ShowEmail = askEmail;
             model.ShowPhoneNumber = askPhoneNumber;
             model.ShowCard = askCard;
+            model.ShowGoal = askGoal;
 
             var districtList = await _schoolService.GetDistrictsAsync();
             if (model.SchoolId.HasValue)
@@ -456,6 +468,7 @@ namespace GRA.Controllers
             bool askAge = false;
             bool askSchool = false;
             bool askCard = false;
+            bool askGoal = false;
 
             if (model.ProgramId.HasValue)
             {
@@ -463,6 +476,7 @@ namespace GRA.Controllers
                 askAge = program.AskAge;
                 askSchool = program.AskSchool;
                 askCard = program.AskCard;
+                askGoal = program.AskGoal;
 
                 if (program.AgeRequired && !model.Age.HasValue)
                 {
@@ -490,6 +504,11 @@ namespace GRA.Controllers
                 if (program.CardRequired && string.IsNullOrWhiteSpace(model.Card))
                 {
                     ModelState.AddModelError("Card", "The Library Card field is required");
+                }
+
+                if (program.GoalRequired && !model.Goal.HasValue)
+                {
+                    ModelState.AddModelError("Goal", "The Goal field is required");
                 }
             }
 

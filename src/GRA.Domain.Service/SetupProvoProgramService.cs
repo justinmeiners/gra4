@@ -72,9 +72,9 @@ namespace GRA.Domain.Service
                 AskAuthor = false,
                 AskReview = false,
                 PointsEarned = 1,
-                TranslationName = "Playing (minutes)",
-                TranslationDescriptionPastTense = "played",
-                TranslationDescriptionPresentTense = "playing"
+                TranslationName = "Talking, singing, reading, writing, playing (minutes)",
+                TranslationDescriptionPastTense = "interacted",
+                TranslationDescriptionPresentTense = "talking, singing, reading, writing, playing"
             };
 
             var readMinutesPointTranslation = new Model.PointTranslation
@@ -126,7 +126,7 @@ namespace GRA.Domain.Service
             var program = new Model.Program
             {
                 SiteId = siteId,
-                AchieverPointAmount = 1000,
+                AchieverGoalMultiplier = 40, // 40 days in the program
                 Name = "Apprentices (ages 3 and below)",
                 Position = programCount++,
                 AgeRequired = true,
@@ -136,6 +136,9 @@ namespace GRA.Domain.Service
                 AskSchool = false,
                 AskCard = true,
                 CardRequired = true,
+                AskGoal = true,
+                GoalRequired = true,
+                EditGoal = false,
                 AskEmail = false,
                 EditEmail = false,
                 EmailRequired = false,
@@ -152,7 +155,7 @@ namespace GRA.Domain.Service
             program = new Model.Program
             {
                 SiteId = siteId,
-                AchieverPointAmount = 1000,
+                AchieverGoalMultiplier = 40, // 40 days in the program
                 Name = "Journeymen (ages 4 to 8)",
                 Position = programCount++,
                 AgeRequired = true,
@@ -162,6 +165,9 @@ namespace GRA.Domain.Service
                 AskSchool = false,
                 AskCard = true,
                 CardRequired = true,
+                AskGoal = true,
+                GoalRequired = true,
+                EditGoal = false,
                 AskEmail = false,
                 EditEmail = false,
                 EmailRequired = false,
@@ -179,7 +185,7 @@ namespace GRA.Domain.Service
             program = new Model.Program
             {
                 SiteId = siteId,
-                AchieverPointAmount = 1000,
+                AchieverGoalMultiplier = 40, // 40 days in the program
                 Name = "Master Craftsmen (ages 9 to 12)",
                 Position = programCount++,
                 AgeRequired = true,
@@ -189,6 +195,9 @@ namespace GRA.Domain.Service
                 AskSchool = false,
                 AskCard = true,
                 CardRequired = true,
+                AskGoal = true,
+                EditGoal = false,
+                GoalRequired = true,
                 AskEmail = false,
                 EditEmail = false,
                 EmailRequired = false,
@@ -206,7 +215,7 @@ namespace GRA.Domain.Service
             program = new Model.Program
             {
                 SiteId = siteId,
-                AchieverPointAmount = 1000,
+                AchieverTotal = 600,
                 Name = "Teen (ages 12 to 18)",
                 Position = programCount,
                 AgeRequired = true,
@@ -215,6 +224,8 @@ namespace GRA.Domain.Service
                 AskSchool = false,
                 AskCard = true,
                 CardRequired = true,
+                AskGoal = false,
+                GoalRequired = false,
                 AskEmail = true,
                 EditEmail = true,
                 EmailRequired = true,
@@ -232,7 +243,7 @@ namespace GRA.Domain.Service
             program = new Model.Program
             {
                 SiteId = siteId,
-                AchieverPointAmount = 1000,
+                AchieverTotal = 600,
                 Name = "Adults (ages 18 and up)",
                 Position = programCount,
                 AgeRequired = true,
@@ -241,6 +252,8 @@ namespace GRA.Domain.Service
                 AskSchool = false,
                 AskCard = true,
                 CardRequired = true,
+                AskGoal = false,
+                GoalRequired = false,
                 AskEmail = true,
                 EditEmail = true,
                 EmailRequired = true,

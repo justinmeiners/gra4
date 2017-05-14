@@ -103,16 +103,13 @@ namespace GRA.Controllers
                     }
                 }
 
-                var pointGoal = user.PointGoal ?? 3;
-                float dec = user.PointsEarned / (float)pointGoal;
-                int percent = (int)(dec * 100.0f);
+            
 
                 var viewModel = new DashboardViewModel()
                 {
                     FirstName = user.FirstName,
                     TeamName = teamName,
                     CurrentPointTotal = user.PointsEarned,
-                    GoalPercent = percent,
                     SingleEvent = pointTranslation.IsSingleEvent,
                     ActivityDescription = pointTranslation.ActivityDescription,
                     ActivityDescriptionPlural = pointTranslation.ActivityDescriptionPlural,
@@ -123,6 +120,25 @@ namespace GRA.Controllers
                     AskAuthor = pointTranslation.AskAuthor,
                     AskReview = pointTranslation.AskReview,
                 };
+
+                var program = await _siteService.GetProgramByIdAsync(user.ProgramId);
+
+                int? achieveAmount = null;
+
+                if (program.AchieverGoalMultiplier.HasValue && user.Goal.HasValue)
+                {
+                    achieveAmount = user.Goal * program.AchieverGoalMultiplier.Value;
+                }
+                else if (program.AchieverTotal.HasValue)
+                {
+                    achieveAmount = program.AchieverTotal.Value;
+                }
+
+                if (achieveAmount.HasValue)
+                {
+                    float dec = user.PointsEarned / (float)achieveAmount.Value;
+                    viewModel.AchieverProgressPercent = (int)(dec * 100.0f);
+                }
 
                 if (!string.IsNullOrEmpty(staticAvatarPath))
                 {

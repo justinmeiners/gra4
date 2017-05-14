@@ -7,7 +7,8 @@ namespace GRA.Controllers.ViewModel.Profile
         public Domain.Model.User User { get; set; }
         public bool RequirePostalCode { get; set; }
         public bool ShowEmail {get; set; }
-        public bool ShowCard {get; set; }
+        public bool ShowCard { get; set; }
+        public bool ShowGoal { get; set; }
         public bool ShowPhoneNumber {get; set; }
         public bool ShowAge { get; set; }
         public bool ShowSchool { get; set; }

@@ -14,6 +14,8 @@ namespace GRA.Controllers.ViewModel.Profile
         public bool ShowSchool { get; set; }
         public bool ShowCard { get; set; }
         public bool EditCard { get; set; }
+        public bool ShowGoal { get; set; }
+        public bool EditGoal { get; set; }
         public bool ShowEmail { get; set; }
         public bool EditEmail { get; set; }
         public bool ShowPhone { get; set; }

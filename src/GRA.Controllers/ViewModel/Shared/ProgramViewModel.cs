@@ -11,6 +11,8 @@ namespace GRA.Controllers.ViewModel.Shared
         public bool AskSchool { get; set; }
         public bool AskCard { get; set; }
         public bool EditCart { get; set; }
+        public bool AskGoal { get; set; }
+        public bool EditGoal { get; set; }
         public bool AskEmail { get; set; }
         public bool EditEmail { get; set; }
         public bool AskPhoneNumber { get; set; }

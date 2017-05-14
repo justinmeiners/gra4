@@ -191,7 +191,7 @@ namespace GRA.Controllers.MissionControl
             var programViewObject = _mapper.Map<List<ProgramViewModel>>(programList);
             var districtList = await _schoolService.GetDistrictsAsync();
 
-            ParticipantsAddViewModel viewModel = new ParticipantsAddViewModel()
+            var viewModel = new ParticipantsAddViewModel()
             {
                 RequirePostalCode = site.RequirePostalCode,
                 ProgramJson = Newtonsoft.Json.JsonConvert.SerializeObject(programViewObject),
@@ -224,6 +224,7 @@ namespace GRA.Controllers.MissionControl
                 viewModel.ShowAge = program.AskAge;
                 viewModel.ShowSchool = program.AskSchool;
                 viewModel.ShowCard = program.AskCard;
+                viewModel.ShowGoal = program.AskGoal;
                 viewModel.ShowEmail = program.AskEmail;
                 viewModel.ShowPhoneNumber = program.AskPhoneNumber;
             }
@@ -244,6 +245,7 @@ namespace GRA.Controllers.MissionControl
             bool askSchool = false;
             bool askEmail = false;
             bool askCard = false;
+            bool askGoal = false;
             bool askPhoneNumber = false;
 
             if (model.ProgramId.HasValue)
@@ -253,6 +255,7 @@ namespace GRA.Controllers.MissionControl
                 askSchool = program.AskSchool;
                 askEmail = program.AskEmail;
                 askCard = program.AskCard;
+                askGoal = program.AskGoal;
                 askPhoneNumber = program.AskPhoneNumber;
 
                 if (program.AgeRequired && !model.Age.HasValue)
@@ -281,6 +284,10 @@ namespace GRA.Controllers.MissionControl
                 if (program.CardRequired && string.IsNullOrWhiteSpace(model.Card))
                 {
                     ModelState.AddModelError("Card", "The library card field is required.");
+                }
+                if (program.GoalRequired && !model.Goal.HasValue)
+                {
+                    ModelState.AddModelError("Goal", "The goal field is required.");
                 }
                 if (program.EmailRequired && string.IsNullOrWhiteSpace(model.Email))
                 {
@@ -318,6 +325,10 @@ namespace GRA.Controllers.MissionControl
                 if (!askCard)
                 {
                     model.Card = null;
+                }
+                if (!askGoal)
+                {
+                    model.Goal = null;
                 }
                 if (!askEmail)
                 {
@@ -372,9 +383,10 @@ namespace GRA.Controllers.MissionControl
             model.RequirePostalCode = site.RequirePostalCode;
             model.ShowAge = askAge;
             model.ShowSchool = askSchool;
+            model.ShowCard = askCard;
+            model.ShowGoal = askGoal;
             model.ShowEmail = askEmail;
             model.ShowPhoneNumber = askPhoneNumber;
-            model.ShowCard = askCard;
 
             var districtList = await _schoolService.GetDistrictsAsync();
             if (model.SchoolId.HasValue)
@@ -449,6 +461,7 @@ namespace GRA.Controllers.MissionControl
                     ShowAge = userProgram.AskAge,
                     ShowSchool = userProgram.AskSchool,  
                     ShowCard = userProgram.AskCard,
+                    ShowGoal = userProgram.AskGoal,
                     ShowEmail = userProgram.AskEmail,
                     ShowPhoneNumber = userProgram.AskPhoneNumber,                  
                     HasSchoolId = user.SchoolId.HasValue,
@@ -521,6 +534,10 @@ namespace GRA.Controllers.MissionControl
             {
                 ModelState.AddModelError("User.CardNumber", "The library card field is required.");
             }
+            if (program.GoalRequired && !model.User.Goal.HasValue)
+            {
+                ModelState.AddModelError("User.Goal", "The goal field is required.");
+            }
             if (program.EmailRequired && string.IsNullOrWhiteSpace(model.User.Email))
             {
                 ModelState.AddModelError("User.Email", "The email field is required.");
@@ -534,6 +551,7 @@ namespace GRA.Controllers.MissionControl
             bool askSchool = program.AskSchool;
             bool askEmail = program.AskEmail;
             bool askCard = program.AskCard;
+            bool askGoal = program.AskGoal;
             bool askPhoneNumber = program.AskPhoneNumber;
 
             if (ModelState.IsValid)
@@ -562,6 +580,10 @@ namespace GRA.Controllers.MissionControl
                     if (!askCard)
                     {
                         model.User.CardNumber = null;
+                    }
+                    if (!askGoal)
+                    {
+                        model.User.Goal = null;
                     }
                     if (!askEmail)
                     {
@@ -600,6 +622,7 @@ namespace GRA.Controllers.MissionControl
             model.ShowAge = askAge;
             model.ShowSchool = askSchool;
             model.ShowCard = askCard;
+            model.ShowGoal = askGoal;
             model.ShowEmail = askEmail;
             model.ShowPhoneNumber = askPhoneNumber;
 
@@ -963,6 +986,7 @@ namespace GRA.Controllers.MissionControl
             bool askAge = false;
             bool askSchool = false;
             bool askCard = false;
+            bool askGoal = false;
             bool askEmail = false;
             bool askPhoneNumber = false;
             if (model.User.ProgramId >= 0)
@@ -971,6 +995,7 @@ namespace GRA.Controllers.MissionControl
                 askAge = program.AskAge;
                 askSchool = program.AskSchool;
                 askCard = program.AskCard;
+                askGoal = program.AskGoal;
                 askEmail = program.AskEmail;
                 askPhoneNumber = program.AskPhoneNumber;
                 
@@ -1000,6 +1025,10 @@ namespace GRA.Controllers.MissionControl
                 if (program.CardRequired && string.IsNullOrWhiteSpace(model.User.CardNumber))
                 {
                     ModelState.AddModelError("User.CardNumber", "The library card field is required.");
+                }
+                if (program.GoalRequired && !model.User.Goal.HasValue)
+                {
+                    ModelState.AddModelError("User.Goal", "The goal field is required.");
                 }
                 if (program.EmailRequired && string.IsNullOrWhiteSpace(model.User.Email))
                 {
@@ -1039,6 +1068,10 @@ namespace GRA.Controllers.MissionControl
                     {
                         model.User.CardNumber = null;
                     }
+                    if (!askGoal)
+                    {
+                        model.User.Goal = null;
+                    }
                     if (!askEmail)
                     {
                         model.User.Email = null;
@@ -1076,6 +1109,7 @@ namespace GRA.Controllers.MissionControl
             model.ShowAge = askAge;
             model.ShowSchool = askSchool;
             model.ShowCard = askCard;
+            model.ShowGoal = askGoal;
             model.ShowEmail = askEmail;
             model.ShowPhone = askPhoneNumber;
 

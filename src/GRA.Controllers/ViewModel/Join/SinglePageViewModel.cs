@@ -55,6 +55,10 @@ namespace GRA.Controllers.ViewModel.Join
         public int? ProgramId { get; set; }
 
         public int? Age { get; set; }
+
+        [DisplayName("Daily Goal")]
+        public int? Goal { get; set; }
+
         [DisplayName("School")]
         public int? SchoolId { get; set; }
         [DisplayName("School Name")]
@@ -75,7 +79,7 @@ namespace GRA.Controllers.ViewModel.Join
         public bool ShowEmail {get; set; }
         public bool ShowCard {get; set; }
         public bool ShowPhoneNumber {get; set; }
-
+        public bool ShowGoal { get; set; }
         public bool ShowAge { get; set; }
         public bool ShowSchool { get; set; }
         public bool NewEnteredSchool { get; set; }
