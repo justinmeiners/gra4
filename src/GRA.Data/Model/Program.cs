@@ -23,6 +23,7 @@ namespace GRA.Data.Model
         public int? JoinBadgeId { get; set; }
         [MaxLength(255)]
         public string JoinBadgeName { get; set; }
+        public int? JoinAvatarId { get; set; }
 
         [Required]
         public bool AskAge { get; set; }

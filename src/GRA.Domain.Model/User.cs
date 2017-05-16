@@ -41,7 +41,7 @@ namespace GRA.Domain.Model
         public string PostalCode { get; set; }
 
         [DisplayName("Library Card")]
-        [RegularExpression(@"^\d+\s*$", ErrorMessage="This does not appear to be a valid library card.")]
+        [RegularExpression(@"^(21391|23005)\d{9}\s*$", ErrorMessage="This does not appear to be a valid library card.")]
         [MaxLength(64)]
         public string CardNumber { get; set; }
         public DateTime? LastAccess { get; set; }

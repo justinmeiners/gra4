@@ -25,6 +25,7 @@ namespace GRA.Domain.Service
         private readonly ISchoolRepository _schoolRepository;
         private readonly ISiteRepository _siteRepository;
         private readonly IStaticAvatarRepository _staticAvatarRepository;
+        private readonly IDynamicAvatarRepository _dynamicAvatarRepository;
         private readonly ISystemRepository _systemRepository;
         private readonly IUserLogRepository _userLogRepository;
         private readonly IUserRepository _userRepository;
@@ -48,6 +49,7 @@ namespace GRA.Domain.Service
             ISchoolRepository schoolRepository,
             ISiteRepository siteRepository,
             IStaticAvatarRepository staticAvatarRepository,
+            IDynamicAvatarRepository dynamicAvatarRepository,
             ISystemRepository systemRepository,
             IUserLogRepository userLogRepository,
             IUserRepository userRepository,
@@ -76,6 +78,8 @@ namespace GRA.Domain.Service
             _siteRepository = Require.IsNotNull(siteRepository, nameof(siteRepository));
             _staticAvatarRepository = Require.IsNotNull(staticAvatarRepository,
                 nameof(staticAvatarRepository));
+            _dynamicAvatarRepository = Require.IsNotNull(dynamicAvatarRepository,
+                nameof(dynamicAvatarRepository));
             _systemRepository = Require.IsNotNull(systemRepository, nameof(systemRepository));
             _userLogRepository = Require.IsNotNull(userLogRepository, nameof(userLogRepository));
             _userRepository = Require.IsNotNull(userRepository, nameof(userRepository));
@@ -784,9 +788,9 @@ namespace GRA.Domain.Service
                 IsJoining = true
             };
 
-            if (program.JoinBadgeId != null)
+            if (program.JoinBadgeId.HasValue)
             {
-                var badge = await _badgeRepository.GetByIdAsync((int)program.JoinBadgeId);
+                var badge = await _badgeRepository.GetByIdAsync(program.JoinBadgeId.Value);
                 await _badgeRepository.AddUserBadge(registeredUser.Id, badge.Id);
                 await _userLogRepository.AddAsync(registeredUser.Id, new UserLog
                 {
@@ -798,6 +802,11 @@ namespace GRA.Domain.Service
                 });
                 notification.BadgeId = badge.Id;
                 notification.BadgeFilename = badge.Filename;
+            }
+
+            if (program.JoinAvatarId.HasValue)
+            {
+                await _dynamicAvatarRepository.AddUserAvatar(registeredUser.Id, program.JoinAvatarId.Value);
             }
             await _notificationRepository.AddSaveAsync(registeredUser.Id, notification);
         }

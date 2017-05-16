@@ -18,6 +18,9 @@ namespace GRA.Domain.Model
         public string AchieverBadgeName { get; set; }
         public int? JoinBadgeId { get; set; }
         public string JoinBadgeName { get; set; }
+
+        public int? JoinAvatarId { get; set; }
+
         [Required]
         public bool AskAge { get; set; }
         [Required]

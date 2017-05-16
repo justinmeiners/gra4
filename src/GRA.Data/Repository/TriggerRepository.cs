@@ -228,7 +228,7 @@ namespace GRA.Data.Repository
 
         public async Task<ICollection<TriggerRequirement>> GetTriggerRequirmentsAsync(Trigger trigger)
         {
-            Collection<TriggerRequirement> requirements = new Collection<TriggerRequirement>();
+            var requirements = new Collection<TriggerRequirement>();
 
             foreach (var badgeId in trigger.BadgeIds)
             {
