@@ -30,6 +30,7 @@ namespace GRA.Domain.Service
         private readonly IUserLogRepository _userLogRepository;
         private readonly IUserRepository _userRepository;
         private readonly IVendorCodeRepository _vendorCodeRepository;
+        private readonly ITeamRepository _teamRepository;
         private readonly ActivityService _activityService;
         private readonly SampleDataService _configurationService;
         private readonly SchoolService _schoolService;
@@ -54,6 +55,7 @@ namespace GRA.Domain.Service
             IUserLogRepository userLogRepository,
             IUserRepository userRepository,
             IVendorCodeRepository vendorCodeRepository,
+            ITeamRepository teamRepository,
             ActivityService activityService,
             SampleDataService configurationService,
             SchoolService schoolService)
@@ -84,6 +86,7 @@ namespace GRA.Domain.Service
             _userLogRepository = Require.IsNotNull(userLogRepository, nameof(userLogRepository));
             _userRepository = Require.IsNotNull(userRepository, nameof(userRepository));
             _vendorCodeRepository = Require.IsNotNull(vendorCodeRepository, nameof(vendorCodeRepository));
+            _teamRepository = Require.IsNotNull(teamRepository, nameof(teamRepository));
             _activityService = Require.IsNotNull(activityService, nameof(activityService));
             _configurationService = Require.IsNotNull(configurationService,
                 nameof(configurationService));
@@ -113,6 +116,7 @@ namespace GRA.Domain.Service
                     .AddEnteredSchool(user.EnteredSchoolName, schoolDistrictId.Value);
                 user.EnteredSchoolId = enteredSchool.Id;
             }
+
             var registeredUser = new User();
             if (MCRegistration)
             {
@@ -123,6 +127,16 @@ namespace GRA.Domain.Service
             {
                 registeredUser = await _userRepository.AddSaveAsync(0, user);
             }
+
+            var teams = await _teamRepository.GetAllAsync(GetCurrentSiteId());
+            int teamCount = teams.Count();
+            if (teamCount > 0)
+            {
+                int index = registeredUser.Id % teamCount;
+                registeredUser.TeamId = teams.ElementAt(index).Id;
+            }
+
+            await _userRepository.UpdateSaveAsync(registeredUser.Id, registeredUser);
 
             await _userRepository
                 .SetUserPasswordAsync(registeredUser.Id, registeredUser.Id, password);
@@ -510,6 +524,18 @@ namespace GRA.Domain.Service
                 var registeredUser = await _userRepository.AddSaveAsync(authUserId, memberToAdd);
                 await JoinedProgramNotificationBadge(registeredUser);
                 await _activityService.AwardUserTriggersAsync(registeredUser.Id, false);
+
+
+                // team assignment cycles through with Ids
+                var teams = await _teamRepository.GetAllAsync(GetCurrentSiteId());
+                int teamCount = teams.Count();
+                if (teamCount > 0)
+                {
+                    int index = registeredUser.Id % teamCount;
+                    registeredUser.TeamId = teams.ElementAt(index).Id;
+                }
+
+                await _userRepository.UpdateSaveAsync(registeredUser.Id, registeredUser);
             }
             else
             {

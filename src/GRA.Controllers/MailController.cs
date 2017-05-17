@@ -30,7 +30,7 @@ namespace GRA.Controllers
             int skip = take * (page - 1);
             var mailList = await _mailService.GetUserInboxPaginatedAsync(skip, take);
 
-            PaginateViewModel paginateModel = new PaginateViewModel()
+            var paginateModel = new PaginateViewModel()
             {
                 ItemCount = mailList.Count,
                 CurrentPage = page,
@@ -45,7 +45,7 @@ namespace GRA.Controllers
                     });
             }
 
-            MailListViewModel viewModel = new MailListViewModel()
+            var viewModel = new MailListViewModel()
             {
                 Mail = mailList.Data,
                 PaginateModel = paginateModel

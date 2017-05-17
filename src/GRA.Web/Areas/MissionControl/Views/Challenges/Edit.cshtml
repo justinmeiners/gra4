@@ -117,7 +117,7 @@
                                     <label asp-for="Task.Title" class="control-label">Name</label>
                                     <input asp-for="Task.Title" id="actionTitle" class="form-control" data-val-required="The Name field is required." disabled="@(Model.Task.ChallengeTaskType == ChallengeTaskType.Action ? null : "disabled")" />
                                 </div>
-                                <div role="tabpanel" class="tab-pane gra-tab-pane active" id="submission">
+                                <div role="tabpanel" class="tab-pane gra-tab-pane @(Model.Task.ChallengeTaskType == ChallengeTaskType.Submission ? "active" : "")" id="submission">
                                     <label asp-for="Task.Title" class="control-label">Name</label>
                                     <input asp-for="Task.Title" id="submissionTitle" class="form-control" data-val-required="The Name field is required." />
                                 </div>
@@ -430,6 +430,7 @@
         $(document).ready(function() {
             @if (Model.AddTask)
             {
+                <text>$("#Task_ChallengeTaskType").val("@ChallengeTaskType.Action");</text>
                 <text>$('#addModal').modal('show');</text>
             }
             @if (Model.Task != null)

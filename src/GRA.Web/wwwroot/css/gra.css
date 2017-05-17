@@ -46,6 +46,7 @@ p.footer {
 }
 
 .label-as-badge {
+    background-color: #5cb85c;
     border-radius: 0.7em;
     font-size: 0.8em;
 }
