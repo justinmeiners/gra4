@@ -637,6 +637,12 @@ namespace GRA.Domain.Service
                 // every trigger awards a badge
                 var badge = await AwardBadgeAsync(userId, trigger.AwardBadgeId);
 
+                // award avatar
+                if (trigger.AwardAvatarId.HasValue)
+                {
+                    await _dynamicAvatarRepository.AddUserAvatar(userId, trigger.AwardAvatarId.Value);
+                }
+
                 // log the notification
                 await _notificationRepository.AddSaveAsync(userId, new Notification
                 {
@@ -656,12 +662,6 @@ namespace GRA.Domain.Service
                     BadgeId = trigger.AwardBadgeId,
                     Description = trigger.AwardMessage
                 });
-
-                // award avatar
-                if (trigger.AwardAvatarId.HasValue)
-                {
-                    await _dynamicAvatarRepository.AddUserAvatar(userId, trigger.AwardAvatarId.Value);
-                }
 
                 // award any vendor code that is necessary
                 await AwardVendorCodeAsync(userId, trigger.AwardVendorCodeTypeId, siteId);
@@ -774,6 +774,12 @@ namespace GRA.Domain.Service
 
             // every trigger awards a badge
             var badge = await AwardBadgeAsync(userIdToLog, trigger.AwardBadgeId);
+
+            // award avatar
+            if (trigger.AwardAvatarId.HasValue)
+            {
+                await _dynamicAvatarRepository.AddUserAvatar(userIdToLog, trigger.AwardAvatarId.Value);
+            }
 
             // log the notification
             await _notificationRepository.AddSaveAsync(authUserId, new Notification

@@ -35,9 +35,9 @@ namespace GRA.Data.Repository
         
         public async Task<bool> UserHasAvatar(int userId, int avatarId)
         {
-            return null != await _context.UserAvatars
+            return await _context.UserAvatars
                 .Where(_ => _.UserId == userId && _.DynamicAvatarId == avatarId)
-                .SingleOrDefaultAsync();
+                .AnyAsync();
         }
          public async Task<ICollection<DynamicAvatar>> GetPaginatedAvatarListAsync(
                     int siteId,
