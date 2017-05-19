@@ -120,7 +120,8 @@ namespace GRA.Data.Repository
 
             if (!string.IsNullOrWhiteSpace(filter.Search))
             {
-                triggerList = triggerList.Where(_ => _.Name.Contains(filter.Search));
+                triggerList = triggerList.Where(_ => _.Name.Contains(filter.Search)
+                                                || _.SecretCode.Contains(filter.Search));
             }
 
             return triggerList;
