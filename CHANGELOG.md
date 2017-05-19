@@ -24,6 +24,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 - Fix joining and logging in while logged in
 - Fix trigger badge creation exception
 - Fix prize redemption exceptions not being caught
+- Fix challenge task positioning
 
 ## [4.0.0-alpha5] 2017-05-01
 ### Added
