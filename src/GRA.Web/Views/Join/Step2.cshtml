@@ -108,6 +108,10 @@
             return obj.Id == $("#ProgramId").val();
         })[0];
 
+        $(document).ready(function() {
+            validateAge();
+        });
+
         $("#ProgramId").on("change", function() {
             var programId = $(this).val();
             selectedProgram = $.grep(programs, function(obj) {

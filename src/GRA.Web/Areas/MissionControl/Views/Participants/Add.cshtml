@@ -221,6 +221,10 @@
             return obj.Id == $("#ProgramId").val();
         })[0];
 
+        $(document).ready(function() {
+            validateAge();
+        });
+        
         $("#SystemId").on("change", function() {
             var systemId = $(this).val();
             var branchList = $("#BranchId");

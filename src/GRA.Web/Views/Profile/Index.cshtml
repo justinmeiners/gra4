@@ -220,6 +220,10 @@
             return obj.Id == $("#User_ProgramId").val();
         })[0];
 
+        $(document).ready(function() {
+            validateAge();
+        });
+
         $("#User_SystemId").on("change", function() {
             var systemId = $(this).val();
             var branchList = $("#User_BranchId");
