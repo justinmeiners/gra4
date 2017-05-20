@@ -56,7 +56,7 @@ namespace GRA.Controllers.ViewModel.Join
 
         public int? Age { get; set; }
 
-        [DisplayName("Daily Goal")]
+        [DisplayName("Goal (minutes per day)")]
         public int? Goal { get; set; }
 
         [DisplayName("School")]

@@ -77,7 +77,7 @@ namespace GRA.Controllers
                 }
                 else
                 {
-                    StaticAvatar avatar = new StaticAvatar();
+                    var avatar = new StaticAvatar();
                     if (user.AvatarId != null)
                     {
                         avatar = await _staticAvatarService.GetByIdAsync(user.AvatarId.Value);

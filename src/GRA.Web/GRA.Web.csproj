@@ -33,6 +33,17 @@
     <Content Include="assets\dynamicavatars\layer1\3.png" CopyToPublishDirectory="PreserveNewest" />
     <Content Include="assets\dynamicavatars\layer1\4.png" CopyToPublishDirectory="PreserveNewest" />
     <Content Include="assets\dynamicavatars\layer1\5.png" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="assets\dynamicavatars\layer1\6.png" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="assets\dynamicavatars\layer1\7.png" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="assets\dynamicavatars\layer1\8.png" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="assets\dynamicavatars\layer1\9.png" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="assets\dynamicavatars\layer1\10.png" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="assets\dynamicavatars\layer1\11.png" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="assets\dynamicavatars\layer1\12.png" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="assets\dynamicavatars\layer1\13.png" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="assets\dynamicavatars\layer1\14.png" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="assets\dynamicavatars\layer1\15.png" CopyToPublishDirectory="PreserveNewest" />
+
     <Content Include="assets\dynamicavatars\layer2\1.png" CopyToPublishDirectory="PreserveNewest" />
     <Content Include="assets\dynamicavatars\layer2\2.png" CopyToPublishDirectory="PreserveNewest" />
     <Content Include="assets\dynamicavatars\layer2\3.png" CopyToPublishDirectory="PreserveNewest" />
@@ -41,6 +52,14 @@
     <Content Include="assets\dynamicavatars\layer2\6.png" CopyToPublishDirectory="PreserveNewest" />
     <Content Include="assets\dynamicavatars\layer2\7.png" CopyToPublishDirectory="PreserveNewest" />
     <Content Include="assets\dynamicavatars\layer2\8.png" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="assets\dynamicavatars\layer2\9.png" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="assets\dynamicavatars\layer2\10.png" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="assets\dynamicavatars\layer2\11.png" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="assets\dynamicavatars\layer2\12.png" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="assets\dynamicavatars\layer2\13.png" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="assets\dynamicavatars\layer2\14.png" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="assets\dynamicavatars\layer2\15.png" CopyToPublishDirectory="PreserveNewest" />
+
     <Content Include="assets\dynamicavatars\layer3\1.png" CopyToPublishDirectory="PreserveNewest" />
     <Content Include="assets\dynamicavatars\layer3\2.png" CopyToPublishDirectory="PreserveNewest" />
     <Content Include="assets\dynamicavatars\layer3\3.png" CopyToPublishDirectory="PreserveNewest" />
@@ -49,6 +68,13 @@
     <Content Include="assets\dynamicavatars\layer3\6.png" CopyToPublishDirectory="PreserveNewest" />
     <Content Include="assets\dynamicavatars\layer3\7.png" CopyToPublishDirectory="PreserveNewest" />
     <Content Include="assets\dynamicavatars\layer3\8.png" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="assets\dynamicavatars\layer3\9.png" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="assets\dynamicavatars\layer3\10.png" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="assets\dynamicavatars\layer3\11.png" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="assets\dynamicavatars\layer3\12.png" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="assets\dynamicavatars\layer3\13.png" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="assets\dynamicavatars\layer3\14.png" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="assets\dynamicavatars\layer3\15.png" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>
