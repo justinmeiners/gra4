@@ -58,7 +58,6 @@ namespace GRA.Data.Model
         [MaxLength(16)]
         public string DynamicAvatar { get; set; }
         public int? TeamId { get; set; }
-
         public int? Goal { get; set; }
 
     }

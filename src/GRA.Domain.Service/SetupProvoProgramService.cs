@@ -145,7 +145,7 @@ namespace GRA.Domain.Service
                 AskPhoneNumber = false,
                 EditPhoneNumber = false,
                 PhoneNumberRequired = false,
-                AgeMaximum = 3
+                AgeMaximum = 3,
             };
             program = await _programRepository.AddSaveAsync(userId, program);
 
@@ -175,7 +175,7 @@ namespace GRA.Domain.Service
                 EditPhoneNumber = false,
                 PhoneNumberRequired = false,
                 AgeMaximum = 8,
-                AgeMinimum = 4
+                AgeMinimum = 4,
             };
             program = await _programRepository.AddSaveAsync(userId, program);
 
@@ -205,7 +205,7 @@ namespace GRA.Domain.Service
                 EditPhoneNumber = false,
                 PhoneNumberRequired = false,
                 AgeMaximum = 12,
-                AgeMinimum = 9
+                AgeMinimum = 9,
             };
             program = await _programRepository.AddSaveAsync(userId, program);
 

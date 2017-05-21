@@ -79,6 +79,7 @@ namespace GRA.Domain.Model
 
         public int? TeamId { get; set; }
         [DisplayName("Daily Goal (minutes per day)")]
+        [Range(15, 180)]
         public int? Goal { get; set; }
         public bool HasNewMail { get; set; }
         public bool HasUnclaimedPrize { get; set; }

@@ -553,6 +553,7 @@ namespace GRA.Controllers
             model.ShowAge = askAge;
             model.ShowSchool = askSchool;
             model.ShowCard = askCard;
+            model.ShowGoal = askGoal;
 
             var districtList = await _schoolService.GetDistrictsAsync();
             if (model.SchoolId.HasValue)

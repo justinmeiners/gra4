@@ -945,7 +945,7 @@ namespace GRA.Controllers.MissionControl
                 var programViewObject = _mapper.Map<List<ProgramViewModel>>(programList);
                 var districtList = await _schoolService.GetDistrictsAsync();
 
-                HouseholdAddViewModel viewModel = new HouseholdAddViewModel()
+                var viewModel = new HouseholdAddViewModel()
                 {
                     User = userBase,
                     Id = id,
