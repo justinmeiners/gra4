@@ -64,15 +64,17 @@
                 @if (Model.Goal.HasValue)
                 {
                     <p>
-                        Your goal is @Model.Goal.Value @Model.ActivityDescriptionPlural.
+                        Your daily goal is @Model.Goal.Value @Model.ActivityDescriptionPlural.
                     </p>
                 }
 
                 @if (Model.AchieverProgressPercent.HasValue)
                 {
+                    var progressWidth = Math.Min(100, Model.AchieverProgressPercent.Value);
+                    
                     <p>
                         <div class="progress">
-                            <div class="progress-bar" role="progressbar" aria-valuenow="@Model.AchieverProgressPercent.Value" aria-valuemin="0" aria-valuemax="100" style="width: @Model.AchieverProgressPercent.Value%;">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="@Model.AchieverProgressPercent.Value" aria-valuemin="0" aria-valuemax="100" style="width: @progressWidth%;">
                                 @Model.AchieverProgressPercent.Value%
                             </div>
                         </div>
@@ -116,7 +118,7 @@
                         {
                             <div class="row row-spacing">
                                 <div class="col-xs-12">
-                                    <label class="control-label">Enter @Model.ActivityDescriptionPlural @Model.TranslationDescriptionPastTense</label>
+                                    <label style="font-weight: normal;" class="control-label">Enter @Model.ActivityDescriptionPlural @Model.TranslationDescriptionPastTense</label>
                                     <input id="amount-field" asp-for="ActivityAmount" type="text" value="@Model.ActivityAmount" class="form-control" />
                                     <span asp-validation-for="ActivityAmount" class="text-danger"></span>
                                 </div>
@@ -253,6 +255,8 @@
             if (amountText)
             {
                 text += amountText;
+                text += " ";
+                text += '@Model.ActivityDescriptionPlural'
             }
 
             var titleText = $('#title-field').val();

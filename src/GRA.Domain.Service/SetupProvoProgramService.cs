@@ -73,8 +73,8 @@ namespace GRA.Domain.Service
                 AskReview = false,
                 PointsEarned = 1,
                 TranslationName = "Talking, singing, reading, writing, playing (minutes)",
-                TranslationDescriptionPastTense = "interacted",
-                TranslationDescriptionPresentTense = "talking, singing, reading, writing, playing"
+                TranslationDescriptionPastTense = "spent talking, singing, reading, writing, or playing",
+                TranslationDescriptionPresentTense = "talking, singing, reading, writing, or playing"
             };
 
             var readMinutesPointTranslation = new Model.PointTranslation

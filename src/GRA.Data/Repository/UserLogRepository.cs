@@ -65,7 +65,7 @@ namespace GRA.Data.Repository
                         }
                         else
                         {
-                            userLog.Description = $"{translation.TranslationDescriptionPastTense} {translation.ActivityDescription}";
+                            userLog.Description = $"{translation.TranslationDescriptionPastTense}";
                         }
                         userLog.Description =
                             userLog.Description.Substring(0, 1).ToUpper()

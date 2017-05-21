@@ -168,7 +168,7 @@ namespace GRA.Domain.Service
             }
             else
             {
-                activityDescription = $"{translation.TranslationDescriptionPresentTense} {translation.ActivityDescription}";
+                activityDescription += $"{translation.TranslationDescriptionPresentTense}";
             }
             activityDescription += "</strong>";
 
@@ -478,18 +478,22 @@ namespace GRA.Domain.Service
             var program = await _programRepository.GetByIdAsync(earnedUser.ProgramId);
 
             int? achieveAmount = null;
+            int? achieveDisplayAmount = null;
 
             if (program.AchieverGoalMultiplier.HasValue && earnedUser.Goal.HasValue)
             {
                 achieveAmount = earnedUser.Goal.Value * program.AchieverGoalMultiplier.Value;
+                achieveDisplayAmount = earnedUser.Goal.Value;
             }
             else if (program.AchieverTotal.HasValue)
             {
                 achieveAmount = program.AchieverTotal.Value;
+                achieveDisplayAmount = achieveAmount;
             }
 
             if (!earnedUser.IsAchiever
                 && achieveAmount.HasValue
+                && achieveDisplayAmount.HasValue
                 && earnedUser.PointsEarned >= achieveAmount.Value)
             {
                 earnedUser.IsAchiever = true;
@@ -497,7 +501,7 @@ namespace GRA.Domain.Service
                 var notification = new Notification
                 {
                     PointsEarned = 0,
-                    Text = $"<span class=\"fa fa-certificate\"></span> Congratulations! You've achieved <strong>{achieveAmount.Value} points</strong> reaching your gol!",
+                    Text = $"<span class=\"fa fa-certificate\"></span> Congratulations! You've achieved <strong>{achieveDisplayAmount.Value} points</strong> reaching your goal!",
                     UserId = earnedUser.Id,
                     IsAchiever = true
                 };
@@ -512,7 +516,7 @@ namespace GRA.Domain.Service
                         PointsEarned = 0,
                         IsDeleted = false,
                         BadgeId = badge.Id,
-                        Description = $"You reached the goal of {achieveAmount.Value} points!"
+                        Description = $"You reached your goal of {achieveDisplayAmount.Value} points!"
                     });
                     notification.Text += " You've also earned a badge!";
                     notification.BadgeId = badge.Id;

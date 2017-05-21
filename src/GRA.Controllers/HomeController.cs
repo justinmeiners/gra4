@@ -103,8 +103,6 @@ namespace GRA.Controllers
                     }
                 }
 
-            
-
                 var viewModel = new DashboardViewModel()
                 {
                     FirstName = user.FirstName,
