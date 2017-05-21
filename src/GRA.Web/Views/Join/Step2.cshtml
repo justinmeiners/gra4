@@ -109,7 +109,6 @@
         })[0];
 
         $(document).ready(function() {
-            validateGoal();
             validateAge();
         });
 
@@ -162,26 +161,6 @@
         $("#Age").on("change", function() {
             validateAge();
         });
-
-/*
-        function validateGoal() {
-            var goal = $("#Goal").val();
-            var message = $("#goalMessage");
-            if (goal != "" && ((goal > selectedProgram.GoalMaximum && selectedProgram.GoalMaximum != null)
-                || (goal < selectedProgram.GoalMinimum && selectedProgram. != null)))
-            {
-                var s = "Your goal must be between " + selectedProgram.GoalMinimum;
-                s += " and " + selectedProgram.GoalMaximum;
-                message.removeClass('field-validation-valid text-danger');
-                message.addClass('text-primary');
-                message.text(s);
-            }
-            else
-            {
-                message.text("");
-            }
-        }
-        */
 
         function validateAge() {
             var age = $("#Age").val();

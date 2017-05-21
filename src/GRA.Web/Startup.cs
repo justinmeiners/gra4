@@ -142,8 +142,8 @@ namespace GRA.Web
             services.AddScoped<Data.ServiceFacade.Repository, Data.ServiceFacade.Repository>();
 
             // database
-            //services.AddScoped<Data.Context, Data.SqlServer.SqlServerContext>();
-            services.AddScoped<Data.Context, Data.SQLite.SQLiteContext>();
+            services.AddScoped<Data.Context, Data.SqlServer.SqlServerContext>();
+            //services.AddScoped<Data.Context, Data.SQLite.SQLiteContext>();
 
             // utilities
             services.AddScoped<IUserContextProvider, Controllers.UserContextProvider>();
