@@ -70,7 +70,7 @@
                     {
                         <li ActiveBy routeKey="Controller" value="Home"><a asp-controller="Home" asp-action="Index" title="Home"><span class="fa fa-home"></span><span class="visible-xs-inline"> Home</span></a></li>
                         <li><a href="/info/rules">Rules</a></li>
-
+                        <li><a href="/info/prizes">Prizes</a></li>
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li ActiveBy routeKey="Controller" value="Mail" title="Mail">
@@ -217,7 +217,7 @@
         @if (Context.Items[GRA.Controllers.ItemKey.NotificationsModal] != null)
         {
             @: $('#notificationsModal').modal('show');
-                                        }
+        }
     </script>
 </body>
 </html>

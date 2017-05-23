@@ -38,7 +38,7 @@ namespace GRA.Controllers
             string StartDate = null,
             string EndDate = null)
         {
-            EventFilter filter = new EventFilter(page)
+            var filter = new EventFilter(page)
             {
                 Search = search,
             };
@@ -69,7 +69,7 @@ namespace GRA.Controllers
 
             var eventList = await _eventService.GetPaginatedListAsync(filter);
 
-            PaginateViewModel paginateModel = new PaginateViewModel()
+            var paginateModel = new PaginateViewModel()
             {
                 ItemCount = eventList.Count,
                 CurrentPage = page,
@@ -85,7 +85,7 @@ namespace GRA.Controllers
                     });
             }
 
-            EventsListViewModel viewModel = new EventsListViewModel()
+            var viewModel = new EventsListViewModel()
             {
                 Events = eventList.Data,
                 PaginateModel = paginateModel,

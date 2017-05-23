@@ -28,6 +28,7 @@ namespace GRA.Data.Repository
         public async Task<ICollection<Event>> PageAsync(EventFilter filter)
         {
             var events = await ApplyFilters(filter)
+                .OrderBy(_ => _.StartDate)
                 .ApplyPagination(filter)
                 .ProjectTo<Event>()
                 .ToListAsync();
@@ -179,8 +180,10 @@ namespace GRA.Data.Repository
             // apply search
             if (!string.IsNullOrEmpty(filter.Search))
             {
-                events = events.Where(_ => _.Name.Contains(filter.Search)
-                    || _.Description.Contains(filter.Search));
+                var lowerSearch = filter.Search.ToLower();
+
+                events = events.Where(_ => _.Name.ToLower().Contains(lowerSearch)
+                    || _.Description.ToLower().Contains(lowerSearch));
             }
 
             return events;

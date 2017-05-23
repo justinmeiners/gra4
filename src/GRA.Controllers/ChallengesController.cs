@@ -116,7 +116,7 @@ namespace GRA.Controllers
             bool showCompleted = siteStage == SiteStage.ProgramOpen
                 || siteStage == SiteStage.ProgramEnded;
 
-            ChallengeDetailViewModel viewModel = new ChallengeDetailViewModel()
+            var viewModel = new ChallengeDetailViewModel()
             {
                 Challenge = challenge,
                 BadgePath = challenge.BadgeFilename,
@@ -125,11 +125,8 @@ namespace GRA.Controllers
                 Tasks = new List<TaskDetailViewModel>()
             };
 
-            viewModel.Details = $"Completing <strong>{challenge.TasksToComplete} "
-                + $"{(challenge.TasksToComplete > 1 ? "Tasks" : "Task")}</strong> will earn: "
-                + $"<strong>{challenge.PointsAwarded} "
-                + $"{(challenge.PointsAwarded > 1 ? "Points" : "Point")}</strong> and "
-                + "<strong>a badge</strong>.";
+            viewModel.Details = $"<strong>{challenge.TasksToComplete} "
+                + $"{(challenge.TasksToComplete > 1 ? "Tasks" : "Task")}</strong> is required to complete this challenge";
 
             foreach (var task in challenge.Tasks)
             {
