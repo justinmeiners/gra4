@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace GRA.Controllers.MissionControl
 {
@@ -35,7 +36,7 @@ namespace GRA.Controllers.MissionControl
             int skip = take * (page - 1);
             var mailList = await _mailService.GetAllUnrepliedPaginatedAsync(skip, take);
 
-            PaginateViewModel paginateModel = new PaginateViewModel()
+            var paginateModel = new PaginateViewModel()
             {
                 ItemCount = mailList.Count,
                 CurrentPage = page,
@@ -50,7 +51,7 @@ namespace GRA.Controllers.MissionControl
                     });
             }
 
-            MailListViewModel viewModel = new MailListViewModel()
+            var viewModel = new MailListViewModel()
             {
                 Mail = mailList.Data,
                 PaginateModel = paginateModel,
@@ -66,7 +67,7 @@ namespace GRA.Controllers.MissionControl
             int skip = take * (page - 1);
             var mailList = await _mailService.GetAllPaginatedAsync(skip, take);
 
-            PaginateViewModel paginateModel = new PaginateViewModel()
+            var paginateModel = new PaginateViewModel()
             {
                 ItemCount = mailList.Count,
                 CurrentPage = page,
@@ -81,7 +82,7 @@ namespace GRA.Controllers.MissionControl
                     });
             }
 
-            MailListViewModel viewModel = new MailListViewModel()
+            var viewModel = new MailListViewModel()
             {
                 Mail = mailList.Data,
                 PaginateModel = paginateModel,
@@ -96,6 +97,7 @@ namespace GRA.Controllers.MissionControl
             try
             {
                 var mail = await _mailService.GetDetails(id);
+
                 if (mail.ToUserId == null)
                 {
                     if (mail.IsNew)
@@ -108,12 +110,22 @@ namespace GRA.Controllers.MissionControl
                     mail.Body = CommonMark.CommonMarkConverter.Convert(mail.Body);
                 }
 
+                List<Mail> thread = new List<Mail>();
+                int? replyTo = mail.InReplyToId;
+
+                while (replyTo.HasValue)
+                {
+                    var replyMail = await _mailService.GetDetails(replyTo.Value);
+                    thread.Add(replyMail);
+                    replyTo = replyMail.InReplyToId;
+                }
+
                 string participantLink = string.Empty;
                 string participantName = string.Empty;
-                int from = mail.ToUserId ?? mail.FromUserId;
-                if (from > 0)
+                int fromId = mail.ToUserId ?? mail.FromUserId;
+                if (fromId > 0)
                 {
-                    var participant = await _userService.GetDetails(from);
+                    var participant = await _userService.GetDetails(fromId);
 
                     participantLink = Url.Action("Detail", "Participants", new { id = participant.Id });
                     participantName = participant.FirstName;
@@ -124,10 +136,12 @@ namespace GRA.Controllers.MissionControl
                     }
                 }
 
-                MailDetailViewModel viewModel = new MailDetailViewModel()
+                var viewModel = new MailDetailViewModel()
                 {
                     Mail = mail,
-                    SentMessage = (mail.ToUserId == null ? "from" : "to"),
+                    Thread = thread,
+                    SentMessage = (mail.ToUserId == null ? "From" : "To"),
+                    ParticipantId = fromId,
                     ParticipantLink = participantLink,
                     ParticipantName = participantName,
                     CanDelete = UserHasPermission(Permission.DeleteAnyMail),
@@ -165,6 +179,7 @@ namespace GRA.Controllers.MissionControl
             try
             {
                 var mail = await _mailService.GetDetails(id);
+
                 if (mail.ToUserId == null)
                 {
                     var participant = await _userService.GetDetails(mail.FromUserId);
@@ -176,9 +191,20 @@ namespace GRA.Controllers.MissionControl
                         participantName += $" ({participant.Username})";
                     }
 
-                    MailReplyViewModel viewModel = new MailReplyViewModel()
+                    List<Mail> thread = new List<Mail>();
+                    int? replyTo = mail.InReplyToId;
+
+                    while (replyTo.HasValue)
+                    {
+                        var replyMail = await _mailService.GetDetails(replyTo.Value);
+                        thread.Add(replyMail);
+                        replyTo = replyMail.InReplyToId;
+                    }
+
+                    var viewModel = new MailReplyViewModel()
                     {
                         Subject = $"Re: {mail.Subject}",
+                        Thread = thread,
                         InReplyToId = mail.Id,
                         InReplyToSubject = mail.Subject,
                         ParticipantLink = participantLink,

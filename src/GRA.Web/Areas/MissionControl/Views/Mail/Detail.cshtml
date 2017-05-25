@@ -32,7 +32,7 @@
 
 <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
-        <p style="font-size:large">Sent @Model.SentMessage <a target="_blank" href="@Model.ParticipantLink">@Model.ParticipantName</a> on @Model.Mail.CreatedAt.ToString("d")</p>
+        <p style="font-size:large">@Model.SentMessage <a target="_blank" href="@Model.ParticipantLink">@Model.ParticipantName</a> on @Model.Mail.CreatedAt.ToString("d")</p>
         <div class="panel panel-default">
             <div class="panel-heading">
                 <span class="lead">
@@ -82,5 +82,40 @@
                 </div>
             </div>
         </div>
+
+        @foreach (var mail in Model.Thread)
+        {
+            @if (mail.FromUserId == Model.ParticipantId)
+            {
+                <p style="font-size:large">From. On @mail.CreatedAt.ToString("d")</p>
+            }
+            else
+            {
+                <p style="font-size:large">To. On @mail.CreatedAt.ToString("d")</p>
+            }
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <span class="lead">
+                        Subject: @mail.Subject
+                    </span>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xs-8 col-sm-9">
+                            @if (mail.ToUserId.HasValue)
+                            {
+                                @: @Html.Raw(mail.Body)
+                            }
+                            else
+                            {
+                                <p>@mail.Body</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer clearfix hidden-print">
+                </div>
+            </div>
+        }
     </div>
 </div>

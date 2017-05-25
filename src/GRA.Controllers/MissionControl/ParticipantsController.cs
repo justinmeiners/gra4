@@ -1651,7 +1651,7 @@ namespace GRA.Controllers.MissionControl
         {
             if (ModelState.IsValid)
             {
-                Mail mail = new Mail()
+                var mail = new Mail()
                 {
                     ToUserId = model.Id,
                     Subject = model.Subject,

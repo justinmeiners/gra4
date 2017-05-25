@@ -16,6 +16,10 @@
                 <span class="lead">Events</span>
             </div>
             <div class="panel-body">
+                <p>
+                    Badges can be earned by attending Library programs throughout the summer. To unlock the badge, just enter the secret code given out at the program.
+                </p>
+                <hr/>
                 <form asp-controller="Events" asp-action="Index" method="post" role="form">
                     <input asp-for="UseLocation" type="hidden" />
 
@@ -50,7 +54,7 @@
                         </div>
                     </div>
 
-                    <div class="row">
+                    <div class="row row-spacing">
                         <div class="col-xs-6">
                             @if (Model.SystemList.Count() > 1)
                             {

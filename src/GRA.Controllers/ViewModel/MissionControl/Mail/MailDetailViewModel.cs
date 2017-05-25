@@ -8,7 +8,9 @@ namespace GRA.Controllers.ViewModel.MissionControl.Mail
     public class MailDetailViewModel
     {
         public GRA.Domain.Model.Mail Mail { get; set; }
+        public List<GRA.Domain.Model.Mail> Thread { get; set; }
         public string SentMessage { get; set; }
+        public int ParticipantId { get; set; }
         public string ParticipantLink { get; set; }
         public string ParticipantName { get; set; }
         public bool CanDelete { get; set; }
