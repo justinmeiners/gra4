@@ -63,5 +63,9 @@ namespace GRA.Domain.Model
 
         public int? AgeMaximum { get; set; }
         public int? AgeMinimum { get; set; }
+
+        public string GoalDescription { get; set; }
+        public int? GoalMaximum { get; set; }
+        public int? GoalMinimum { get; set; }
     }
 }

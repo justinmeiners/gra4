@@ -85,7 +85,7 @@
 
                             <div id="goalField" class="row row-spacing @(Model.ShowGoal ? "": "hide")">
                                 <div class="col-xs-12">
-                                    <label asp-for="User.Goal" class="control-label"></label>
+                                    <label id="goalLabel" asp-for="User.Goal" class="control-label"></label>
                                     <input asp-for="User.Goal" class="form-control" />
                                     <span asp-validation-for="User.Goal" class="text-danger"></span>
                                 </div>
@@ -190,6 +190,7 @@
         })[0];
 
         $(document).ready(function() {
+            validateGoal();
             validateAge();
         });
 
@@ -210,6 +211,26 @@
                 });
             });
         });
+
+        $("#User_Goal").on("change", function() {
+            validateGoal();
+        });
+
+        function validateGoal() {
+            var goal = $("#User_Goal").val();
+            var message = $("#goalMessage");
+
+            if (goal != "" && ((selectedProgram.GoalMaximum != null && goal > selectedProgram.GoalMaximum)
+                || (selectedProgram.GoalMinimum != null && goal < selectedProgram.GoalMinimum)))
+            {
+                 message.removeClass('field-validation-valid');
+                 message.text("Your goal must be between " + selectedProgram.GoalMinimum + " and " + selectedProgram.GoalMaximum);
+            }
+            else
+            {
+                message.text("");
+            }
+        }
 
         $("#User_ProgramId").on("change", function() {
             var programId = $(this).val();
@@ -271,6 +292,15 @@
                 else
                 {
                     $("#goalField").addClass("hide");
+                }
+
+                if (selectedProgram.GoalDescription)
+                {
+                    $("#goalLabel").text(selectedProgram.GoalDescription)
+                }
+                else
+                {
+                    $("#goalLabel").text("Goal")
                 }
             }
         });

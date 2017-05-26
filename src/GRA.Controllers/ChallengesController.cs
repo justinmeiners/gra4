@@ -181,7 +181,7 @@ namespace GRA.Controllers
                     }
                 }
 
-                var completed = await _activityService.UpdateChallengeTasksAsync(model.Challenge.Id, tasks);
+                var completed = await _activityService.UpdateChallengeTasksAsync(null, model.Challenge.Id, tasks);
 
                 if (!completed)
                 {

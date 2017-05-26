@@ -17,6 +17,7 @@
                             <th>Challenge</th>
                             <th>Task</th>
                             <th>Submission</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -24,7 +25,7 @@
                         {
                             <tr>
                                 <td>
-                                    <a href="/MissionControl/Participants/Detail/@task.UserId">@task.User.Username</a>
+                                    <a href="/MissionControl/Participants/Detail/@task.UserId">@task.User.Id @task.User.Username</a>
                                 </td>
                                 <td>
                                     <a href="/MissionControl/Challenges/Edit/@task.ChallengeId">@task.Challenge.Name</a>

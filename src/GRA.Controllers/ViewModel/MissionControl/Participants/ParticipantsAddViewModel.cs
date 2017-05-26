@@ -60,7 +60,7 @@ namespace GRA.Controllers.ViewModel.MissionControl.Participants
         [MaxLength(254)]
         public string Email { get; set; }
 
-        [DisplayName("Daily Goal (minutes per day)")]
+        [DisplayName("Goal")]
         public int? Goal;
 
         [DisplayName("Phone Number")]

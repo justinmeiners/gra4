@@ -113,7 +113,7 @@
 
                     <div id="goalField" class="row row-spacing @(Model.ShowGoal ? "": "hide")">
                         <div class="col-xs-12">
-                            <label asp-for="Goal" class="control-label"></label>
+                            <label id="goalLabel" asp-for="Goal" class="control-label"></label>
                             <input asp-for="Goal" class="form-control" type="text" />
                             <span id="goalMessage" asp-validation-for="Goal" class="text-danger"></span>
                         </div>
@@ -218,6 +218,11 @@
             return obj.Id == $("#ProgramId").val();
         })[0];
 
+        $(document).ready(function() {
+            validateAge();
+            validateGoal();
+        });
+
         $("#SystemId").on("change", function() {
             var systemId = $(this).val();
             var branchList = $("#BranchId");
@@ -297,8 +302,38 @@
                 {
                     $("#goalField").addClass("hide");
                 }
+
+                if (selectedProgram.GoalDescription)
+                {
+                    $("#goalLabel").text(selectedProgram.GoalDescription)
+                }
+                else
+                {
+                    $("#goalLabel").text("Goal")
+                }
             }
         });
+
+        $("#Goal").on("change", function() {
+            validateGoal();
+        });
+
+        function validateGoal() {
+            var goal = $("#Goal").val();
+            var message = $("#goalMessage");
+
+            if (goal != "" && ((selectedProgram.GoalMaximum != null && goal > selectedProgram.GoalMaximum)
+                || (selectedProgram.GoalMinimum != null && goal < selectedProgram.GoalMinimum)))
+            {
+                 message.removeClass('field-validation-valid');
+                 message.text("Your goal must be between " + selectedProgram.GoalMinimum + " and " + selectedProgram.GoalMaximum);
+            }
+            else
+            {
+                message.text("");
+            }
+        }
+
 
         $("#Age").on("change", function() {
             validateAge();

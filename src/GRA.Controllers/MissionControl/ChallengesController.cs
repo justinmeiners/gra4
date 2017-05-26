@@ -705,13 +705,14 @@ namespace GRA.Controllers.MissionControl
         [HttpPost]
         public async Task<IActionResult> ApproveTask(int challengeId, int taskId, int userId, bool approve)
         {
+            
             var challenge = await _challengeService.GetChallengeDetailsAsync(challengeId, userId);
 
             var task = challenge.Tasks.Where(_ => _.Id == taskId).SingleOrDefault();
             task.IsCompleted = approve;
             task.SubmissionNeedsApproval = false;
 
-            await _activityService.UpdateChallengeTasksAsync(challengeId, challenge.Tasks);
+            await _activityService.UpdateChallengeTasksAsync(userId, challengeId, challenge.Tasks);
 
             return RedirectToAction("Approve");
         }

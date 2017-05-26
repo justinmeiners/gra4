@@ -221,6 +221,7 @@
         })[0];
 
         $(document).ready(function() {
+            validateGoal();
             validateAge();
         });
 
@@ -309,8 +310,37 @@
                 {
                     $("#goalField").addClass("hide");
                 }
+
+                if (selectedProgram.GoalDescription)
+                {
+                    $("#goalLabel").text(selectedProgram.GoalDescription)
+                }
+                else
+                {
+                    $("#goalLabel").text("Goal")
+                }
             }
         });
+
+        $("#User_Goal").on("change", function() {
+            validateGoal();
+        });
+
+        function validateGoal() {
+            var goal = $("#User_Goal").val();
+            var message = $("#goalMessage");
+
+            if (goal != "" && ((selectedProgram.GoalMaximum != null && goal > selectedProgram.GoalMaximum)
+                || (selectedProgram.GoalMinimum != null && goal < selectedProgram.GoalMinimum)))
+            {
+                 message.removeClass('field-validation-valid');
+                 message.text("Your goal must be between " + selectedProgram.GoalMinimum + " and " + selectedProgram.GoalMaximum);
+            }
+            else
+            {
+                message.text("");
+            }
+        }
 
         $("#User_Age").on("change", function() {
             validateAge();
