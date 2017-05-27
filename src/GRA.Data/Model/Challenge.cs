@@ -36,5 +36,6 @@ namespace GRA.Data.Model
 
         public virtual ICollection<ChallengeTask> Tasks { get; set; }
         public int? BadgeId { get; set; }
+        public bool Unawardable { get; set; }
     }
 }

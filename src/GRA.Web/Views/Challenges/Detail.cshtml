@@ -26,10 +26,13 @@
                 </div>
                 <table class="table table-striped" style="margin-top: 1em;">
                     <tr>
-                        @if (Model.IsActive && Model.Challenge.IsCompleted == false)
-                        {
-                            <th class="text-center">Complete</th>
-                        }
+                        <th class="text-center">
+                            @if (Model.IsActive && Model.Challenge.IsCompleted == false && !Model.Challenge.Unawardable)
+                            {
+                                <text>Complete</text>
+                            }
+                        </th>
+
                         <th>Task</th>
                     </tr>
                     @for (int i = 0; i < Model.Tasks.Count; i++)
@@ -41,13 +44,16 @@
                                 <td class="text-center col-xs-1 challenge-checkbox-container" style="vertical-align: middle;">
                                     <input asp-for="Tasks[i].Id" type="hidden" />
 
-                                    @if (task.TaskType == ChallengeTaskType.Submission.ToString())
+                                    @if (!Model.Challenge.Unawardable)
                                     {
-                                        <input asp-for="Tasks[i].IsCompleted" type="checkbox" disabled/>
-                                    }
-                                    else
-                                    {
-                                        <input asp-for="Tasks[i].IsCompleted" type="checkbox"/>
+                                        @if (task.TaskType == ChallengeTaskType.Submission.ToString())
+                                        {
+                                            <input asp-for="Tasks[i].IsCompleted" type="checkbox" disabled/>
+                                        }
+                                        else
+                                        {
+                                            <input asp-for="Tasks[i].IsCompleted" type="checkbox"/>
+                                        }
                                     }
                                 </td>
                             }
@@ -99,9 +105,8 @@
                                 Completed on: @Model.Challenge.CompletedAt?.ToString("d")
                             </div>
                         </div>
-
                     }
-                    else if (Model.IsActive)
+                    else if (Model.IsActive && !Model.Challenge.Unawardable)
                     {
                         <input asp-for="Challenge.Id" type="hidden" />
                         <div class="pull-right">

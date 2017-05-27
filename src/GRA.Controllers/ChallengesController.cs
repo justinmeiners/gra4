@@ -39,7 +39,7 @@ namespace GRA.Controllers
             var challengeList = await _challengeService
                 .GetPaginatedChallengeListAsync(skip, take, Search);
 
-            PaginateViewModel paginateModel = new PaginateViewModel()
+            var paginateModel = new PaginateViewModel()
             {
                 ItemCount = challengeList.Count,
                 CurrentPage = page,
@@ -125,8 +125,15 @@ namespace GRA.Controllers
                 Tasks = new List<TaskDetailViewModel>()
             };
 
-            viewModel.Details = $"<strong>{challenge.TasksToComplete} "
-                + $"{(challenge.TasksToComplete > 1 ? "Tasks" : "Task")}</strong> is required to complete this challenge";
+            if (challenge.Unawardable)
+            {
+                viewModel.Details = "";
+            }
+            else
+            {
+                viewModel.Details = $"<strong>{challenge.TasksToComplete} "
+                    + $"{(challenge.TasksToComplete > 1 ? "Tasks" : "Task")}</strong> is required to complete this challenge";
+            }
 
             foreach (var task in challenge.Tasks)
             {
