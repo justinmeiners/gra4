@@ -282,8 +282,8 @@ namespace GRA.Domain.Service
         }
 
         public async Task<bool> UpdateChallengeTasksAsync(int? userId,
-                                                        int challengeId,
-                                                         IEnumerable<ChallengeTask> challengeTasks)
+                                                          int challengeId,
+                                                          IEnumerable<ChallengeTask> challengeTasks)
         {
             VerifyCanLog();
 
@@ -398,45 +398,48 @@ namespace GRA.Domain.Service
                 }
                 await _userLogRepository.AddSaveAsync(awardUserId, userLog);
 
-                // update the score in the user record
-                var postUpdateUser = await AddPointsSaveAsync(authUserId,
-                    awardUserId,
-                    awardUserId,
-                    pointsAwarded);
-
-                string badgeNotification = null;
-                Badge badge = await AwardBadgeAsync(awardUserId, challenge.BadgeId);
-                if (badge != null)
+                if (!challenge.Unawardable) 
                 {
-                    badgeNotification = $" and got a badge";
+                    // update the score in the user record
+                    var postUpdateUser = await AddPointsSaveAsync(authUserId,
+                        awardUserId,
+                        awardUserId,
+                        pointsAwarded);
+
+                    string badgeNotification = null;
+                    Badge badge = await AwardBadgeAsync(awardUserId, challenge.BadgeId);
+                    if (badge != null)
+                    {
+                        badgeNotification = $" and got a badge";
+                    }
+
+                    String notificationText = null;
+
+                    if (pointsAwarded == 0)
+                    {
+                        notificationText = $"<span class=\"fa fa-star\"></span> You completed the challenge: <strong>{challenge.Name}</strong>{badgeNotification}!";
+                    }
+                    else
+                    {
+                        notificationText = $"<span class=\"fa fa-star\"></span> You earned <strong>{pointsAwarded} points{badgeNotification}</strong> for completing the challenge: <strong>{challenge.Name}</strong>!";
+                    }
+
+                    // create the notification record
+                    var notification = new Notification
+                    {
+                        PointsEarned = pointsAwarded,
+                        Text = notificationText,
+                        UserId = awardUserId,
+                        ChallengeId = challengeId
+                    };
+                    if (badge != null)
+                    {
+                        notification.BadgeId = challenge.BadgeId;
+                        notification.BadgeFilename = badge.Filename;
+                    };
+
+                    await _notificationRepository.AddSaveAsync(authUserId, notification);
                 }
-
-                String notificationText = null;
-
-                if (pointsAwarded == 0)
-                {
-                    notificationText = $"<span class=\"fa fa-star\"></span> You completed the challenge: <strong>{challenge.Name}</strong>{badgeNotification}!";
-                }
-                else
-                {
-                    notificationText = $"<span class=\"fa fa-star\"></span> You earned <strong>{pointsAwarded} points{badgeNotification}</strong> for completing the challenge: <strong>{challenge.Name}</strong>!";
-                }
-
-                // create the notification record
-                var notification = new Notification
-                {
-                    PointsEarned = pointsAwarded,
-                    Text = notificationText,
-                    UserId = awardUserId,
-                    ChallengeId = challengeId
-                };
-                if (badge != null)
-                {
-                    notification.BadgeId = challenge.BadgeId;
-                    notification.BadgeFilename = badge.Filename;
-                };
-
-                await _notificationRepository.AddSaveAsync(authUserId, notification);
 
                 return true;
             }

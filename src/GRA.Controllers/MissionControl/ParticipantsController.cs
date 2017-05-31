@@ -281,9 +281,9 @@ namespace GRA.Controllers.MissionControl
                     ModelState.AddModelError("SchoolDistrictId", "The School District field is required.");
                 }
 
-                if (program.CardRequired && string.IsNullOrWhiteSpace(model.Card))
+                if (program.CardRequired && string.IsNullOrWhiteSpace(model.CardNumber))
                 {
-                    ModelState.AddModelError("Card", "The library card field is required.");
+                    ModelState.AddModelError("CardNumber", "The library card field is required.");
                 }
                 if (program.GoalRequired && !model.Goal.HasValue)
                 {
@@ -324,7 +324,7 @@ namespace GRA.Controllers.MissionControl
 
                 if (!askCard)
                 {
-                    model.Card = null;
+                    model.CardNumber = null;
                 }
                 if (!askGoal)
                 {

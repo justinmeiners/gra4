@@ -50,14 +50,13 @@
                                                 <td style="vertical-align:middle;"><a asp-action="Detail" asp-route-id="@challenge.Id">@challenge.Name</a></td>
                                                                                                    
                                                 <td style="text-align:center; vertical-align:middle;">
-                                                    @if (Model.IsActive && !challenge.Unawardable)
+                                                    @if (Model.IsActive)
                                                     {
-                                                            @challenge.Status
-                                                            <div class="progress" style="margin:0px;">
-                                                                <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="@challenge.PercentComplete" aria-valuemin="0" aria-valuemax="100" style="width: @challenge.PercentComplete%;">
-                                                                </div>
+                                                        @challenge.Status
+                                                        <div class="progress" style="margin:0px;">
+                                                            <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="@challenge.PercentComplete" aria-valuemin="0" aria-valuemax="100" style="width: @challenge.PercentComplete%;">
                                                             </div>
-                                                    
+                                                        </div>
                                                     }
                                                  </td>
                                                 <td>

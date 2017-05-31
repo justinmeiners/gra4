@@ -27,7 +27,7 @@ namespace GRA.Controllers.ViewModel.MissionControl.Participants
         
         [DisplayName("Library Card")]
         [MaxLength(64)]
-        public string Card { get; set; }
+        public string CardNumber { get; set; }
 
         [DisplayName("Zip Code")]
         [MaxLength(32)]

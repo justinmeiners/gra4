@@ -125,15 +125,8 @@ namespace GRA.Controllers
                 Tasks = new List<TaskDetailViewModel>()
             };
 
-            if (challenge.Unawardable)
-            {
-                viewModel.Details = "";
-            }
-            else
-            {
-                viewModel.Details = $"<strong>{challenge.TasksToComplete} "
-                    + $"{(challenge.TasksToComplete > 1 ? "Tasks" : "Task")}</strong> is required to complete this challenge";
-            }
+            viewModel.Details = $"<strong>{challenge.TasksToComplete} "
+                + $"{(challenge.TasksToComplete > 1 ? "Tasks" : "Task")}</strong> is required to complete this challenge";
 
             foreach (var task in challenge.Tasks)
             {

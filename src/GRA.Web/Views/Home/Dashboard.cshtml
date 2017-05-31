@@ -91,7 +91,7 @@
 
                 @if (Model.TeamName != null)
                 {
-                    <p style="font-size: 10pt"> You are on <strong>@Model.TeamName</strong> team. </p>
+                    <p style="font-size: 10pt"> You are on <strong>@Model.TeamName</strong> team.  Click here to see <a href="/info/teams">team progress</a>. </p>
                 }
 
                 @if ((GRA.Domain.Model.SiteStage)Context.Items[GRA.Controllers.ItemKey.SiteStage] == GRA.Domain.Model.SiteStage.RegistrationOpen)

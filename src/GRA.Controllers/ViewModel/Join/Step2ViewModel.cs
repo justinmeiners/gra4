@@ -29,7 +29,7 @@ namespace GRA.Controllers.ViewModel.Join
         [DisplayName("Library Card")]
         [RegularExpression(@"^(21391|23005)\d{9}\s*$", ErrorMessage="This does not appear to be a valid library card.")]
         [MaxLength(64)]
-        public string Card { get; set; }
+        public string CardNumber { get; set; }
         public bool ShowAge { get; set; }
         public bool ShowSchool { get; set; }
         public bool ShowCard { get; set; }
