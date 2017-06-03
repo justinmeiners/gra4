@@ -517,7 +517,7 @@ namespace GRA.Domain.Service
                 var notification = new Notification
                 {
                     PointsEarned = 0,
-                    Text = $"<span class=\"fa fa-certificate\"></span> Congratulations! You've achieved <strong>{achieveDisplayAmount.Value} points</strong> reaching your goal!",
+                    Text = $"<span class=\"fa fa-certificate\"></span> Congratulations! You've achieved your <strong>{achieveDisplayAmount.Value} point</strong> goal!",
                     UserId = earnedUser.Id,
                     IsAchiever = true
                 };
@@ -532,7 +532,7 @@ namespace GRA.Domain.Service
                         PointsEarned = 0,
                         IsDeleted = false,
                         BadgeId = badge.Id,
-                        Description = $"You reached your goal of {achieveDisplayAmount.Value} points!"
+                        Description = $"You reached your {achieveDisplayAmount.Value} point goal!"
                     });
                     notification.Text += " You've also earned a badge!";
                     notification.BadgeId = badge.Id;

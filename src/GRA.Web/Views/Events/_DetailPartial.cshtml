@@ -10,6 +10,12 @@
         @if (Model.Event.AllDay)
         {
             <strong>All Day:</strong> @Model.Event.StartDate.ToString("d")
+
+            @if (Model.Event.EndDate.HasValue)
+            {
+                <br/>
+                <strong>To:</strong> @Model.Event.EndDate.Value.ToString("d")
+            }
         }
         else
         {

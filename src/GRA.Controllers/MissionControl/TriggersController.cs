@@ -169,6 +169,32 @@ namespace GRA.Controllers.MissionControl
             return View(viewModel);
         }
 
+        public async Task<IActionResult> Duplicate(int id)
+        {
+            var oldTrigger = await _triggerService.GetByIdAsync(id);
+
+            var oldBadge = await _badgeService.GetByIdAsync(oldTrigger.AwardBadgeId);
+
+            var fullPath = _pathResolver.ResolveContentPath(oldBadge.Filename);
+            byte[] imageBytes = System.IO.File.ReadAllBytes(fullPath);
+
+            oldBadge.Filename = "badge.png";
+            oldBadge.Id = 0;
+
+            var newBadge = await _badgeService.AddBadgeAsync(oldBadge, imageBytes);
+
+            oldTrigger.Name = string.Format("{0} Copy", oldTrigger.Name);
+            oldTrigger.Id = 0;
+
+            oldTrigger.AwardBadgeId = newBadge.Id;
+            oldTrigger.AwardBadgeFilename = newBadge.Filename;
+
+            var newTrigger = await _triggerService.AddAsync(oldTrigger);
+
+
+            return RedirectToAction("Index");
+        }
+
         public async Task<IActionResult> Create()
         {
             var site = await GetCurrentSiteAsync();

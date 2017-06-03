@@ -136,6 +136,8 @@
                                                     @if (eventItem.AllDay)
                                                     {
                                                          @eventItem.StartDate.ToString("d")
+                                                         <br/>
+                                                         @String.Format("to {0}", eventItem.EndDate.Value.ToString("d"))
                                                     }
                                                     else
                                                     {

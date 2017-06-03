@@ -492,6 +492,7 @@ namespace GRA.Controllers
             bool askAge = false;
             bool askSchool = false;
             bool askCard = false;
+            bool askGoal = false;
             bool askEmail = false;
             bool askPhoneNumber = false;
 
@@ -501,6 +502,7 @@ namespace GRA.Controllers
                 askAge = program.AskAge;
                 askSchool = program.AskSchool;
                 askCard = program.AskCard;
+                askGoal = program.AskGoal;
                 askEmail = program.AskEmail;
                 askPhoneNumber = program.AskPhoneNumber;
                 
@@ -530,6 +532,22 @@ namespace GRA.Controllers
                 {
                     ModelState.AddModelError("User.Card", "The library card field is required.");
                 }
+
+                if (program.GoalRequired && !model.User.Goal.HasValue)
+                {
+                    ModelState.AddModelError("User.Goal", "The goal is required.");
+                }
+                
+                if (program.GoalMaximum.HasValue && model.User.Goal > program.GoalMaximum.Value)
+                {
+                    ModelState.AddModelError("User.Goal", string.Format("The goal maximum is {0}.", program.GoalMaximum.Value));
+                }
+
+                if (program.GoalMinimum.HasValue && model.User.Goal < program.GoalMinimum.Value)
+                {
+                    ModelState.AddModelError("User.Goal", string.Format("The goal minimum is {0}.", program.GoalMinimum.Value));
+                }
+
                 if (program.EmailRequired && string.IsNullOrWhiteSpace(model.User.Email))
                 {
                     ModelState.AddModelError("User.Email", "The email field is required.");
@@ -603,6 +621,7 @@ namespace GRA.Controllers
             model.RequirePostalCode = site.RequirePostalCode;
             model.ShowAge = askAge;
             model.ShowSchool = askSchool;
+            model.ShowGoal = askGoal;
             model.ShowEmail = askEmail;
             model.ShowPhoneNumber = askPhoneNumber;
             model.ShowCard = askCard;

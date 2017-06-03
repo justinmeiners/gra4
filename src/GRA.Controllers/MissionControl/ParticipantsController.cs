@@ -285,9 +285,18 @@ namespace GRA.Controllers.MissionControl
                 {
                     ModelState.AddModelError("CardNumber", "The library card field is required.");
                 }
+                
                 if (program.GoalRequired && !model.Goal.HasValue)
                 {
                     ModelState.AddModelError("Goal", "The goal field is required.");
+                }
+                if (program.GoalMaximum.HasValue && model.Goal > program.GoalMaximum.Value)
+                {
+                    ModelState.AddModelError("Goal", string.Format("The goal maximum is {0}.", program.GoalMaximum.Value));
+                }
+                if (program.GoalMinimum.HasValue && model.Goal < program.GoalMinimum.Value)
+                {
+                    ModelState.AddModelError("Goal", string.Format("The goal minimum is {0}.", program.GoalMinimum.Value));
                 }
                 if (program.EmailRequired && string.IsNullOrWhiteSpace(model.Email))
                 {
@@ -538,7 +547,6 @@ namespace GRA.Controllers.MissionControl
             {
                 ModelState.AddModelError("User.Goal", "The goal field is required.");
             }
-
             if (program.GoalMaximum.HasValue && model.User.Goal > program.GoalMaximum.Value)
             {
                 ModelState.AddModelError("User.Goal", string.Format("The goal maximum is {0}.", program.GoalMaximum.Value));

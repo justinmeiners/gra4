@@ -53,32 +53,43 @@ namespace GRA.Data.Repository
 
         private async Task AddLocationData(Event evt)
         {
-            if (evt.AtLocationId != null)
+            if (evt.AtLocationId.HasValue)
             {
-                var location = await _context.Locations
-                    .AsNoTracking()
-                    .Where(_ => _.Id == evt.AtLocationId)
-                    .SingleOrDefaultAsync();
-                if (location != null)
-                {
-                    evt.EventLocationAddress = location.Address;
-                    evt.EventLocationLink = location.Url;
-                    evt.EventLocationName = location.Name;
-                    evt.EventLocationTelephone = location.Telephone;
+                try {
+                    var location = await _context.Locations
+                        .AsNoTracking()
+                        .Where(_ => _.Id == evt.AtLocationId)
+                        .SingleOrDefaultAsync();
+
+                                        if (location != null)
+                    {
+                        evt.EventLocationAddress = location.Address;
+                        evt.EventLocationLink = location.Url;
+                        evt.EventLocationName = location.Name;
+                        evt.EventLocationTelephone = location.Telephone;
+                    }
+                } catch (System.Exception e) {
+                     _logger.LogWarning("Add location data error.");
                 }
+
             }
-            else if (evt.AtBranchId != null)
+            else if (evt.AtBranchId.HasValue)
             {
-                var branch = await _context.Branches
-                    .AsNoTracking()
-                    .Where(_ => _.Id == evt.AtBranchId)
-                    .SingleOrDefaultAsync();
-                if (branch != null)
-                {
-                    evt.EventLocationAddress = branch.Address;
-                    evt.EventLocationLink = branch.Url;
-                    evt.EventLocationName = branch.Name;
-                    evt.EventLocationTelephone = branch.Telephone;
+                try {
+                    var branch = await _context.Branches
+                        .AsNoTracking()
+                        .Where(_ => _.Id == evt.AtBranchId)
+                        .SingleOrDefaultAsync();
+
+                    if (branch != null)
+                    {
+                        evt.EventLocationAddress = branch.Address;
+                        evt.EventLocationLink = branch.Url;
+                        evt.EventLocationName = branch.Name;
+                        evt.EventLocationTelephone = branch.Telephone;
+                    }
+                } catch (System.Exception e) {
+                    _logger.LogWarning("Add location data error.");
                 }
             }
         }

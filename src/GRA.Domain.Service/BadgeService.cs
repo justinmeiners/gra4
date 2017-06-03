@@ -40,7 +40,7 @@ namespace GRA.Domain.Service
             return System.IO.Path.Combine(contentDir, filename);
         }
 
-        private string GetUrlPath(string filename)
+        public string GetUrlPath(string filename)
         {
             return $"site{GetCurrentSiteId()}/{BadgePath}/{filename}";
         }

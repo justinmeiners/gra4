@@ -147,7 +147,7 @@ namespace GRA.Controllers
 
         public async Task<IActionResult> Detail(int id)
         {
-            EventsDetailViewModel viewModel = new EventsDetailViewModel()
+            var viewModel = new EventsDetailViewModel()
             {
                 Event = await _eventService.GetDetails(id)
             };

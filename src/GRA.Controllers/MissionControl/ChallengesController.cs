@@ -71,6 +71,7 @@ namespace GRA.Controllers.MissionControl
             }
         }
 
+
         [Authorize(Policy = Policy.ActivateChallenges)]
         public async Task<IActionResult> Pending(string Search, int? System, int? Branch,
             int? Program, bool? Mine, int page = 1)
