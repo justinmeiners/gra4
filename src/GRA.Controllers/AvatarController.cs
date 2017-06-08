@@ -146,7 +146,7 @@ namespace GRA.Controllers
 
             var details = await GetDynamicAvatarDetailsAsync(id, _dynamicAvatarService);
 
-            if (details.DynamicAvatarPaths.Count == 0)
+            if (details.Paths.Count == 0)
             {
                 // the requested avatar was not found, show the user's avatar
                 int userId = GetActiveUserId();
@@ -156,14 +156,15 @@ namespace GRA.Controllers
                     // validate avatar
                     details = await GetDynamicAvatarDetailsAsync(currentUser.DynamicAvatar,
                         _dynamicAvatarService);
-                    if (details.DynamicAvatarPaths != null && details.DynamicAvatarPaths.Count() > 0)
+
+                    if (details.Paths != null && details.Paths.Count() > 0)
                     {
                         // user has a valid avatar, redirect to that
                         return RedirectToRoute(new
                         {
                             controller = "Avatar",
                             action = "Index",
-                            id = details.DynamicAvatarString
+                            id = details.AvatarString
                         });
                     }
                 }
@@ -225,7 +226,7 @@ namespace GRA.Controllers
             int counter = 0;
             int userId = GetActiveUserId();
 
-            foreach (string elementIdHex in details.DynamicAvatarString.SplitInParts(2))
+            foreach (string elementIdHex in details.AvatarString.SplitInParts(2))
             {
                 counter++;
                 if (counter == layerNumber)
@@ -261,7 +262,7 @@ namespace GRA.Controllers
         {
             var currentUserId = GetActiveUserId();
             var currentUser = await _userService.GetDetails(currentUserId);
-            currentUser.DynamicAvatar = details.DynamicAvatarString.Trim();
+            currentUser.DynamicAvatar = details.AvatarString.Trim();
             await _userService.Update(currentUser);
             return RedirectToRoute(new { controller = "Home", action = "Index" });
         }

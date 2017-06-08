@@ -22,15 +22,18 @@ namespace GRA.Controllers.Base
         {
             int userId = GetActiveUserId();
             bool problem = false;
-            Dictionary<int, int> avatarLayerElement = null;
+
+            // key is layer id, value is avatar id
+            Dictionary<int, int> avatarLayerElements = null;
             if (!string.IsNullOrEmpty(dynamicAvatar))
             {
-                var elementIds = new List<int>();
+                // the string elements are ordered by layer Id
+                var elementAvatarIds = new List<int>();
                 foreach (string hexString in dynamicAvatar.SplitInParts(2))
                 {
                     try
                     {
-                        elementIds.Add(Convert.ToInt32(hexString, 16));
+                        elementAvatarIds.Add(Convert.ToInt32(hexString, 16));
                     }
                     catch (Exception)
                     {
@@ -40,8 +43,8 @@ namespace GRA.Controllers.Base
                 }
                 if (!problem)
                 {
-                    avatarLayerElement = await dynamicAvatarService.ReturnValidated(elementIds, userId);
-                    if (avatarLayerElement == null)
+                    avatarLayerElements = await dynamicAvatarService.ReturnValidated(elementAvatarIds, userId);
+                    if (avatarLayerElements == null)
                     {
                         problem = true;
                     }
@@ -50,21 +53,27 @@ namespace GRA.Controllers.Base
 
             var details = new DynamicAvatarDetails
             {
-                DynamicAvatarPaths = new Dictionary<int, string>()
+                Paths = new Dictionary<int, string>(),
+                LayerOrders = new List<int>(),
             };
+
+
             var dynamicAvatarString = new StringBuilder();
-            if (avatarLayerElement != null && !problem)
+            if (avatarLayerElements != null && !problem)
             {
-                int zIndex = 1;
                 int siteId = GetCurrentSiteId();
-                foreach (int layerId in avatarLayerElement.Keys)
+
+                var layers = await dynamicAvatarService.GetAllLayersAsync();
+                
+                foreach (var layer in layers)
                 {
-                    string path = $"site{siteId}/dynamicavatars/layer{layerId}/{avatarLayerElement[layerId]}.png";
-                    details.DynamicAvatarPaths.Add(zIndex, _pathResolver.ResolveContentPath(path));
-                    dynamicAvatarString.Append(avatarLayerElement[layerId].ToString("x2"));
-                    zIndex++;
+                    var avatarId = avatarLayerElements[layer.Id];
+                    string path = $"site{siteId}/dynamicavatars/layer{layer.Id}/{avatarId}.png";
+                    details.Paths.Add(layer.Position, _pathResolver.ResolveContentPath(path));
+                    dynamicAvatarString.Append(avatarLayerElements[layer.Id].ToString("x2"));
                 }
-                details.DynamicAvatarString = dynamicAvatarString.ToString();
+
+                details.AvatarString = dynamicAvatarString.ToString();
             }
             return details;
         }

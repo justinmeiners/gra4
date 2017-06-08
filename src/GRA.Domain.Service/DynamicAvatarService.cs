@@ -76,19 +76,19 @@ namespace GRA.Domain.Service
             return avatarParts;
         }
 
-        public async Task<Dictionary<int, int>> ReturnValidated(IEnumerable<int> elementIds, int userId)
+        public async Task<Dictionary<int, int>> ReturnValidated(IEnumerable<int> elementAvatarIds, int userId)
         {
             var avatarParts = new Dictionary<int, int>();
             var layerIds = await _dynamicAvatarLayerRepository.GetLayerIdsAsync();
 
-            if (layerIds.Count() != elementIds.Count())
+            if (layerIds.Count() != elementAvatarIds.Count())
             {
                 return null;
             }
 
             var layerElements = layerIds
-                .Zip(elementIds, (LayerId, ElementId) => new { LayerId, ElementId })
-                .ToDictionary(_ => _.LayerId, _ => _.ElementId);
+                .Zip(elementAvatarIds, (LayerId, ElementAvatarId) => new { LayerId, ElementAvatarId })
+                .ToDictionary(_ => _.LayerId, _ => _.ElementAvatarId);
 
             foreach (var layerId in layerElements.Keys)
             {

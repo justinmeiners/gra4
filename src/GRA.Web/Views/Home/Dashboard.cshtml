@@ -31,10 +31,10 @@
                 {
                     <a asp-controller="Avatar" asp-action="Index">
                         <div class="dynamic-avatar-container-dashboard">
-                            @foreach (var zIndex in Model.DynamicAvatarPaths.Keys)
+                            @foreach (var zPosition in Model.DynamicAvatarPaths.Keys)
                             {
-                                <img src="~/@Model.DynamicAvatarPaths[zIndex]"
-                                    style="z-index: @zIndex"
+                                <img src="~/@Model.DynamicAvatarPaths[zPosition]"
+                                    style="z-index: @zPosition"
                                     class="dynamic-avatar" />
                             }
                         </div>

@@ -65,9 +65,9 @@ namespace GRA.Data.Repository
             var avatars = DbSet.AsNoTracking();
             
             return await avatars.OrderBy(_ => _.Position)
-                    .ThenBy(_ => _.Name)
-                    .ProjectTo<DynamicAvatar>()
-                    .ToListAsync();
+                                .ThenBy(_ => _.Name)
+                                .ProjectTo<DynamicAvatar>()
+                                .ToListAsync();
         }
 
         new public async Task<DynamicAvatar> GetByIdAsync(int id)
@@ -125,16 +125,16 @@ namespace GRA.Data.Repository
                                 .AnyAsync();
         }
 
-        public async Task<DynamicAvatarElement> GetElementAsync(int avatarId, int dynamicAvatarLayerId)
+        public async Task<DynamicAvatarElement> GetElementAsync(int avatarId, int layerId)
         {
             var entity = await _context.DynamicAvatarElements
                 .AsNoTracking()
-                .Where(_ => _.DynamicAvatarId == avatarId && _.DynamicAvatarLayerId == dynamicAvatarLayerId)
+                .Where(_ => _.DynamicAvatarId == avatarId && _.DynamicAvatarLayerId == layerId)
                 .SingleOrDefaultAsync();
             
             if (entity == null)
             {
-                throw new Exception($"{nameof(DynamicAvatarElement)} id {avatarId} with layer id {dynamicAvatarLayerId} could not be found.");
+                throw new Exception($"{nameof(DynamicAvatarElement)} id {avatarId} with layer id {layerId} could not be found.");
             }
             return _mapper.Map<DynamicAvatarElement>(entity);
         }

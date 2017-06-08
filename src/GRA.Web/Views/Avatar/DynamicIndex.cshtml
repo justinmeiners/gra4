@@ -1,6 +1,6 @@
 @model GRA.Controllers.DynamicAvatarDetails
 <form asp-controller="Avatar" asp-action="DynamicIndex" method="post" role="form">
-   <input asp-for="DynamicAvatarString" type="hidden" />
+   <input asp-for="AvatarString" type="hidden" />
    <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="row">
@@ -13,9 +13,9 @@
                         </td>
                         <td rowspan="3">
                             <div class="dynamic-avatar-container">
-                                @foreach (var zIndex in Model.DynamicAvatarPaths.Keys)
+                                @foreach (var zPosition in Model.Paths.Keys)
                                 {
-                                    <img src="~/@Model.DynamicAvatarPaths[zIndex]" style="z-index: @zIndex" class="dynamic-avatar" />
+                                    <img src="~/@Model.Paths[zPosition]" style="z-index: @zPosition" class="dynamic-avatar" />
                                 }
                             </div>
                         </td>

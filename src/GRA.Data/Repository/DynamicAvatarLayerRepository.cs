@@ -21,15 +21,17 @@ namespace GRA.Data.Repository
 
         public async Task<ICollection<DynamicAvatarLayer>> GetAllAsync()
         {
+            // order by position
             return await DbSet
                .AsNoTracking()
-               .OrderBy(_ => _.Position)
+               .OrderBy(_ => _.Id)
                .ProjectTo<DynamicAvatarLayer>()
                .ToListAsync();
         }
 
         public async Task<ICollection<int>> GetLayerIdsAsync()
         {
+            // order by id
             return await DbSet
                 .AsNoTracking()
                 .OrderBy(_ => _.Id)

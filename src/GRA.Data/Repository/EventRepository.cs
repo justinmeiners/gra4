@@ -69,7 +69,7 @@ namespace GRA.Data.Repository
                         evt.EventLocationTelephone = location.Telephone;
                     }
                 } catch (System.Exception e) {
-                     _logger.LogWarning("Add location data error.");
+                     _logger.LogWarning($"Add location data error: {e.Message}");
                 }
 
             }
@@ -89,7 +89,7 @@ namespace GRA.Data.Repository
                         evt.EventLocationTelephone = branch.Telephone;
                     }
                 } catch (System.Exception e) {
-                    _logger.LogWarning("Add location data error.");
+                    _logger.LogWarning($"Add location data error: {e.Message}");
                 }
             }
         }

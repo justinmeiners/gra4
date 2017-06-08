@@ -143,9 +143,9 @@ namespace GRA.Controllers
                     viewModel.AvatarPath = staticAvatarPath;
                 }
                 if (dynamicAvatarDetails != null
-                    && dynamicAvatarDetails.DynamicAvatarPaths.Count > 0)
+                    && dynamicAvatarDetails.Paths.Count > 0)
                 {
-                    viewModel.DynamicAvatarPaths = dynamicAvatarDetails.DynamicAvatarPaths;
+                    viewModel.DynamicAvatarPaths = dynamicAvatarDetails.Paths;
                 }
 
                 if (TempData.ContainsKey(ModelData))
