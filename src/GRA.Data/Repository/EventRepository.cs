@@ -38,8 +38,17 @@ namespace GRA.Data.Repository
 
         public override async Task<Event> GetByIdAsync(int id)
         {
-            var evt = await base.GetByIdAsync(id);
-            await AddLocationData(evt);
+            var evt = await DbSet
+                 .AsNoTracking()
+                 .Where(_ => _.Id == id)
+                 .ProjectTo<Event>()
+                 .SingleOrDefaultAsync();
+ 
+            if (evt != null)
+            {
+                await AddLocationData(evt);
+            }
+
             return evt;
         }
 
